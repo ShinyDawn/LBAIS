@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>课堂助手</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script th:src="@{/js/ref/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/ref/jquery.min.js}"></script>
+<script th:src="@{js/ref/jquerysession.js}"></script>
+<script th:src="@{js/ref/bootstrap.min.js}"></script>
+<script th:src="@{js/checkLogin.js}"></script>
+<link rel="stylesheet" th:href="@{css/bootstrap.css}" />
+<style>
+#brand {
+	margin-left: 20px;
+	color: #38a626;
+	font-weight: bold;
+	margin-right:50px;
+}
+
+#t_class {
+	margin-top: 80px;
+	margin-left: 50px;
+	width: 100%;
+	float: left;
+}
+
+#t_title {
+	float: left;
+}
+
+#add {
+	float: left;
+	margin-left: 10px;
+	padding-top: 8px;
+	width: 130px;
+	height: 35px;
+	text-align: center;
+	font-size: 16px;
+	text-decoration: none
+}
+
+#logout {
+	margin-left: 20px;
+}
+
+#list {
+	float: left;
+	width: 100%;
+	margin-left: 50px;
+}
+
+.block {
+	padding: 10px;
+	padding-left: 16px;
+	float: left;
+	width: 130px;
+	height: 100px;
+	box-shadow: 6px 6px 5px #9C9C9C;
+	margin-right: 20px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+.tl {
+	margin-bottom:10px;
+	float: left;
+	width: 30%;
+}
+
+.line {
+	margin-bottom:10px;
+	float: left;
+	color: #337ab7;
+	width: 60%;
+	padding-left:20px;
+}
+
+.inner {
+	width: 100%;
+	height: 80px;
+}
+
+.glyphicon-trash {
+	float: right;
+	margin-top: 5px;
+	color: red;
+}
+.glyphicon-pencil{float:right;margin-top: 5px;margin-right: 15px;color:#38a626}
+#myModal{
+	margin-top:10px;
+}
+.modal-body{
+	padding-left:20px;
+	padding-right:20px;
+}
+.container{
+	width:100%;
+}
+#title{color:grey}
+#confirm{height:35px}
+.form-control{margin-bottom:10px}
+#alert{margin-top:5px;margin-bottom:5px;height:20px;color:red}
+.grade{margin-top:40px;float: left;width:100%;color:grey}
+h5{color:grey}
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+$.ajax({
+	type : "POST",
+	url : "http://localhost:10002/classroom",
+	crossDomain : true,
+	success : function(data) {
+		var html = "";
+		var grade = "";
+		for(var i = 0;i<data.length;i++){
+			var c = data[i];
+			if(c.grade!=grade){
+				html+="<h4 class='grade'>"+c.grade+"年级<h4>";
+				grade=c.grade;
+			}
+			html+="<div class='block'>";
+			html+="<div class='inner' onclick='see("+c.id+")'>";
+			html+="<div class='tl'>班级</div><div class='line'>"+c.cname+"</div>";
+			html+="<div class='tl'>教师</div><div class='line'>"+c.teacher+"</div>";
+			html+="<div class='tl'>人数</div><div class='line'>"+c.num+"</div></div>";
+			html+="</div>"
+		}
+		document.getElementById("list").innerHTML+=html;
+		$(".inner").hover(function(){
+			$(this).parent().css({"background":"#644790","color":"white"});
+			$(this).parent().children().css({"color":"white"});
+    		$(this).children().css({"color":"white"});
+		});
+		$(".inner").mouseleave(function(){
+			$(this).parent().css({"background":"white","color":"black"});
+			$(this).children().css({"color":"black"});
+    		$(".glyphicon-trash").css({"color":"red"});
+    		$(".glyphicon-pencil").css({"color":"#38a626"});
+    		$(".line").css({"color":"#337ab7"});
+		});
+		$(".glyphicon-trash").hover(function(){
+			$(this).css({"color":"orange"});
+		});
+		$(".glyphicon-trash").mouseleave(function(){
+			$(this).css({"color":"red"});
+		});
+		$(".glyphicon-pencil").hover(function(){
+			$(this).css({"color":"#7CCD7C"});
+		});
+		$(".glyphicon-pencil").mouseleave(function(){
+			$(this).css({"color":"#38a626"});
+		});
+	}
+});
+
+/*]]>*/
+</script>
+</head>
+
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+					aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" id="brand">课&nbsp;堂&nbsp;助&nbsp;手</a>
+			</div>
+
+			<div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li><a href="http://localhost:10001/class">班级列表</a></li>
+					<li><a href="http://localhost:10001/ss">全校班级信息统计</a></li>
+					<li class="active"><a href="#">班级人数统计</a></li>
+					<li><a href="http://localhost:10001/help">帮助文档</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href='http://localhost:10001/login' id='logout'>登出</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="t_class">
+		<h4 id="t_title">班级人数实时统计</h4>
+
+	</div>
+
+	<div id="list">
+	</div>
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" id="close_btn"
+						data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel"
+						style="padding-left: 13px;color:#38a626">课堂助手</h4>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+							<h4 class="title" id="title">新建班级</h4>
+							<h5>年级</h5>
+							<input id="grade" class="form-control" placeholder="年级" autofocus="autofocus"/>
+							<h5>班级名称</h5>
+							<input id="cname" class="form-control" placeholder="班级名称"/>
+							<h5>班主任</h5>
+							<input id="teacher" class="form-control" placeholder="班主任"/>
+							<h5>人数</h5>
+							<input id="num" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" 
+							class="form-control" placeholder="人数"/>
+							<h5>开班日期</h5>
+							<input id="date" class="form-control" placeholder="开班日期" onfocus="removeError()" />
+							<div id="alert"></div>
+							<div id="contain"></div>
+					</div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+</body>
+</html>

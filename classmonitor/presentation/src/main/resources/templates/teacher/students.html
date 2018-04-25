@@ -1,0 +1,340 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>课堂助手</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script th:src="@{/js/ref/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/ref/jquery.min.js}"></script>
+<script th:src="@{js/ref/jquerysession.js}"></script>
+<script th:src="@{js/ref/bootstrap.min.js}"></script>
+<script th:src="@{js/ref/toastr.min.js}"></script>
+<script th:src="@{js/checkLogin.js}"></script>
+<script th:src="@{js/ref/bootstrap-select.min.js}"></script>
+<link rel="stylesheet" th:href="@{css/bootstrap-select.min.css}" />
+<link rel="stylesheet" th:href="@{css/bootstrap.css}" />
+<link rel="stylesheet" th:href="@{css/toastr.min.css}" />
+<style>
+#brand {
+	margin-left: 20px;
+	color: #38a626;
+	font-weight: bold;
+	margin-right: 50px;
+}
+
+#t_class {
+	margin-top: 80px;
+	margin-left: 50px;
+	margin-bottom: 20px;
+	width: 100%;
+	float: left;
+}
+
+#t_title {
+	float: left;
+}
+
+#modify {
+	float: left;
+	margin-left: 10px;
+	padding-top: 8px;
+	width: 120px;
+	height: 35px;
+	text-align: center;
+	font-size: 16px;
+	text-decoration: none
+}
+
+#logout {
+	margin-left: 20px;
+}
+
+#student {
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+#myModal {
+	margin-top: 10px;
+}
+
+.modal-body {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.container {
+	width: 100%;
+}
+
+#confirm {
+	height: 35px
+}
+
+.form-control {
+	margin-bottom: 10px
+}
+
+#alert {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	height: 20px;
+	color: red
+}
+
+#title {
+	color: grey
+}
+
+.glyphicon-trash {
+	color: red
+}
+
+.glyphicon-edit {
+	color: #38a626
+}
+
+.glyphicon-trash:hover {
+	color: orange
+}
+
+.glyphicon-edit:hover {
+	color: #7CCD7C
+}
+
+h5 {
+	color: grey
+}
+</style>
+<script type="text/javascript">
+	/*<![CDATA[*/
+	var cid = $.session.get('cid');
+	$.ajax({
+		type : "POST",
+		url : "http://localhost:10002/classroom/info",
+		data : {
+			id : cid
+		},
+		crossDomain : true,
+		success : function(data) {
+			document.getElementById("t_title").innerText = data.grade + "年级"
+					+ data.cname + "班学生信息列表";
+		}
+	});
+	$
+			.ajax({
+				type : "POST",
+				url : "http://localhost:10002/students",
+				data : {
+					cid : cid
+				},
+				crossDomain : true,
+				success : function(data) {
+					document.getElementById("student").innerHTML += "<tbody>";
+					if (data.length == 0) {
+						document.getElementById("student").innerHTML = '<h4 style="color:grey">还没有学生信息</h4>';
+					} else {
+						var html = '<table class="table table-bordered">'
+								+ '<thead><tr><th>#</th><th>学号</th><th>姓名</th><th>姓别</th>'
+								+ '<th>座位</th><th>修改</th><th>删除</th></tr></thead><tbody>';
+
+						for (var i = 0; i < data.length; i++) {
+							var s = data[i];
+							html += "<tr class='line' id='"+s.id+"'>";
+							html += "<td>" + (i + 1) + "</td>";
+							html += "<td>" + s.sid + "</td>";
+							html += "<td>" + s.name + "</td>";
+							html += "<td>" + s.gender + "</td>";
+							html += "<td>" + s.x + "排" + s.y + "座" + "</td>";
+							html += "<td><span class='glyphicon glyphicon-edit' aria-hidden='true' data-toggle='modal'"
+									+ " data-target='#myModal' onclick='update("+ s.id+ ","+ s.x+ ","+ s.y
+									+ ")'></span></td>";
+							html += "<td><span class='glyphicon glyphicon-trash' aria-hidden='true' onclick='del("
+									+ s.id + ")'></span></td></tr>";
+						}
+						document.getElementById("student").innerHTML += html;
+						document.getElementById("student").innerHTML += "</tbody></table>";
+					}
+				}
+			});
+
+	function update(id, x, y) {
+		document.getElementById("alert").innerText = "";
+		var line = document.getElementById(id);
+		var sid = line.children[1].innerText;
+		var name = line.children[2].innerText;
+		document.getElementById("sid").value = sid;
+		document.getElementById("name").value = name;
+		var gender = line.children[3].innerText;
+		if(gender=="男"){
+			document.getElementById("gender").options[0].selected = true;
+			document.getElementById("gender").options[1].selected = false;
+		}else{
+			document.getElementById("gender").options[0].selected = false;
+			document.getElementById("gender").options[1].selected = true;
+		}
+		document.getElementById("x").value = x;
+		document.getElementById("y").value = y;
+		document.getElementById("contain").innerHTML = "<button class='btn btn-primary btn-block' id='confirm' onclick='submit("
+				+ id + ")'>确认修改</button>";
+	}
+
+	function add() {
+		document.getElementById("alert").innerText = "";
+		document.getElementById("title").innerText = "新增学生";
+		document.getElementById("sid").value = "";
+		document.getElementById("name").value = "";
+		document.getElementById("x").value = "";
+		document.getElementById("y").value = "";
+		document.getElementById("contain").innerHTML = "<button class='btn btn-primary btn-block' id='confirm' onclick='submit(0)'>确认添加</button>";
+	}
+
+	function del(id) {
+		$.ajax({
+			type : "POST",
+			url : "http://localhost:10002/students/delete",
+			data : {
+				id : id
+			},
+			crossDomain : true,
+			success : function(data) {
+				window.location.reload();
+			}
+		});
+	}
+
+	function submit(id) {
+		var cid = $.session.get('cid');
+		var sid = document.getElementById("sid").value;
+		var name = document.getElementById("name").value;
+		var gender = $('#gender option:selected').text();
+		var x = document.getElementById("x").value;
+		var y = document.getElementById("y").value;
+
+		if (sid == "")
+			document.getElementById("alert").innerText = "*请输入学号";
+		else if (name == "")
+			document.getElementById("alert").innerText = "*请输入姓名";
+		else if (x == "")
+			document.getElementById("alert").innerText = "*请输入排数";
+		else if (y == "")
+			document.getElementById("alert").innerText = "*请输入座位";
+		else {
+			document.getElementById("alert").innerText = "";
+			var baseurl = "http://localhost:10002/students/update";
+			if (id == 0)
+				baseurl = "http://localhost:10002/students/add";
+			$
+					.ajax({
+						type : "POST",
+						url : baseurl,
+						data : {
+							id : id,
+							cid : cid,
+							sid : sid,
+							name : name,
+							gender : gender,
+							x : x,
+							y : y
+						},
+						crossDomain : true,
+						success : function(data) {
+							if (data == -1) {
+								document.getElementById("alert").innerText = "*学号已存在，请重新输入";
+							} else if(data==-2){
+								document.getElementById("alert").innerText = "*该座位已有人，请重新输入";
+							}else{
+								window.location.reload();
+							}
+						}
+					});
+		}
+	}
+	/*]]>*/
+</script>
+</head>
+
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+					aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" id="brand">课&nbsp;堂&nbsp;助&nbsp;手</a>
+			</div>
+
+			<div class="navbar-collapse collapse"
+				id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li><a href="http://localhost:10001/curriculum">课程表</a></li>
+					<li><a href="http://localhost:10001/realtime">上课实时统计</a></li>
+					<li class="dropdown active"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-haspopup="true"
+						aria-expanded="false">班级信息<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#">学生列表</a></li>
+							<li><a href="http://localhost:10001/cs">班级信息统计</a></li>
+						</ul></li>
+					<li><a href="http://localhost:10001/subject">学科信息统计</a></li>
+					<li><a href="http://localhost:10001/exception">特殊情况</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href='http://localhost:10001/login' id='logout'>登出</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="t_class">
+		<h4 id="t_title"></h4>
+		<button class="btn btn-lg btn-link" id="modify" data-toggle="modal"
+			data-target="#myModal" onclick="add()">
+			添加学生 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</button>
+	</div>
+
+	<div id="student"></div>
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" id="close_btn"
+						data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel"
+						style="padding-left: 13px; color: #38a626;">课堂助手</h4>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<h4 class="title" id="title">学生信息</h4>
+						<h5>学号</h5>
+						<input id="sid" class="form-control" placeholder="学号"
+							autofocus="autofocus" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
+						<h5>姓名</h5>
+						<input id="name" class="form-control" placeholder="姓名" />
+						<h5>姓别</h5>
+						<select class="selectpicker" id="gender">
+							<option selected="selected">男</option>
+							<option>女</option>
+						</select>
+						<h5>第几排</h5>
+						<input id="x" class="form-control" placeholder="排数"
+							onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
+						<h5>第几座</h5>
+						<input id="y" class="form-control" placeholder="座位"
+							onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
+						<div id="alert"></div>
+						<div id="contain"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

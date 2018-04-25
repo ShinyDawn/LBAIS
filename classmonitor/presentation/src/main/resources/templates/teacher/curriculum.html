@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>课堂助手</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script th:src="@{/js/ref/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/ref/jquery.min.js}"></script>
+<script th:src="@{js/ref/jquerysession.js}"></script>
+<script th:src="@{js/ref/bootstrap.min.js}"></script>
+<script th:src="@{js/ref/toastr.min.js}"></script>
+<script th:src="@{js/curriculum.js}"></script>
+<script th:src="@{js/checkLogin.js}"></script>
+<link rel="stylesheet" th:href="@{css/toastr.min.css}" />
+<link rel="stylesheet" th:href="@{css/bootstrap.css}" />
+<link rel="stylesheet" th:href="@{css/ref/curriculum.css}" />
+<script type="text/javascript">
+	/*<![CDATA[*/
+	var cid = $.session.get('cid');
+	
+	$
+	.ajax({
+		type : "POST",
+		url : "http://localhost:10002/classroom/info",
+		data : {
+			id : cid
+		},
+		crossDomain : true,
+		success : function(data) {
+			document.getElementById("t_title").innerText = data.grade+"年级"+data.cname+"班课程表(双击可编辑)";
+		}
+	});
+	
+	$
+			.ajax({
+				type : "POST",
+				url : "http://localhost:10002/curriculum",
+				data : {
+					cid : cid
+				},
+				crossDomain : true,
+				success : function(data) {
+					var html = "";
+					var time = "";
+					if (data.length == 0)
+						add();
+					else {
+						var line = 0;
+						for (var i = 0; i < data.length; i++) {
+							var c = data[i];
+							line = 0;
+							if (time != c.time) {
+								if (time != "")
+									html += '<td><span class="glyphicon glyphicon-trash" aria-hidden="true" onclick="del(this)"></span></td></tr>';
+								time = c.time;
+								html += '<tr><td id="' + c.tid
+										+ '" ondblclick="edit(this,' + 0
+										+ ')" onchange="save(this,' + 0 + ')">'
+										+ c.time + '</td>';
+							} else {
+								html += '<td class="block" ondblclick="edit(this,'
+										+ c.day
+										+ ')" onchange="save(this,'
+										+ c.day + ')">' + c.course + '</td>';
+							}
+						}
+						html += '<td><span class="glyphicon glyphicon-trash" aria-hidden="true" onclick="del(this)"></span></td></tr>';
+						document.getElementById("t_body").innerHTML += html;
+					}
+				}
+			});
+
+	function keyPress(a) {
+		var keyCode = event.keyCode - 48;
+		var str = a.value;
+		var lc = str.charAt(str.length - 1);
+		if (str.length == 2 || str.length == 8)
+			a.value += ":";
+		else if (str.length == 5)
+			a.value += "-";
+		str = a.value;
+		if (keyCode >= 0 && keyCode <= 9) {
+			if (str.length == 0 || str.length == 6) {
+				if (keyCode == 0 || keyCode == 1 || keyCode == 2)
+					event.returnValue = true;
+				else
+					event.returnValue = false;
+			}
+			if (str.length == 1 || str.length == 7) {
+				if (lc == 0 || lc == 1)
+					event.returnValue = true;
+				else if (lc == 2
+						&& (keyCode == 0 || keyCode == 1 || keyCode == 2 || keyCode == 3))
+					event.returnValue = true;
+				else
+					event.returnValue = false;
+			}
+			if (str.length == 3 || str.length == 9) {
+				if (keyCode >= 0 && keyCode <= 5)
+					event.returnValue = true;
+				else
+					event.returnValue = false;
+			}
+			if (str.length == 11)
+				event.returnValue = false;
+		} else
+			event.returnValue = false;
+	}
+	/* ]]> */
+</script>
+</head>
+
+<body>
+	<script type="text/javascript">
+		toastr.options.positionClass = 'toast-top-right';
+	</script>
+
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+					aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" id="brand">课&nbsp;堂&nbsp;助&nbsp;手</a>
+			</div>
+
+			<div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="http://localhost:10001/curriculum">课程表</a></li>
+					<li><a href="http://localhost:10001/realtime">上课实时统计</a></li>
+					<li class="dropdown">
+          				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">班级信息<span class="caret"></span></a>
+          				<ul class="dropdown-menu">
+            				<li><a href="http://localhost:10001/students">学生列表</a></li>
+            				<li><a href="http://localhost:10001/cs">班级信息统计</a></li>
+          				</ul>
+        			</li>
+					<li><a href="http://localhost:10001/subject">学科信息统计</a></li>
+					<li><a href="http://localhost:10001/exception">特殊情况</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href='http://localhost:10001/login' id='logout'>登出</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="t_class">
+		<h4 id="t_title"></h4>
+		<button class="btn btn-lg btn-link" id="add" onclick="add()">
+			添加一行 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</button>
+	</div>
+
+	<div id="course">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>时间</th>
+					<th>星期一</th>
+					<th>星期二</th>
+					<th>星期三</th>
+					<th>星期四</th>
+					<th>星期五</th>
+					<th>星期六</th>
+					<th>星期日</th>
+					<th>删除一行</th>
+				</tr>
+			</thead>
+			<tbody id="t_body">
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

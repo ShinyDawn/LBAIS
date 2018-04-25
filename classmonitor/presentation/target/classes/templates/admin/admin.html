@@ -1,0 +1,268 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>课堂助手</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script th:src="@{/js/ref/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/ref/jquery.min.js}"></script>
+<script th:src="@{js/ref/jquerysession.js}"></script>
+<script th:src="@{js/ref/bootstrap.min.js}"></script>
+<script th:src="@{js/checkLogin.js}"></script>
+<link rel="stylesheet" th:href="@{css/bootstrap.css}" />
+<style>
+#brand {
+	margin-left: 20px;
+	color: #38a626;
+	font-weight: bold;
+	margin-right: 50px;
+}
+
+#t_class {
+	margin-top: 80px;
+	margin-left: 50px;
+	margin-bottom: 20px;
+	width: 100%;
+	float: left;
+}
+
+#t_title {
+	float: left;
+}
+
+#modify {
+	float: left;
+	margin-left: 10px;
+	padding-top: 8px;
+	width: 120px;
+	height: 35px;
+	text-align: center;
+	font-size: 16px;
+	text-decoration: none
+}
+
+#logout {
+	margin-left: 20px;
+}
+
+#student {
+	margin-left: 50px;
+	margin-right: 50px;
+}
+#myModal{
+	margin-top:10px;
+}
+.modal-body{
+	padding-left:20px;
+	padding-right:20px;
+}
+.container{
+	width:100%;
+}
+#confirm{height:35px}
+.form-control{margin-bottom:10px}
+#alert{margin-top:5px;margin-bottom:5px;height:20px;color:red}
+#title{color:grey}
+.glyphicon-trash{color:red}
+.glyphicon-edit{color:#38a626}
+.glyphicon-trash:hover{color:orange}
+.glyphicon-edit:hover{color:#7CCD7C}
+h5{color:grey}
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+$.ajax({
+	type : "POST",
+	url : "http://localhost:10002/admin",
+	crossDomain : true,
+	success : function(data) {
+		document.getElementById("aaa").innerHTML+="<tbody>";
+		for(var i = 0;i<data.length;i++){
+			var u = data[i];
+			var html = "<tr class='line' id='"+u.id+"'>";
+			html+="<td>"+u.uid+"</td>";
+			html+="<td>"+u.name+"</td>";
+			html+="<td>"+u.email+"</td>";
+			html+="<td>"+u.tel+"</td>";
+			html+="<td>"+u.password+"</td>";
+			html+="<td><span class='glyphicon glyphicon-edit' aria-hidden='true' data-toggle='modal'"+
+			" data-target='#myModal' onclick='update("+u.id+")'></span></td>";
+			if(u.uid=="admin")
+				html+="<td></td>";
+			else
+				html+="<td><span class='glyphicon glyphicon-trash' aria-hidden='true' onclick='del("
+					+u.id+")'></span></td>";
+			html += "</tr>";
+			document.getElementById("aaa").innerHTML+=html;
+		}
+		document.getElementById("aaa").innerHTML+="</tbody>";
+	}
+});
+
+	function update(id){
+		document.getElementById("alert").innerText="";
+		var line = document.getElementById(id);
+		var uid = line.children[0].innerText;
+		var name = line.children[1].innerText;
+		var email = line.children[2].innerText;
+		var tel = line.children[3].innerText;
+		var password = line.children[4].innerText;
+		document.getElementById("uid").setAttribute("disabled","disabled");
+		document.getElementById("title").innerText=uid+"员工信息";
+		document.getElementById("uid").value=uid;
+		document.getElementById("name").value=name;
+		document.getElementById("email").value=email;
+		document.getElementById("tel").value=tel;
+		document.getElementById("password").value=password;
+		document.getElementById("contain").innerHTML="<button class='btn btn-primary btn-block' id='confirm' onclick='submit("+id+")'>确认修改</button>";
+	}
+	
+	function add(){
+		document.getElementById("alert").innerText="";
+		document.getElementById("title").innerText="新增员工";
+		document.getElementById("uid").value="";
+		document.getElementById("name").value="";
+		document.getElementById("email").value="";
+		document.getElementById("tel").value="";
+		document.getElementById("password").value="";
+		document.getElementById("contain").innerHTML="<button class='btn btn-primary btn-block' id='confirm' onclick='submit(0)'>确认添加</button>";
+	}
+	
+	function del(id){
+		$.ajax({
+			type : "POST",
+			url : "http://localhost:10002/admin/delete",
+			data : {
+				id : id
+			},
+			crossDomain : true,
+			success : function(data) {
+				window.location.reload();
+			}
+		});
+	}
+	
+	function submit(id){
+		var uid = document.getElementById("uid").value;
+		var name = document.getElementById("name").value;
+		var email = document.getElementById("email").value;
+		var tel = document.getElementById("tel").value;
+		var password = document.getElementById("password").value;
+		
+		if(uid=="")
+			document.getElementById("alert").innerText="*请输入员工号";
+		else if(name=="")
+			document.getElementById("alert").innerText="*请输入姓名";
+		else if(email=="")
+			document.getElementById("alert").innerText="*请输入邮箱";
+		else if(tel=="")
+			document.getElementById("alert").innerText="*请输入电话";
+		else if(password=="")
+			document.getElementById("alert").innerText="*请输入密码";
+		else if(password.length < 9)
+			document.getElementById("alert").innerText="*请输入至少9位的密码";
+		else{
+			document.getElementById("alert").innerText="";
+			var baseurl = "http://localhost:10002/admin/modify";
+			if(id==0)
+				baseurl = "http://localhost:10002/admin/add";
+			$.ajax({
+				type : "POST",
+				url : baseurl,
+				data : {
+					id : id,
+					uid : uid,
+					name : name,
+					email : email,
+					tel : tel,
+					password : password
+				},
+				crossDomain : true,
+				success : function(data) {
+					window.location.reload();
+				}
+			});
+		}
+	}
+/*]]>*/
+</script>
+</head>
+
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+					aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" id="brand">课&nbsp;堂&nbsp;助&nbsp;手</a>
+			</div>
+
+			<div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href='http://localhost:10001/login' id='logout'>登出</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="t_class">
+		<h4 id="t_title">员工信息管理表</h4>
+		<button class="btn btn-lg btn-link" id="modify" data-toggle="modal"
+			data-target="#myModal" onclick="add()">
+			添加员工<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</button>
+	</div>
+
+	<div id="student">
+		<table class="table table-bordered" id="aaa">
+			<thead>
+				<tr>
+					<th>员工号</th>
+					<th>姓名</th>
+					<th>邮箱</th>
+					<th>电话</th>
+					<th>密码</th>
+					<th>修改</th>
+					<th>删除</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" id="close_btn"
+						data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel"
+						style="padding-left:13px;color:#38a626;">课堂助手</h4>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+							<h4 class="title" id="title">教职员工信息</h4>
+							<h5>员工号</h5>
+							<input id="uid" class="form-control" placeholder="员工号" autofocus="autofocus" />
+							<h5>姓名</h5>
+							<input id="name" class="form-control" placeholder="姓名"/>
+							<h5>邮箱</h5>
+							<input id="email" class="form-control" placeholder="邮箱"/>
+							<h5>电话</h5>
+							<input id="tel" class="form-control" placeholder="电话"/>
+							<h5>密码</h5>
+							<input id="password" class="form-control" placeholder="密码"/>
+							<div id="alert"></div>
+							<div id="contain"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

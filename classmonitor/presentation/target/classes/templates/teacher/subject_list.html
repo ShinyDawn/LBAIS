@@ -1,0 +1,514 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>课堂助手</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script th:src="@{/js/ref/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/ref/jquery.min.js}"></script>
+<script th:src="@{/js/ref/jquery.form.js}"></script>
+<script th:src="@{js/ref/jquerysession.js}"></script>
+<script th:src="@{js/ref/bootstrap.min.js}"></script>
+<script th:src="@{js/ref/fileinput.min.js}"></script>
+<script th:src="@{js/ref/zh.js}"></script>
+<script th:src="@{js/ref/toastr.min.js}"></script>
+<link rel="stylesheet" th:href="@{css/toastr.min.css}" />
+<link rel="stylesheet" th:href="@{css/bootstrap.css}" />
+<link rel="stylesheet" th:href="@{css/fileinput.min.css}" />
+<style>
+#brand {
+	margin-left: 20px;
+	color: #38a626;
+	font-weight: bold;
+	margin-right: 50px;
+}
+
+#t_class {
+	margin-top: 80px;
+	margin-left: 50px;
+	margin-right: 50px;
+	margin-bottom: 40px;
+	width: 90%;
+	float: left;
+	margin-bottom: 40px;
+}
+
+#t_title {
+	float: left;
+}
+
+#add {
+	float: left;
+	margin-left: 10px;
+	padding-top: 6px;
+	width: 130px;
+	height: 35px;
+	text-align: center;
+	font-size: 16px;
+	text-decoration: none
+}
+
+#logout {
+	margin-left: 20px;
+}
+
+#list {
+	float: left;
+	width: 100%;
+	margin-left: 50px;
+}
+
+.block {
+	padding: 10px;
+	padding-left: 16px;
+	float: left;
+	width: 200px;
+	height: 120px;
+	box-shadow: 6px 6px 5px #9C9C9C;
+	margin-right: 30px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+}
+
+.tl {
+	float: left;
+	width: 45%;
+}
+
+.line {
+	float: left;
+	color: #337ab7;
+	width: 55%;
+}
+
+.inner {
+	width: 100%;
+	height: 80px;
+}
+
+.glyphicon-trash {
+	float: right;
+	margin-top: 5px;
+	color: red;
+}
+
+.glyphicon-edit {
+	float: right;
+	margin-top: 5px;
+	margin-right: 15px;
+	color: #38a626
+}
+
+#myModal {
+	margin-top: 10px;
+}
+
+.modal-body {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.container {
+	width: 100%;
+}
+
+.title {
+	color: grey;
+}
+
+#confirm {
+	height: 35px
+}
+
+.form-control {
+	margin-bottom: 10px
+}
+
+#alert {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	height: 20px;
+	color: red
+}
+
+#download {
+	float: right;
+	padding-top: 6px;
+	width: 120px;
+	height: 35px;
+	text-align: center;
+	font-size: 16px;
+}
+
+#alert1 {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	height: 20px;
+	color: red
+}
+
+.grade {
+	margin-top: 40px;
+	float: left;
+	width: 100%;
+	color: grey
+}
+
+.upload {
+	float: left;
+	margin-top: 5px;
+	color: #337ab7;
+}
+
+h5 {
+	color: grey
+}
+</style>
+<script type="text/javascript">
+	/*<![CDATA[*/
+	$(function() {
+		var oFileInput = new FileInput();
+	});
+
+	var FileInput = function() {
+		var control = $('#upload');
+
+		//初始化上传控件的样式
+		control.fileinput({
+			language : 'zh', //设置语言
+			allowedFileExtensions : [ 'xls', 'xlsx' ],//接收的文件后缀
+			showUpload : false, //是否显示上传按钮
+			showCaption : false,//是否显示标题
+			dropZoneEnabled : false,
+			allowedPreviewTypes : [ 'image' ],
+			autoReplace : true,
+			maxFileCount : 1, //表示允许同时上传的最大文件个数
+			minFileCount : 1, //表示允许同时上传的最大文件个数
+			enctype : 'multipart/form-data',
+			validateInitialCount : true,
+			msgFilesTooMany : "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+		});
+	}
+
+	var cid = $.session.get('cid');
+
+	$.ajax({
+		type : "POST",
+		url : "http://localhost:10002/classroom/info",
+		data : {
+			id : cid
+		},
+		crossDomain : true,
+		success : function(data) {
+			document.getElementById("t_title").innerText = data.grade + "年级"
+					+ data.cname + "班科目列表";
+		}
+	});
+	$
+			.ajax({
+				type : "POST",
+				url : "http://localhost:10002/subject",
+				data : {
+					cid : cid
+				},
+				crossDomain : true,
+				success : function(data) {
+					var html = "";
+					var grade = "";
+					for (var i = 0; i < data.length; i++) {
+						var s = data[i];
+						html += "<div class='block'>";
+						html += "<div class='inner' onclick='see(" + s.id
+								+ ")'>";
+						html += "<div class='tl'>学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;科</div><div class='line' id='a"+s.id+"'>"
+								+ s.name + "</div>";
+						html += "<div class='tl'>教&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;师</div><div class='line' id='b"+s.id+"'>"
+								+ s.tname + "</div>";
+						html += "<div class='tl'>考试次数</div><div class='line'>"
+								+ s.num + "次</div>";
+						html += "<div class='tl'>均&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分</div><div class='line'>"
+								+ s.average + "分</div></div>";
+						html += "<div class='upload' data-toggle='modal' data-target='#uploadModal'>"
+								+ "<span class='glyphicon glyphicon-upload' aria-hidden='true' onclick='upload("
+								+ s.id + ")'></span></div>";
+						html += "<span class='glyphicon glyphicon-trash' aria-hidden='true' onclick='del("
+								+ s.id + ")'></span>";
+						html += "<span class='glyphicon glyphicon-edit' aria-hidden='true' data-toggle='modal' data-target='#myModal'"
+								+ " onclick='update(" + s.id + ")'></span>";
+						html += "</div>"
+					}
+					document.getElementById("list").innerHTML += html;
+					$(".inner").hover(function() {
+						$(this).parent().css({
+							"background" : "#644790",
+							"color" : "white"
+						});
+						$(this).parent().children().css({
+							"color" : "white"
+						});
+						$(this).children().css({
+							"color" : "white"
+						});
+					});
+					$(".inner").mouseleave(function() {
+						$(this).parent().css({
+							"background" : "white",
+							"color" : "black"
+						});
+						$(this).children().css({
+							"color" : "black"
+						});
+						$(".glyphicon-trash").css({
+							"color" : "red"
+						});
+						$(".glyphicon-edit").css({
+							"color" : "#38a626"
+						});
+						$(".upload").css({
+							"color" : "#337ab7"
+						});
+						$(".line").css({
+							"color" : "#337ab7"
+						});
+					});
+					$(".glyphicon-trash").hover(function() {
+						$(this).css({
+							"color" : "orange"
+						});
+					});
+					$(".glyphicon-trash").mouseleave(function() {
+						$(this).css({
+							"color" : "red"
+						});
+					});
+					$(".glyphicon-edit").hover(function() {
+						$(this).css({
+							"color" : "#7CCD7C"
+						});
+					});
+					$(".glyphicon-edit").mouseleave(function() {
+						$(this).css({
+							"color" : "#38a626"
+						});
+					});
+					$(".upload").hover(function() {
+						$(this).css({
+							"color" : "#81b3df"
+						});
+					});
+					$(".upload").mouseleave(function() {
+						$(this).css({
+							"color" : "#337ab7"
+						});
+					});
+				}
+			});
+
+	function see(id) {
+		$.session.set('subject', id);
+		window.location.href = "http://localhost:10001/single";
+	}
+
+	function update(id) {
+		document.getElementById("alert").innerText = "";
+		var name = document.getElementById("a" + id).innerText;
+		var tname = document.getElementById("b" + id).innerText;
+		document.getElementById("title").innerText = "修改科目信息";
+		document.getElementById("name").value = name;
+		document.getElementById("tname").value = tname;
+		document.getElementById("contain").innerHTML = "<button class='btn btn-primary btn-block' id='confirm' onclick='submit("
+				+ id + ")'>确认修改</button>";
+	}
+
+	function add() {
+		document.getElementById("alert").innerText = "";
+		document.getElementById("title").innerText = "新增科目";
+		document.getElementById("name").value = "";
+		document.getElementById("tname").value = "";
+		document.getElementById("contain").innerHTML = "<button class='btn btn-primary btn-block' id='confirm' onclick='submit(0)'>确认添加</button>";
+	}
+
+	function del(id) {
+		$.ajax({
+			type : "POST",
+			url : "http://localhost:10002/subject/delete",
+			data : {
+				id : id
+			},
+			crossDomain : true,
+			success : function(data) {
+				window.location.reload();
+			}
+		});
+	}
+
+	function submit(id) {
+		var name = document.getElementById("name").value;
+		var tname = document.getElementById("tname").value;
+
+		if (name == "")
+			document.getElementById("alert").innerText = "*请输入学科名称";
+		else if (tname == "")
+			document.getElementById("alert").innerText = "*请输入指导老师";
+		else {
+			document.getElementById("alert").innerText = "";
+			var baseurl = "http://localhost:10002/subject/update";
+			if (id == 0)
+				baseurl = "http://localhost:10002/subject/add";
+			$.ajax({
+				type : "POST",
+				url : baseurl,
+				data : {
+					id : id,
+					cid : cid,
+					name : name,
+					tname : tname
+				},
+				crossDomain : true,
+				success : function(data) {
+					if (data == -1) {
+						document.getElementById("alert").innerText = "*学科已存在";
+					} else {
+						window.location.reload();
+					}
+				}
+			});
+		}
+	}
+
+	function upload(id) {
+		document.getElementById("cid").value = cid;
+		document.getElementById("sid").value = id;
+	}
+	
+	$(document).ready(function() {  
+	       $("#uploadForm").ajaxForm(function(data){  
+	    	   if (data == 0) {
+					toastr.success('上传成功');
+					$('#ccc').click();
+					setTimeout("window.location.reload();",3000);
+				} else {
+					toastr.error('上传失败');
+				}
+	       });           
+	});  
+	/*]]>*/
+</script>
+</head>
+
+<body>
+	<script type="text/javascript">
+		toastr.options.positionClass = 'toast-top-right';
+	</script>
+
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+					aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" id="brand">课&nbsp;堂&nbsp;助&nbsp;手</a>
+			</div>
+
+			<div class="navbar-collapse collapse"
+				id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li><a href="http://localhost:10001/curriculum">课程表</a></li>
+					<li><a href="http://localhost:10001/realtime">上课实时统计</a></li>
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-haspopup="true"
+						aria-expanded="false">班级信息<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="http://localhost:10001/students">学生列表</a></li>
+							<li><a href="http://localhost:10001/cs">班级信息统计</a></li>
+						</ul></li>
+					<li class="active"><a href="#">学科信息统计</a></li>
+					<li><a href="http://localhost:10001/exception">特殊情况</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href='http://localhost:10001/login' id='logout'>登出</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="t_class">
+		<h4 id="t_title">学科列表</h4>
+		<button class="btn btn-lg btn-link" id="add" data-toggle="modal"
+			data-target="#myModal" onclick="add()">
+			添加科目<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</button>
+
+		<a class="btn btn-lg btn-primary" id="download"
+			href="http://localhost:10002/subject/download"> 下载模板<span
+			class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+		</a>
+	</div>
+
+	<div id="list"></div>
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" id="close_btn"
+						data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel"
+						style="padding-left: 13px; color: #38a626">课堂助手</h4>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<h4 class="title" id="title"></h4>
+						<h5>学科名称</h5>
+						<input id="name" class="form-control" placeholder="学科名称"
+							autofocus="autofocus" />
+						<h5>指导教师</h5>
+						<input id="tname" class="form-control" placeholder="指导教师" />
+						<div id="alert"></div>
+						<div id="contain"></div>
+					</div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true" id="ccc">&times;</button>
+					<h4 class="modal-title" style="padding-left: 13px; color: #38a626">课堂助手</h4>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<form id="uploadForm" enctype="multipart/form-data" method="post" action="http://localhost:10002/subject/upload">
+							<h4 class="title">上传成绩</h4>
+							<input id="file" name="uploadFile" type="file" class="file"
+								data-show-preview="false" data-show-upload="false" />
+							<h4 class="title">考试日期</h4>
+							<input id="date" name="date" class="form-control"
+								placeholder="考试日期 YYYY-mm-DD" />
+							<div id="alert1"></div>
+							<input hidden="true" id="sid" name="sid"></input>
+							<input hidden="true" id="cid" name="cid"></input>
+							<button type="submit" class='btn btn-primary btn-block'>确认上传</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+</body>
+</html>

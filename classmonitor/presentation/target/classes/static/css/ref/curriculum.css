@@ -1,0 +1,56 @@
+#brand {
+	margin-left: 20px;
+	color: #38a626;
+	font-weight: bold;
+	margin-right: 50px;
+}
+
+#t_class {
+	margin-top: 80px;
+	margin-left: 50px;
+	margin-bottom: 20px;
+	width: 100%;
+	float: left;
+}
+
+#t_title {
+	float: left;
+}
+
+#add {
+	float: left;
+	margin-left: 10px;
+	padding-top: 8px;
+	width: 120px;
+	height: 35px;
+	text-align: center;
+	font-size: 16px;
+	text-decoration: none
+}
+
+#course {
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+#logout {
+	margin-left: 20px;
+}
+
+.time {
+	width: 150px;
+}
+.aaa{
+	border:0;
+	box-shadow: 0 0 0;
+	width:120px;
+	height:20px;
+	padding:0;
+	margin:0;
+}
+.bbb{float:left;width:25px;}
+.ccc{float:left;}
+th{width:180px;}
+.aaa:focus{outline: none;  border:0;box-shadow: 0 0 0;}
+.glyphicon-trash{color:red}
+.glyphicon-trash:hover{color:orange}

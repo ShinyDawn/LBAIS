@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>课堂助手</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script th:src="@{/js/ref/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/ref/jquery.min.js}"></script>
+<script th:src="@{js/ref/jquerysession.js}"></script>
+<script th:src="@{js/ref/bootstrap.min.js}"></script>
+<script th:src="@{js/checkLogin.js}"></script>
+<link rel="stylesheet" th:href="@{css/bootstrap.css}" />
+<style>
+#brand {
+	margin-left: 20px;
+	color: #38a626;
+	font-weight: bold;
+	margin-right: 50px;
+}
+#t_class {
+	margin-top: 80px;
+	margin-bottom: 20px;
+	width: 100%;
+}
+#t_title{
+	width: 100%;
+	text-align:center;
+	color:#4F4F4F;
+}
+</style>
+</head>
+
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+					aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" id="brand">课&nbsp;堂&nbsp;助&nbsp;手</a>
+			</div>
+
+			<div class="navbar-collapse collapse"
+				id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li><a href="http://localhost:10001/class">班级列表</a></li>
+					<li><a href="http://localhost:10001/ss">全校班级信息统计</a></li>
+					<li><a href="http://localhost:10001/number">班级人数统计</a></li>
+					<li class="active"><a href="#">帮助文档</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href='http://localhost:10001/login' id='logout'>登出</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="t_class">
+		<h3 id="t_title">课堂助手&nbsp;帮助文档</h3>
+		<div id="t_body">
+			<p>易与天地准，故能弥纶天地之道。
+仰以观於天文，俯以察於地理，是故知幽明之故。原始反终，故知死生之说。精气为物，游魂为变，是故知鬼神之情状。
+与天地相似，故不违。知周乎万物，而道济天下，故不过。旁行而不流，乐天知命，故不忧。安土敦乎仁，故能爱。
+范围天地之化而不过，曲成万物而不遗，通乎昼夜之道而知，故神无方而易无体。
+《易经·系辞上传》第五章
+一阴一阳之谓道，继之者善也，成之者性也。
+仁者见之谓之仁，知者见之谓之知，百姓日用不知；故君子之道鲜矣！
+显诸仁，藏诸用，鼓万物而不与圣人同忧，盛德大业至矣哉！
+富有之谓大业，日新之谓盛德。
+生生之谓易，成象之谓乾，效法之谓坤，极数知来之谓占，通变之谓事，阴阳不测之谓神。</p>
+		</div>
+	</div>
+</body>
+</html>
