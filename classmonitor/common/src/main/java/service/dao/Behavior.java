@@ -6,7 +6,7 @@ import javax.persistence.Id;
 /**
  * Created by elva on 2018/4/30.
  */
-public class behavior {
+public class Behavior {
     @Id
     @GeneratedValue
     private int id;
