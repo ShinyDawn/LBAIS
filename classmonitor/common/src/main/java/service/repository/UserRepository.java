@@ -7,7 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import service.dao.User;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface
+UserRepository extends JpaRepository<User, Integer> {
 
 	public User findByUidAndPassword(String uid, String password);
 
