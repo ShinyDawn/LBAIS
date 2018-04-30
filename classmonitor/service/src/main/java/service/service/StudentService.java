@@ -17,6 +17,7 @@ public interface StudentService {
 
 	public void delete(int id);
 
+	//part of Personal Model
 	public List<AttendanceVO> getAttendanceInfo(int cid,int sid,int period);
 	public double getAttendenceRate(int cid,int sid,int period);
 

@@ -22,4 +22,9 @@ public interface ClassroomService {
 	public List<StudentNewVO> getStudentInfoBySimpleFilter(int cid,String problem);
 
 	public List<StudentNewVO> getStudentInfoByAdvancedFilter(int cid);
+
+	public double getClassLivenessRate(int cid,String date);
+	public double getClassAttendenceRate(int cid,String date);
+	public int getClassEvent(int cid,String date);
+	public void leaveForApproval(int cid,int sid,String date,int tid,int reason);
 }

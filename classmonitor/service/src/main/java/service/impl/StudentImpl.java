@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import service.dao.Student;
 import service.repository.StudentRepository;
 import service.service.StudentService;
+import service.vo.AttendanceVO;
+import service.vo.DisciplineVO;
+import service.vo.LivenessVO;
 
 @Service
 public class StudentImpl implements StudentService {
@@ -52,4 +55,27 @@ public class StudentImpl implements StudentService {
 	public void delete(int id) {
 		studentRepo.deleteOne(id);
 	}
+
+	//part of Personal Model
+	public List<AttendanceVO> getAttendanceInfo(int cid, int sid, int period){
+		return null;
+	};
+
+	public double getAttendenceRate(int cid,int sid,int period){
+		return 0;
+	};
+
+	public List<LivenessVO> geLivenessInfo(int cid, int sid, int period, String subject){
+		return null;
+	};
+	public double getLivenessRate(int cid,int sid,int period,String subject){
+		return 0;
+	};
+
+	public List<DisciplineVO> getDisplineInfo(int cid, int sid, int period){
+		return null;
+	};
+	public double getDisciplineRate(int cid,int sid,int period){
+		return 0;
+	};
 }
