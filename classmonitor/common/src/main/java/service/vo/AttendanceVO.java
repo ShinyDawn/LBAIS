@@ -10,6 +10,14 @@ public class AttendanceVO {
     private String behavior;
     private String status;
 
+    public AttendanceVO(String date,int tid,String subject,String behavior,String status){
+        this.date=date;
+        this.tid=tid;
+        this.subject=subject;
+        this.behavior=behavior;
+        this.status=status;
+    }
+
     public void setDate(String date) {
         this.date = date;
     }

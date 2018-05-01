@@ -10,23 +10,8 @@ import java.util.List;
 
 /**
  * Created by elva on 2018/4/30.
- *     private int id;
- //class id
- private int cid;
- //student id in class
- private int sid;
- //date absent; Format:YYYY-MM-DD
- private String date;
- //time period absent
- private int tid;
- //illness or personal affairs
- private String reason;
  */
 public interface AbsenteeRepository extends JpaRepository<Absentee, Integer> {
-
-    public List<Absentee> findByCidAndSid(int cid, int sid);
-
-    public List<Absentee> findAbsenteesByCidAndSidAndDateIsAfter(int cid,int sid,String date);
 
     @Transactional
     @Modifying

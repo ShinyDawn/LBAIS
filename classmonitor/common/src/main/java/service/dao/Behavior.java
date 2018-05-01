@@ -1,11 +1,13 @@
 package service.dao;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
  * Created by elva on 2018/4/30.
  */
+@Entity
 public class Behavior {
     @Id
     @GeneratedValue

@@ -14,6 +14,11 @@ public interface CurriculumRepository extends JpaRepository<Curriculum, Integer>
 	public List<Curriculum> findByCid(int cid);
 	
 	public Curriculum findByTidAndCidAndDay(int tid,int cid,int day);
+
+	@Query("SELECT count(id)\n" +
+			"FROM Curriculum \n" +
+			"WHERE cid = ?1 AND day = 1")
+	public int findHowManyLessonsOneDay(int cid);
 	
 	@Transactional
 	@Modifying

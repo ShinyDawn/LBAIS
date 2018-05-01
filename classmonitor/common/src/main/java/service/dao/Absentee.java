@@ -1,14 +1,18 @@
 package service.dao;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
  * Created by elva on 2018/4/30.
  */
+@Entity
 public class Absentee {
     @Id
     @GeneratedValue
+
+    //请假表
     private int id;
     //class id
     private int cid;
