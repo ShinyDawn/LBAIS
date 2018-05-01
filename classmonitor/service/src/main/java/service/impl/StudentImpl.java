@@ -62,17 +62,25 @@ public class StudentImpl implements StudentService {
     }
 
     //part of Personal Model
+
+    /**
+     *
+     * @param cid class id
+     * @param sid student id
+     * @param period 1,7,30,...
+     * @return 缺勤情况列表
+     */
     public List<AttendanceVO> getAttendanceInfo(int cid, int sid, int period) {
 
         String date = DateUtil.getPassedDate(period, DateUtil.getDate());
         List<Behavior> behaviorList = behaviorRipository.findAbsentee(cid, sid, date);
         List<AttendanceVO> attendanceVOList = new ArrayList<>();
         if (behaviorList == null || behaviorList.isEmpty()) {
-			return attendanceVOList;
+            return attendanceVOList;
         }
 
-        for (Behavior b:behaviorList){
-            AttendanceVO attendanceVO = new AttendanceVO(b.getDate(),b.getTid(),b.getPlace(),b.getBehavior(),b.getStatus());
+        for (Behavior b : behaviorList) {
+            AttendanceVO attendanceVO = new AttendanceVO(b.getDate(), b.getTid(), b.getPlace(), b.getBehavior(), b.getStatus());
             attendanceVOList.add(attendanceVO);
             System.out.println(attendanceVO.toString());
         }
@@ -81,20 +89,20 @@ public class StudentImpl implements StudentService {
     }
 
     public double getAttendenceRate(int cid, int sid, int period) {
-        //一天有多少课时
-        int lessonADay = 0;
-        //迟到算0.5课时
+
+        //迟到算0.5课时（不管有无请假）
         double lateForClass = 0;
-        //早退算0.5课时
+        //早退算0.5课时（不管有无请假）
         double earlyOut = 0;
-        //请假算1课时；自习请假不算入课时
+        //缺勤请假算1课时；自习缺勤请假不算入课时
         double absentee = 0;
-        //旷课算半天的课时：假设每天的课时相等；自习旷课算1课时
-        double cuttingSchool=0;
+        //缺勤旷课算半天的课时（假设每天的课时相等）；自习旷课算1课时
+        double cuttingSchool = 0;
+
         //总课时
         double totalperiods = 0;
 
-        double attendenceRate=0;
+        double attendenceRate = 0;
 
         return attendenceRate;
     }
