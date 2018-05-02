@@ -5,7 +5,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import service.dao.Behavior;
-import service.vo.AttendanceCalculateVO;
+import service.vo.LivenessDataVO;
+
 
 import java.util.List;
 
@@ -52,6 +53,24 @@ public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
             "FROM Behavior\n" +
             "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND behavior = '请假'AND status<>'已请假' AND place ='自习'")
     public int countCuttingStudy(int cid,int sid,String period);
+
+    /**
+     *     private String date;
+     private String Subject;
+     //个人举手次数
+     private double timesOfHandsUp;
+     //提问次数
+     private double timesOfAllHandsUp;
+     //发呆时长
+     private double timeOfDull;
+     //缺勤时长
+     private double timeOfAbsentee;
+     //课时长
+     private double timeOfLesson;
+     */
+
+//    @Query("SELECT new service.vo.LivenessDataVO(date,place,count(id))from Behavior where cid=?1 and sid = ?2 and date>=?3 and behavior = '举手' group by date,place")
+//    public List<LivenessDataVO> countHandsUp(int cid, int sid, String period);
 
 
 

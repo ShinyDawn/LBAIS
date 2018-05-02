@@ -30,6 +30,8 @@ public class Behavior {
     private int tid;
     //redundant: the lesson name; help to classify wheather happened in a study or a lesson
     private String place;
+    //time that behavior lasts(min)
+    private double interval;
 
     public void setTid(int tid) {
         this.tid = tid;
@@ -109,6 +111,14 @@ public class Behavior {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public double getInterval() {
+        return interval;
+    }
+
+    public void setInterval(double interval) {
+        this.interval = interval;
     }
 }
 

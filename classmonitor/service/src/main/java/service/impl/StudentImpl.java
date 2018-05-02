@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import service.dao.Behavior;
 import service.dao.Student;
 import service.repository.BehaviorRepository;
+import service.repository.CurriculumRepository;
 import service.repository.StudentRepository;
 import service.service.StudentService;
 import service.util.DateUtil;
@@ -21,6 +22,7 @@ public class StudentImpl implements StudentService {
     @Autowired
     StudentRepository studentRepo;
     BehaviorRepository behaviorRipository;
+    CurriculumRepository curriculumRepository;
 
     public List<Student> getInfo(int cid) {
         return studentRepo.findByCid(cid);
@@ -64,9 +66,8 @@ public class StudentImpl implements StudentService {
     //part of Personal Model
 
     /**
-     *
-     * @param cid class id
-     * @param sid student id
+     * @param cid    class id
+     * @param sid    student id
      * @param period 1,7,30,...
      * @return 缺勤情况列表
      */
@@ -90,28 +91,57 @@ public class StudentImpl implements StudentService {
 
     public double getAttendenceRate(int cid, int sid, int period) {
 
+        String date = DateUtil.getPassedDate(period, DateUtil.getDate());
+        int courses = curriculumRepository.countCoursesOneDay(cid);
+
         //迟到算0.5课时（不管有无请假）
-        double lateForClass = 0;
+        double lateForClass = 0.5 * behaviorRipository.countLateForClass(cid, sid, date);
         //早退算0.5课时（不管有无请假）
-        double earlyOut = 0;
+        double earlyOut = 0.5 * behaviorRipository.countEarlyOut(cid, sid, date);
         //缺勤请假算1课时；自习缺勤请假不算入课时
-        double absentee = 0;
+        double absentee = 1.0 * behaviorRipository.countAbsentee(cid, sid, date);
         //缺勤旷课算半天的课时（假设每天的课时相等）；自习旷课算1课时
-        double cuttingSchool = 0;
+        double cuttingSchool = 0.5 * courses * behaviorRipository.countCuttingLesson(cid, sid, date) + behaviorRipository.countCuttingStudy(cid, sid, date);
 
         //总课时
-        double totalperiods = 0;
+        double totalperiods = curriculumRepository.countTotalCourses(cid, date, DateUtil.getDate());
 
-        double attendenceRate = 0;
+        double attendenceRate =1;
+        attendenceRate= 1 - (lateForClass + earlyOut + absentee + cuttingSchool) / totalperiods;
 
         return attendenceRate;
     }
 
     ;
 
-    public List<LivenessVO> geLivenessInfo(int cid, int sid, int period, String subject) {
+    public List<LivenessVO> getLivenessInfo(int cid, int sid, int period) {
+
+        /**
+         *     private String Date;
+         *     private String subject;
+         *     private double livenessRate;
+         *     private double concentrationRate;
+         *     private double handsUpTimes;
+         */
+        double livenessRate=0;
+        double concentrationRate=0;
+        double handsUpTimes=0;
+        String subject;
         return null;
     }
+
+    public List<LivenessVO> getLivenessInfoBysubject(int cid,int sid,int period,String subject){
+        List<LivenessVO> livenessVOList=new ArrayList<>();
+
+        String date = DateUtil.getPassedDate(period, DateUtil.getDate());
+
+        double livenessRate=0;
+        double concentrationRate=0;
+        double handsUpTimes=0;
+
+        return null;
+    };
+
 
     ;
 

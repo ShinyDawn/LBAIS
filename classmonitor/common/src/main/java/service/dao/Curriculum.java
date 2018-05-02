@@ -13,6 +13,7 @@ public class Curriculum {
 	private int tid;
 	private int day;
 	private String course;
+	private String date;
 
 	public int getId() {
 		return id;
@@ -52,5 +53,12 @@ public class Curriculum {
 
 	public void setCourse(String course) {
 		this.course = course;
+	}
+
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
 	}
 }

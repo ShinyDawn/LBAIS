@@ -21,7 +21,8 @@ public interface StudentService {
 	public List<AttendanceVO> getAttendanceInfo(int cid,int sid,int period);
 	public double getAttendenceRate(int cid,int sid,int period);
 
-	public List<LivenessVO> geLivenessInfo(int cid,int sid,int period,String subject);
+	public List<LivenessVO> getLivenessInfoBysubject(int cid,int sid,int period,String subject);
+	public List<LivenessVO> getLivenessInfo(int cid,int sid,int period);
 	public double getLivenessRate(int cid,int sid,int period,String subject);
 
 	public List<DisciplineVO> getDisplineInfo(int cid,int sid,int period);

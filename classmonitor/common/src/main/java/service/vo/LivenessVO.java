@@ -6,8 +6,11 @@ package service.vo;
 public class LivenessVO {
     private String Date;
     private String subject;
+    //课堂参与度
     private double livenessRate;
+    //课堂专注度
     private double concentrationRate;
+    //课堂举手次数
     private double handsUpTimes;
 
     public void setDate(String date) {
