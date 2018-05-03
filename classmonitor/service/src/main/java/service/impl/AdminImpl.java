@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import service.dao.User;
+import service.entity.User;
 import service.repository.UserRepository;
 import service.service.AdminService;
 

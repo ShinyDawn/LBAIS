@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import service.dao.Score;
+import service.entity.Score;
 import service.vo.ScoreVO;
 
 public interface ScoreRepository extends JpaRepository<Score, Integer> {

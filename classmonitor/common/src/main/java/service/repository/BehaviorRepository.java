@@ -1,10 +1,8 @@
 package service.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
-import service.dao.Behavior;
+import service.entity.Behavior;
 import service.vo.LivenessDataVO;
 
 
@@ -14,9 +12,8 @@ import java.util.List;
  * Created by elva on 2018/4/30.
  */
 public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
-    public List<Behavior> findBehaviorsByCidAndSid(int cid,int sid);
 
-    @Query("SELECT b from Behavior b WHERE b.cid=?1 AND b.sid=?2 and (b.behavior='缺勤' OR b.behavior = '迟到'OR b.behavior='早退') AND b.date>?3 ORDER BY date DESC")
+    @Query("select b from Behavior b where b.cid=?1 and b.sid=?2 and (b.action='缺勤' or b.action = '迟到'or b.action='早退')and b.date>?3 order by b.date desc")
     public List<Behavior> findAbsentee(int cid,int sid,String period);
 
     /**
@@ -31,27 +28,27 @@ public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
      */
     @Query("SELECT count(id)\n" +
             "FROM Behavior\n" +
-            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND behavior = '迟到'")
+            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND action = '迟到'")
     public int countLateForClass(int cid,int sid,String period);
 
     @Query("SELECT count(id)\n" +
             "FROM Behavior\n" +
-            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND behavior = '早退'")
+            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND action = '早退'")
     public int countEarlyOut(int cid,int sid,String period);
 
     @Query("SELECT count(id)\n" +
             "FROM Behavior\n" +
-            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND behavior = '请假'AND status='已请假' AND place <>'自习'")
+            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND action = '缺勤'AND status='已请假' AND place <>'自习'")
     public int countAbsentee(int cid,int sid,String period);
 
     @Query("SELECT count(id)\n" +
             "FROM Behavior\n" +
-            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND behavior = '请假'AND status<>'已请假' AND place <>'自习'")
+            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND action = '缺勤'AND status<>'已请假' AND place <>'自习'")
     public int countCuttingLesson(int cid,int sid,String period);
 
     @Query("SELECT count(id)\n" +
             "FROM Behavior\n" +
-            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND behavior = '请假'AND status<>'已请假' AND place ='自习'")
+            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND action = '缺勤'AND status<>'已请假' AND place ='自习'")
     public int countCuttingStudy(int cid,int sid,String period);
 
     /**
@@ -69,9 +66,20 @@ public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
      private double timeOfLesson;
      */
 
-//    @Query("SELECT new service.vo.LivenessDataVO(date,place,count(id))from Behavior where cid=?1 and sid = ?2 and date>=?3 and behavior = '举手' group by date,place")
-//    public List<LivenessDataVO> countHandsUp(int cid, int sid, String period);
+    @Query("select count(id) from Behavior where cid = ?1 and sid = ?2  and date = ?3 and tid = ?4 and action='举手'")
+    public int countHandsUp(int cid,int sid,String date,int tid);
 
+    @Query("select count(id) from Behavior where cid = ?1  and date = ?2 and tid = ?3 and action = '举手'")
+    public int countHandsUpAll(int cid,String date,int tid);
+
+//    @Query("select sum(totalTime) from behavior where cid = ?1 and sid = ?2 and date = ?3 and tid = ?4 AND action =?5")
+//    public double sumTimeOfActionInOneLesson(int cid,int sid,String date,int tid,String action);
+
+//    @Query("SELECT new service.vo.LivenessDataVO(date,place,count(id))from Behavior where cid=?1 and sid = ?2 and date>=?3 and behavior = '举手' group by date,place order by date,place asc ")
+//    public List<LivenessDataVO> countHandsUp(int cid, int sid, String period);
+//
+//    @Query("SELECT new service.vo.LivenessDataVO(date,place,count(id))from Behavior where cid=?1 and sid = ?2 and date>=?3 and behavior = '举手' group by date,place order by date,place asc ")
+//    public List<LivenessDataVO> countHandsUpByPlace(int cid, int sid,String place, String period);
 
 
 }

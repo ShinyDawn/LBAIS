@@ -6,14 +6,17 @@ import javax.persistence.Entity;
  * Created by elva on 2018/5/2.
  */
 public class LivenessDataVO {
+
+    //以下三个参数确定一堂课 每天第几课时哪一堂课
     private String date;
     private String subject;
+    private int tid;
+
     private double data;
 
-    public LivenessDataVO(String date,String subject,double data){
-        this.data=data;
+    public LivenessDataVO(String date,int tid){
         this.date=date;
-        this.subject=subject;
+        this.tid = tid;
     }
 
     public String getSubject() {
@@ -38,5 +41,12 @@ public class LivenessDataVO {
 
     public void setData(double data) {
         this.data = data;
+    }
+
+    public void setTid(int tid) {
+        this.tid = tid;
+    }
+    public int getTid() {
+        return tid;
     }
 }

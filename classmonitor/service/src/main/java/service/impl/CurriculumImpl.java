@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import service.dao.Curriculum;
-import service.dao.Time;
+import service.entity.Curriculum;
+import service.entity.Time;
 import service.repository.CurriculumRepository;
 import service.repository.TimeRepository;
 import service.service.CurriculumService;

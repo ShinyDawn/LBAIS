@@ -5,7 +5,9 @@ package service.vo;
  */
 public class LivenessCalculateVO {
     private String date;
-    private String Subject;
+    private String subject;
+    private int tid;
+
     //个人举手次数
     private double timesOfHandsUp;
     //提问次数
@@ -17,6 +19,17 @@ public class LivenessCalculateVO {
     //课时长
     private double timeOfLesson;
 
+    public LivenessCalculateVO(String date,int tid, String subject){
+        this.date =date;
+        this.subject = subject;
+        this.tid = tid;
+        this.timesOfHandsUp = 0;
+        this.timesOfAllHandsUp = 0;
+        this.timeOfDull = 0;
+        this.timeOfAbsentee = 0;
+        this.timeOfLesson = 0;
+   }
+
     public void setDate(String date) {
         this.date = date;
     }
@@ -26,11 +39,11 @@ public class LivenessCalculateVO {
     }
 
     public String getSubject() {
-        return Subject;
+        return subject;
     }
 
     public void setSubject(String subject) {
-        Subject = subject;
+        subject = subject;
     }
 
     public double getTimeOfAbsentee() {
@@ -71,5 +84,13 @@ public class LivenessCalculateVO {
 
     public void setTimesOfHandsUp(double timesOfHandsUp) {
         this.timesOfHandsUp = timesOfHandsUp;
+    }
+
+    public void setTid(int tid) {
+        this.tid = tid;
+    }
+
+    public int getTid() {
+        return tid;
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import service.dao.Test;
+import service.entity.Test;
 
 public interface TestRepository extends JpaRepository<Test, Integer>{
 	

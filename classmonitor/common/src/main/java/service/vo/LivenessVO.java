@@ -6,6 +6,7 @@ package service.vo;
 public class LivenessVO {
     private String Date;
     private String subject;
+    private int tid;
     //课堂参与度
     private double livenessRate;
     //课堂专注度
@@ -53,4 +54,10 @@ public class LivenessVO {
         this.subject = subject;
     }
 
+    public int getTid() {
+        return tid;
+    }
+    public void setTid(int tid) {
+        this.tid = tid;
+    }
 }

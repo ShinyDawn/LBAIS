@@ -2,7 +2,7 @@ package service.service;
 
 import java.util.List;
 
-import service.dao.Student;
+import service.entity.Student;
 import service.vo.AttendanceVO;
 import service.vo.DisciplineVO;
 import service.vo.LivenessVO;

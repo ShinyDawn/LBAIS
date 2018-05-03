@@ -2,7 +2,7 @@ package service.service;
 
 import java.util.List;
 
-import service.dao.User;
+import service.entity.User;
 
 public interface AdminService {
 

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import service.dao.Subject;
+import service.entity.Subject;
 
 public interface SubjectRepository extends JpaRepository<Subject, Integer> {
 

@@ -7,7 +7,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import service.dao.Curriculum;
+import service.entity.Curriculum;
+import service.vo.LivenessDataVO;
+
+import javax.persistence.Tuple;
 
 public interface CurriculumRepository extends JpaRepository<Curriculum, Integer> {
 
@@ -19,6 +22,9 @@ public interface CurriculumRepository extends JpaRepository<Curriculum, Integer>
             "FROM Curriculum \n" +
             "WHERE cid = ?1 AND date='2018-04-25'")
     public int countCoursesOneDay(int cid);
+
+    @Query("SELECT new service.vo.LivenessDataVO(date,tid) FROM Curriculum WHERE cid = ?1 AND course=?2 AND  date >=?3 ORDER BY date,tid ASC")
+    public List<LivenessDataVO> getDistinctCourse(int cid, String course, String period);
 
     @Query("SELECT count(id) from Curriculum where cid=?1 and date>=?2 AND date<=?3")
     public int countTotalCourses(int cid, String start, String end);

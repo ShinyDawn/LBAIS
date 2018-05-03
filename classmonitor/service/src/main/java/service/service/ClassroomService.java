@@ -2,7 +2,7 @@ package service.service;
 
 import java.util.List;
 
-import service.dao.Classroom;
+import service.entity.Classroom;
 import service.vo.StudentNewVO;
 
 public interface ClassroomService {

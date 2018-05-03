@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import service.dao.Classroom;
+import service.entity.Classroom;
 import service.repository.ClassroomRepository;
 import service.service.ClassroomService;
 import service.vo.StudentNewVO;

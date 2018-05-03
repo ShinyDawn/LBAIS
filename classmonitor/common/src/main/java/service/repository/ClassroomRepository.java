@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import service.dao.Classroom;
+import service.entity.Classroom;
 
 public interface ClassroomRepository extends JpaRepository<Classroom, Integer> {
 
