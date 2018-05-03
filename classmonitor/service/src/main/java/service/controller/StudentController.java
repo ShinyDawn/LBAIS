@@ -43,6 +43,12 @@ public class StudentController {
 		return studentService.getLivenessInfoBysubject(cid,sid,period,subject);
 	}
 
+	@RequestMapping(value = "/student/liveness")
+	@ResponseBody
+	public List<LivenessVO> getLivenessInfo(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
+		return studentService.getLivenessInfo(cid,sid,period);
+	}
+
 	@RequestMapping(value = "/students")
 	@ResponseBody
 	public List<Student> index(@RequestParam("cid") int cid) {

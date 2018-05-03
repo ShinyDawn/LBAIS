@@ -122,46 +122,98 @@ public class StudentImpl implements StudentService {
 
     public List<LivenessVO> getLivenessInfo(int cid, int sid, int period) {
 
-        /**
-         *     private String Date;
-         *     private String subject;
-         *     private double livenessRate;
-         *     private double concentrationRate;
-         *     private double handsUpTimes;
-         */
-        double livenessRate = 0;
-        double concentrationRate = 0;
-        double handsUpTimes = 0;
-        String subject;
-        return null;
+        List<LivenessVO> resultList = new ArrayList<>();
+        String startDate = DateUtil.getPassedDate(period, DateUtil.getDate());
+
+        List<String> subjects = curriculumRepository.getDistinctSubject(cid);
+        if (subjects == null || subjects.isEmpty()) {
+            return resultList;
+        }
+
+        for (String s : subjects) {
+            if (s.equals("自习")) {
+                continue;
+            }
+            List<LivenessVO> livenessVOList = getLivenessInfoBysubject(cid, sid, period, s);
+            LivenessVO livenessVO = new LivenessVO();
+            livenessVO.setSubject(s);
+
+            double livenessRate = 0;
+            double concentrationRate = 0;
+            double handsUpTimes = 0;
+
+            if (livenessVOList == null || livenessVOList.isEmpty()) {
+
+            } else {
+                double sumLivenessRate = 0;
+                double sumConcentrationRate = 0;
+                double sumhandsUpTimes = 0;
+                int attendTimes = livenessVOList.size();
+
+                for (int i = 0; i < livenessVOList.size(); i++) {
+                    //这里需要处理请假，因为是各个科目的总体情况，需要处理极端数据：请假不计入计数，未请假仍计入
+                    //注意一种情况：迟到和早退、以及离开时间不算太长的话，举手次数相对比较多时课堂参与度也会相对来说较高，因此还是计入为好，故只计算课堂参与度低于0.3的情况
+                    LivenessVO temp = livenessVOList.get(i);
+                    if (temp.getLivenessRate() < 0.3) {
+//                        if (behaviorRipository.isApproval(cid, sid, temp.getDate(), temp.getTid()) != 0) {
+//                            attendTimes -= 1;
+//                            //以防万一，统一设置请假的统计指标为0,消除后面统一技术影响
+//                            temp.setHandsUpTimes(0);
+//                            temp.setLivenessRate(0);
+//                            temp.setConcentrationRate(0);
+//                        }
+                    }
+                    sumLivenessRate += temp.getLivenessRate();
+                    sumConcentrationRate += temp.getConcentrationRate();
+                    sumhandsUpTimes += temp.getHandsUpTimes();
+                }
+
+                if (attendTimes != 0) {
+                    livenessRate = sumLivenessRate / attendTimes;
+                    concentrationRate = sumConcentrationRate / attendTimes;
+                    handsUpTimes = sumhandsUpTimes / attendTimes;
+                }
+
+            }
+
+            livenessVO.setLivenessRate(livenessRate);
+            livenessVO.setConcentrationRate(concentrationRate);
+            livenessVO.setHandsUpTimes(handsUpTimes);
+            resultList.add(livenessVO);
+        }
+
+        return resultList;
     }
 
     public List<LivenessVO> getLivenessInfoBysubject(int cid, int sid, int period, String subject) {
 
         List<LivenessVO> resultList = new ArrayList<>();
         String startDate = DateUtil.getPassedDate(period, DateUtil.getDate());
-        List<LivenessDataVO> initList = curriculumRepository.getDistinctCourse(cid, subject, startDate);
+        List<LessonDataVO> initList = curriculumRepository.getDistinctCourse(cid, subject, startDate);
 
         if (initList == null || initList.isEmpty()) {
             return resultList;
         }
 
-        for (LivenessDataVO data : initList) {
+        for (LessonDataVO data : initList) {
             String date = data.getDate();
             int tid = data.getTid();
 
             /**
              * 9个需要从数据库统计的指标
+             * 这里迟到、早退、离开、缺勤，即使请假也会计入统计，因为这里是个体各科目的具体到每一节课的情况
              */
-            double timesOfHandsUp = behaviorRipository.countHandsUp(cid, sid, date, tid);
-            double timesOfHansUpAll = behaviorRipository.countHandsUpAll(cid, date, tid);
+            double timesOfHandsUp = behaviorRipository.countByCidAndSidAndDateAndTidAndAction(cid, sid, date, tid, "举手");
+            double timesOfHansUpAll = behaviorRipository.countByCidAndDateAndTidAndAction(cid, date, tid, "举手");
             int timeOfDull = behaviorRipository.sumTimeOfActionInOneLesson(cid, sid, date, tid, "发呆");
             int timeOfAbsentee = behaviorRipository.sumTimeOfActionInOneLesson(cid, sid, date, tid, "缺勤");
             int timeOfLeave = behaviorRipository.sumTimeOfActionInOneLesson(cid, sid, date, tid, "离开");
             int timeOfLate = behaviorRipository.sumTimeOfActionInOneLesson(cid, sid, date, tid, "迟到");
             int timeOfEarly = behaviorRipository.sumTimeOfActionInOneLesson(cid, sid, date, tid, "早退");
             int timeOfLesson = timeRepository.getCourseHour(cid, tid);
-            int studentsOnLesson = 40;
+            int numOfStuduent = studentRepo.countStudentsByCid(cid);
+            int absenteeNum = behaviorRipository.countByCidAndDateAndTidAndAction(cid, date, tid, "缺勤");
+            int studentsOnLesson = numOfStuduent - absenteeNum;
 
             /**
              * 一些参数
@@ -187,6 +239,11 @@ public class StudentImpl implements StudentService {
 
             double rate_on_lesson = 0;
             int time_on_lesson = timeOfLesson - timeOfEarly - timeOfLate - timeOfAbsentee - timeOfLeave;
+            //学生在教室时长不为负
+            if (time_on_lesson < 0) {
+                time_on_lesson = 0;
+            }
+
             if (timeOfLesson != 0 && time_on_lesson >= 0) {
                 rate_on_lesson = time_on_lesson * 1.0 / timeOfLesson;
             }
@@ -197,7 +254,7 @@ public class StudentImpl implements StudentService {
              * 三个需要计算的指标之一concentrationRate
              * 一些中间指标
              * 学生课堂专注度 = 1 - 发呆/学生在教室时长
-             * 注意分母为0的情况
+             * 注意分母为0的情况,即如果学生不在教室，专注度为0
              */
 
             double concentrationRate = 0;
