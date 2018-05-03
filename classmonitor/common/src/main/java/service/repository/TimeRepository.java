@@ -11,8 +11,8 @@ import service.entity.Time;
 
 public interface TimeRepository extends JpaRepository<Time, Integer>{
 
-	@Query("SELECT totalTime from Time where cid =?1  and id =?2")
-	public double getCourseHour(int cid,int tid);
+	@Query("SELECT total_time from Time where cid =?1  and id =?2")
+	public int getCourseHour(int cid,int tid);
 	
 	@Query("select t from Time t where t.cid=?1 order by t.time")
 	public List<Time> findByCid(int cid);

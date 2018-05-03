@@ -72,8 +72,8 @@ public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
     @Query("select count(id) from Behavior where cid = ?1  and date = ?2 and tid = ?3 and action = '举手'")
     public int countHandsUpAll(int cid,String date,int tid);
 
-//    @Query("select sum(totalTime) from behavior where cid = ?1 and sid = ?2 and date = ?3 and tid = ?4 AND action =?5")
-//    public double sumTimeOfActionInOneLesson(int cid,int sid,String date,int tid,String action);
+    @Query("select coalesce(sum(total_time),0) from Behavior where cid = ?1 and sid = ?2 and date = ?3 and tid = ?4 AND action =?5")
+    public int sumTimeOfActionInOneLesson(int cid,int sid,String date,int tid,String action);
 
 //    @Query("SELECT new service.vo.LivenessDataVO(date,place,count(id))from Behavior where cid=?1 and sid = ?2 and date>=?3 and behavior = '举手' group by date,place order by date,place asc ")
 //    public List<LivenessDataVO> countHandsUp(int cid, int sid, String period);

@@ -11,6 +11,8 @@ import service.entity.Student;
 
 public interface StudentRepository extends JpaRepository<Student, Integer> {
 
+	public int countStudentsByCid(int cid);
+
 	@Query("select s from Student s where s.cid=?1 order by s.sid")
 	public List<Student> findByCid(int cid);
 
