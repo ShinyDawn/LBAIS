@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import service.entity.Classroom;
 import service.repository.ClassroomRepository;
 import service.service.ClassroomService;
-import service.vo.StudentNewVO;
+import service.vo.StudentInfoVO;
 
 @Service
 public class ClassroomImpl implements ClassroomService{
@@ -46,15 +46,15 @@ public class ClassroomImpl implements ClassroomService{
 		return classroom.findById(id);
 	}
 
-	public List<StudentNewVO> getStudentInfoList(int cid){
+	public List<StudentInfoVO> getStudentInfoList(int cid){
 		return null;
 	};
 
-	public List<StudentNewVO> getStudentInfoBySimpleFilter(int cid,String problem){
+	public List<StudentInfoVO> getStudentInfoBySimpleFilter(int cid, String problem){
 		return null;
 	};
 
-	public List<StudentNewVO> getStudentInfoByAdvancedFilter(int cid){
+	public List<StudentInfoVO> getStudentInfoByAdvancedFilter(int cid){
 		return null;
 	};
 

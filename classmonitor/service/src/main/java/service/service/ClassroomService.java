@@ -3,7 +3,7 @@ package service.service;
 import java.util.List;
 
 import service.entity.Classroom;
-import service.vo.StudentNewVO;
+import service.vo.StudentInfoVO;
 
 public interface ClassroomService {
 
@@ -17,11 +17,11 @@ public interface ClassroomService {
 	
 	public void deleteOne(int id);
 
-	public List<StudentNewVO> getStudentInfoList(int cid);
+	public List<StudentInfoVO> getStudentInfoList(int cid);
 
-	public List<StudentNewVO> getStudentInfoBySimpleFilter(int cid,String problem);
+	public List<StudentInfoVO> getStudentInfoBySimpleFilter(int cid, String problem);
 
-	public List<StudentNewVO> getStudentInfoByAdvancedFilter(int cid);
+	public List<StudentInfoVO> getStudentInfoByAdvancedFilter(int cid);
 
 	public double getClassLivenessRate(int cid,String date);
 	public double getClassAttendenceRate(int cid,String date);

@@ -3,13 +3,14 @@ package service.vo;
 /**
  * Created by elva on 2018/4/30.
  */
-public class StudentNewVO {
+public class StudentInfoVO {
     private int sid;
     private String name;
     private String problem;
     private double attendanceRate;
     private double livenessRate;
     private double deciplineRate;
+
 
     public void setLivenessRate(double livenessRate) {
         this.livenessRate = livenessRate;

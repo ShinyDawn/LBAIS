@@ -7,32 +7,30 @@ import javax.persistence.Entity;
  */
 public class LessonDataVO {
 
-    //以下三个参数确定一堂课 每天第几课时哪一堂课
-    private String date;
-    private String subject;
-    private int tid;
+    private String field;
+    private int integer;
 
     private double data;
 
-    public LessonDataVO(String date, int tid){
-        this.date=date;
-        this.tid = tid;
+    public LessonDataVO(String field, int integer){
+        this.field=field;
+        this.integer = integer;
     }
 
-    public String getSubject() {
-        return subject;
+    public int getInteger() {
+        return integer;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public String getField() {
+        return field;
     }
 
-    public String getDate() {
-        return date;
+    public void setInteger(int integer) {
+        this.integer = integer;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setField(String field) {
+        this.field = field;
     }
 
     public double getData() {
@@ -43,10 +41,5 @@ public class LessonDataVO {
         this.data = data;
     }
 
-    public void setTid(int tid) {
-        this.tid = tid;
-    }
-    public int getTid() {
-        return tid;
-    }
+
 }

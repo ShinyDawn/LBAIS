@@ -11,13 +11,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import service.entity.Student;
 import service.service.StudentService;
 import service.vo.AttendanceVO;
+import service.vo.DisciplineVO;
 import service.vo.LivenessVO;
+import service.vo.StudentInfoVO;
 
 @Controller
 public class StudentController {
 	@Autowired
 	private StudentService studentService;
 
+
+    @RequestMapping(value = "/student")
+    @ResponseBody
+    public List<StudentInfoVO> getStudentsInfo(@RequestParam("cid") int cid ){
+        return studentService.getStudentsInfoList(cid);
+    }
 	/**
 	 *
 	 * @param cid 班级id
@@ -37,6 +45,13 @@ public class StudentController {
 		return studentService.getAttendenceRate(cid,sid,period);
 	}
 
+    @RequestMapping(value = "/student/attendancePercent")
+    @ResponseBody
+    public double getAttendencePrecent(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
+        return studentService.getAttendencePrecent(cid,sid,period);
+
+    }
+
 	@RequestMapping(value = "/student/liveness/subject")
 	@ResponseBody
 	public List<LivenessVO> getLivenessInfoBySubject(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period , @RequestParam("subject") String subject){
@@ -48,6 +63,51 @@ public class StudentController {
 	public List<LivenessVO> getLivenessInfo(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
 		return studentService.getLivenessInfo(cid,sid,period);
 	}
+
+	@RequestMapping(value = "/student/livenessRate/subject")
+	@ResponseBody
+	public double getLivenessRateBySubject(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period,@RequestParam("subject") String subject){
+		return studentService.getGeneralLivenessRateBySubject(cid,sid,period,subject);
+	}
+
+	@RequestMapping(value = "/student/livenessPercent/subject")
+	@ResponseBody
+	public double getLivenessRateBySubjectPercent(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period,@RequestParam("subject") String subject){
+		return studentService.getGeneralLivenessPercentBySubject(cid,sid,period,subject);
+	}
+
+	@RequestMapping(value = "/student/livenessRate")
+	@ResponseBody
+	public double getLivenessRate(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
+		return studentService.getGeneralLivenessRate(cid,sid,period);
+	}
+
+	@RequestMapping(value = "/student/livenessPercent")
+	@ResponseBody
+	public double getLivenessPercent(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
+		return studentService.getGeneralLivenessPercent(cid,sid,period);
+
+	}
+
+    @RequestMapping(value = "/student/discipline")
+    @ResponseBody
+    public List<DisciplineVO> getDisplineInfo(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
+        return studentService.getDisplineInfo(cid,sid,period);
+    }
+
+    @RequestMapping(value = "/student/disciplineRate")
+    @ResponseBody
+    public double getDisciplineRate(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
+        return studentService.getDisciplineRate(cid,sid,period);
+
+    }
+
+    @RequestMapping(value = "/student/disciplinePercent")
+    @ResponseBody
+    public double getDisciplinePercent(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
+        return studentService.getDisciplinePercent(cid,sid,period);
+
+    }
 
 	@RequestMapping(value = "/students")
 	@ResponseBody

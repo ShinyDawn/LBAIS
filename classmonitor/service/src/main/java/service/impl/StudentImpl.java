@@ -1,7 +1,6 @@
 package service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,8 @@ import service.repository.TimeRepository;
 import service.service.StudentService;
 import service.util.DateUtil;
 import service.vo.*;
+
+import static service.util.MathUtil.getSort;
 
 
 @Service
@@ -69,6 +70,33 @@ public class StudentImpl implements StudentService {
 
     //part of Personal Model
 
+
+    public List<StudentInfoVO> getStudentsInfoList(int cid) {
+
+        List<StudentInfoVO> studentInfoVOList = new ArrayList<>();
+        List<Student> students = studentRepo.findByCid(cid);
+
+        if (students == null || students.isEmpty()) {
+            return studentInfoVOList;
+        }
+
+        for (Student student : students) {
+            int sid = student.getSid();
+            //int sid,String name,double attendanceRate,double livenessRate,double deciplineRate
+            StudentInfoVO studentInfoVO = new StudentInfoVO();
+            studentInfoVO.setSid(sid);
+            studentInfoVO.setName(student.getName());
+            studentInfoVO.setAttendanceRate(getAttendencePrecent(cid, sid, 30));
+            studentInfoVO.setDeciplineRate(getDisciplinePercent(cid, sid, 30));
+            studentInfoVO.setLivenessRate(getGeneralLivenessPercent(cid, sid, 30));
+            studentInfoVOList.add(studentInfoVO);
+        }
+
+        return studentInfoVOList;
+    }
+
+    ;
+
     /**
      * @param cid    class id
      * @param sid    student id
@@ -89,7 +117,6 @@ public class StudentImpl implements StudentService {
         for (Behavior b : behaviorList) {
             AttendanceVO attendanceVO = new AttendanceVO(b.getDate(), b.getTid(), b.getPlace(), b.getAction(), b.getStatus());
             attendanceVOList.add(attendanceVO);
-            System.out.println(attendanceVO.toString());
         }
 
         return attendanceVOList;
@@ -109,13 +136,47 @@ public class StudentImpl implements StudentService {
         //缺勤旷课算半天的课时（假设每天的课时相等）；自习旷课算1课时
         double cuttingSchool = 0.5 * courses * behaviorRipository.countCuttingLesson(cid, sid, date) + behaviorRipository.countCuttingStudy(cid, sid, date);
 
+
         //总课时
-        double totalperiods = curriculumRepository.countTotalCourses(cid, date, DateUtil.getDate());
+        int totalperiods = curriculumRepository.countTotalCourses(cid, date, DateUtil.getDate());
 
         double attendenceRate = 1;
-        attendenceRate = 1 - (lateForClass + earlyOut + absentee + cuttingSchool) / totalperiods;
+
+        if(totalperiods ==0){
+            return attendenceRate;
+        }
+
+        double absenctCourses = lateForClass + earlyOut + absentee + cuttingSchool;
+
+        if(absenctCourses>totalperiods){
+            absenctCourses = totalperiods;
+        }
+        attendenceRate = 1 - 1.0 * absenctCourses / totalperiods;
 
         return attendenceRate;
+    }
+
+    public double getAttendencePrecent(int cid, int sid, int period) {
+        double rankPercent = 0;
+        int rank = 0;
+        List<Integer> sidList = studentRepo.getSid(cid);
+        if (sidList == null || sidList.isEmpty()) {
+            return rankPercent;
+        }
+        List<StudentDataVO> rankList = new ArrayList<>();
+        for (Integer integer : sidList) {
+            int id = (int) integer;
+            StudentDataVO studentDataVO = new StudentDataVO(id, getAttendenceRate(cid, id, period));
+            rankList.add(studentDataVO);
+        }
+        rank = getSort(rankList, sid);
+        int num = sidList.size();
+
+        if (num == 0) {
+            return rankPercent;
+        }
+        rankPercent = 1 - 1.0 * rank / num;
+        return rankPercent;
     }
 
     ;
@@ -189,15 +250,16 @@ public class StudentImpl implements StudentService {
 
         List<LivenessVO> resultList = new ArrayList<>();
         String startDate = DateUtil.getPassedDate(period, DateUtil.getDate());
-        List<LessonDataVO> initList = curriculumRepository.getDistinctCourse(cid, subject, startDate);
+        String endDate = DateUtil.getDate();
+        List<LessonDataVO> initList = curriculumRepository.getDistinctCourse(cid, subject, startDate, endDate);
 
         if (initList == null || initList.isEmpty()) {
             return resultList;
         }
 
         for (LessonDataVO data : initList) {
-            String date = data.getDate();
-            int tid = data.getTid();
+            String date = data.getField();
+            int tid = data.getInteger();
 
             /**
              * 9个需要从数据库统计的指标
@@ -285,31 +347,222 @@ public class StudentImpl implements StudentService {
         return resultList;
     }
 
-    ;;
+    ;
 
-    public double getLivenessRate(int cid, int sid, int period, String subject) {
+    public double getGeneralLivenessRateBySubject(int cid, int sid, int period, String subject) {
 
-        double result=0;
-        List<LivenessVO> livenessVOList = getLivenessInfo(cid,sid,period);
+        List<LivenessVO> livenessVOList = getLivenessInfo(cid, sid, period);
+
         /**
-         * 各科的活跃度需要考虑 课堂参与度和课堂专注度的参数 设为0.7:0.3
-         * 总活跃度需要考虑各个课程的权重，目前根据在统计时间内各科各有多少课来设定权重 VO(ourse,times)
+         * 各科的综合活跃度需要考虑 课堂参与度和课堂专注度的参数 暂时设为0.7:0.3
          */
 
+        double general_a = 0.7;
+        double general_b = 0.3;
 
-        return 0;
+        double generalRate = 0;
+
+        if (livenessVOList == null || livenessVOList.isEmpty()) {
+            return generalRate;
+        }
+        for (LivenessVO livenessVO : livenessVOList) {
+            if (livenessVO.getSubject().equals(subject)) {
+                generalRate = general_a * livenessVO.getLivenessRate() * 1.0 + general_b * livenessVO.getConcentrationRate() * 1.0;
+            }
+        }
+        return generalRate;
+    }
+
+    public double getGeneralLivenessRate(int cid, int sid, int period) {
+        /**
+         * 总活跃度需要考虑各个课程的权重，目前根据在统计时间内各科各有多少课来设定权重 VO(course,times)
+         */
+
+        List<String> subjects = curriculumRepository.getDistinctSubject(cid);
+        double generalRate = 0;
+
+        if (subjects == null || subjects.isEmpty()) {
+            return generalRate;
+        }
+
+        String startDate = DateUtil.getPassedDate(period, DateUtil.getDate());
+        String endDate = DateUtil.getDate();
+        int totalCourse = 0;
+
+        for (String s : subjects) {
+            if (s.equals("自习")) {
+                continue;
+            }
+            int weight = curriculumRepository.countWeight(cid, startDate, endDate, s);
+            double generalSubjectRate = getGeneralLivenessRateBySubject(cid, sid, period, s);
+            generalRate += generalSubjectRate * weight * 1.0;
+            totalCourse += weight;
+        }
+
+        if (totalCourse == 0) {
+            return generalRate;
+        }
+
+        generalRate /= totalCourse;
+        return generalRate;
+    }
+
+    public double getGeneralLivenessPercentBySubject(int cid, int sid, int period, String subject) {
+        double rankPercent = 0;
+        int rank = 0;
+        List<Integer> sidList = studentRepo.getSid(cid);
+        if (sidList == null || sidList.isEmpty()) {
+            return rankPercent;
+        }
+        List<StudentDataVO> rankList = new ArrayList<>();
+        for (Integer integer : sidList) {
+            int id = (int) integer;
+            StudentDataVO studentDataVO = new StudentDataVO(id, getGeneralLivenessRateBySubject(cid, id, period, subject));
+            rankList.add(studentDataVO);
+        }
+        rank = getSort(rankList, sid);
+
+        int num = sidList.size();
+
+        if (num == 0) {
+            return rankPercent;
+        }
+
+        rankPercent = 1.0 * rank / num;
+
+        return rankPercent;
     }
 
     ;
+
+    public double getGeneralLivenessPercent(int cid, int sid, int period) {
+
+        double rankPercent = 0;
+        int rank = 0;
+        List<Integer> sidList = studentRepo.getSid(cid);
+        if (sidList == null || sidList.isEmpty()) {
+            return rankPercent;
+        }
+        List<StudentDataVO> rankList = new ArrayList<>();
+        for (Integer integer : sidList) {
+            int id = (int) integer;
+            StudentDataVO studentDataVO = new StudentDataVO(id, getGeneralLivenessRate(cid, id, period));
+            rankList.add(studentDataVO);
+        }
+        rank = getSort(rankList, sid);
+        int num = sidList.size();
+
+        if (num == 0) {
+            return rankPercent;
+        }
+        rankPercent = 1 - 1.0 * rank / num;
+        return rankPercent;
+    }
+
+    ;
+
+    /**
+     * 需要再设计
+     *
+     * @param cid    class id
+     * @param sid    student id
+     * @param period 7,30,90...
+     * @return 自习列表
+     */
 
     public List<DisciplineVO> getDisplineInfo(int cid, int sid, int period) {
-        return null;
+        String date = DateUtil.getPassedDate(period, DateUtil.getDate());
+        List<DisciplineVO> disciplineVOList = new ArrayList<>();
+
+        List<Behavior> behaviorList = behaviorRipository.findBehaviorsDuringStudy(cid, sid, date);
+
+        if (behaviorList == null || behaviorList.isEmpty()) {
+            return disciplineVOList;
+        }
+
+        for (Behavior b : behaviorList) {
+            DisciplineVO disciplineVO = new DisciplineVO(b.getDate(), b.getEnd(), b.getAction(), b.getTotal_time(), b.getStatus());
+            disciplineVOList.add(disciplineVO);
+        }
+
+        /**
+         * 这里应该跟pattern有一块联动
+         */
+
+        return disciplineVOList;
+
     }
 
     ;
 
+    /**
+     * 需要再设计
+     *
+     * @param cid    class id
+     * @param sid    student id
+     * @param period 7,30,90...
+     * @return 自习守序度
+     */
+
     public double getDisciplineRate(int cid, int sid, int period) {
-        return 0;
+        String startDate = DateUtil.getPassedDate(period, DateUtil.getDate());
+        String endDate = DateUtil.getDate();
+
+
+        double disciplineRate = 1;
+
+        List<Behavior> behaviorList = behaviorRipository.findBehaviorsDuringStudy(cid, sid, startDate);
+
+        if (behaviorList == null || behaviorList.isEmpty()) {
+            return disciplineRate;
+        }
+
+        int studyNum = curriculumRepository.countTotalStudys(cid, startDate, endDate);
+        int studyTime = timeRepository.getCourseHour(cid, 1);
+
+        int totalTime = studyTime * studyNum;
+        int outTime = 0;
+
+        /**
+         * 不同行为的权重根据zq那边设置，需要更精细的计算
+         */
+
+        for (Behavior b : behaviorList) {
+            outTime += b.getTotal_time();
+        }
+
+        if (outTime > totalTime) {
+            outTime = totalTime;
+        }
+
+        disciplineRate = 1 - outTime * 1.0 / totalTime;
+
+        return disciplineRate;
+    }
+
+    public double getDisciplinePercent(int cid, int sid, int period) {
+
+        double rankPercent = 0;
+        int rank = 0;
+        List<Integer> sidList = studentRepo.getSid(cid);
+        if (sidList == null || sidList.isEmpty()) {
+            return rankPercent;
+        }
+        List<StudentDataVO> rankList = new ArrayList<>();
+        for (Integer integer : sidList) {
+            int id = (int) integer;
+            StudentDataVO studentDataVO = new StudentDataVO(id, getDisciplineRate(cid, id, period));
+            rankList.add(studentDataVO);
+        }
+        rank = getSort(rankList, sid);
+        int num = sidList.size();
+
+        if (num == 0) {
+            return rankPercent;
+        }
+        rankPercent = 1 - 1.0 * rank / num;
+        return rankPercent;
+
     }
 
     ;

@@ -15,39 +15,19 @@ public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
     @Query("select b from Behavior b where b.cid=?1 and b.sid=?2 and (b.action='缺勤' or b.action = '迟到'or b.action='早退')and b.date>?3 order by b.date desc")
     public List<Behavior> findAbsentee(int cid, int sid, String period);
 
-    /**
-     * //迟到算0.5课时（不管有无请假）
-     * double lateForClass = 0;
-     * //早退算0.5课时（不管有无请假）
-     * double earlyOut = 0;
-     * //缺勤请假算1课时；自习缺勤请假不算入课时
-     * double absentee = 0;
-     * //缺勤旷课算半天的课时（假设每天的课时相等）；自习旷课算1课时
-     * double cuttingSchool=0;
-     */
-    @Query("SELECT count(id)\n" +
-            "FROM Behavior\n" +
-            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND action = '迟到'")
+    @Query("SELECT count(id) FROM Behavior WHERE cid = ?1 AND sid = ?2 AND date > ?3 AND action = '迟到'")
     public int countLateForClass(int cid, int sid, String period);
 
-    @Query("SELECT count(id)\n" +
-            "FROM Behavior\n" +
-            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND action = '早退'")
+    @Query("SELECT count(id) FROM Behavior WHERE cid = ?1 AND sid = ?2 AND date > ?3 AND action = '早退'")
     public int countEarlyOut(int cid, int sid, String period);
 
-    @Query("SELECT count(id)\n" +
-            "FROM Behavior\n" +
-            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND action = '缺勤'AND status='已请假' AND place <>'自习'")
+    @Query("SELECT count(id) FROM Behavior WHERE cid = ?1 AND sid = ?2 AND date > ?3 AND action = '缺勤'AND status='已请假' AND place <>'自习'")
     public int countAbsentee(int cid, int sid, String period);
 
-    @Query("SELECT count(id)\n" +
-            "FROM Behavior\n" +
-            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND action = '缺勤'AND status<>'已请假' AND place <>'自习'")
+    @Query("SELECT count(id) FROM Behavior WHERE cid = ?1 AND sid = ?2 AND date > ?3 AND action = '缺勤'AND status<>'已请假' AND place <>'自习'")
     public int countCuttingLesson(int cid, int sid, String period);
 
-    @Query("SELECT count(id)\n" +
-            "FROM Behavior\n" +
-            "WHERE cid = ?1 AND sid = ?2 AND date >= ?3 AND action = '缺勤'AND status<>'已请假' AND place ='自习'")
+    @Query("SELECT count(id) FROM Behavior WHERE cid = ?1 AND sid = ?2 AND date > ?3 AND action = '缺勤'AND status<>'已请假' AND place ='自习'")
     public int countCuttingStudy(int cid, int sid, String period);
 
 
@@ -61,11 +41,8 @@ public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
     @Query("SELECT count(id) FROM Behavior WHERE cid=?1 AND sid=?2 AND date =?3 AND tid = ?4 AND status = '已请假'")
     public int countApproval(int cid, int sid, String date, int tid);
 
-//    @Query("SELECT new service.vo.LivenessDataVO(date,place,count(id))from Behavior where cid=?1 and sid = ?2 and date>=?3 and behavior = '举手' group by date,place order by date,place asc ")
-//    public List<LivenessDataVO> countHandsUp(int cid, int sid, String period);
-//
-//    @Query("SELECT new service.vo.LivenessDataVO(date,place,count(id))from Behavior where cid=?1 and sid = ?2 and date>=?3 and behavior = '举手' group by date,place order by date,place asc ")
-//    public List<LivenessDataVO> countHandsUpByPlace(int cid, int sid,String place, String period);
+    @Query("SELECT b FROM Behavior b WHERE b.cid = ?1 AND b.sid = ?2 AND b.date > ?3 AND b.place = '自习' AND b.status <> '误报'")
+    public List<Behavior> findBehaviorsDuringStudy(int cid, int sid, String period);
 
 
 }

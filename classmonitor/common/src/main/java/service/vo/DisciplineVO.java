@@ -5,8 +5,19 @@ package service.vo;
  */
 public class DisciplineVO {
     private String date;
-    private String time;
-    private String detail;
+    private String discover_time;
+    private String action;
+    private int total_time;
+    private String status;
+
+    public DisciplineVO(String date, String discover_time, String action, int total_time, String status) {
+        this.date = date;
+        this.action = action;
+        this.discover_time = discover_time;
+        this.total_time = total_time;
+        this.status = status;
+
+    }
 
     public String getDate() {
         return date;
@@ -16,19 +27,35 @@ public class DisciplineVO {
         this.date = date;
     }
 
-    public String getDetail() {
-        return detail;
+    public void setTotal_time(int total_time) {
+        this.total_time = total_time;
     }
 
-    public String getTime() {
-        return time;
+    public int getTotal_time() {
+        return total_time;
     }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
+    public void setAction(String action) {
+        this.action = action;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public String getAction() {
+        return action;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDiscover_time() {
+        return discover_time;
+    }
+
+    public void setDiscover_time(String discover_time) {
+        this.discover_time = discover_time;
     }
 }
