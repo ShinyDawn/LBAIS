@@ -58,8 +58,8 @@ public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
 
     public int countByCidAndDateAndTidAndAction(int cid, String date, int tid, String action);
 
-//    @Query("SELECT count(id) FROM Behavior WHERE cid=?1 AND sid=?2 AND date =?3AND tid = ?4 AND status = '已请假'")
-//    public int isApproval(int cid, int sid, String date, int tid);
+    @Query("SELECT count(id) FROM Behavior WHERE cid=?1 AND sid=?2 AND date =?3 AND tid = ?4 AND status = '已请假'")
+    public int countApproval(int cid, int sid, String date, int tid);
 
 //    @Query("SELECT new service.vo.LivenessDataVO(date,place,count(id))from Behavior where cid=?1 and sid = ?2 and date>=?3 and behavior = '举手' group by date,place order by date,place asc ")
 //    public List<LivenessDataVO> countHandsUp(int cid, int sid, String period);

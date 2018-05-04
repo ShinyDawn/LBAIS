@@ -155,13 +155,13 @@ public class StudentImpl implements StudentService {
                     //注意一种情况：迟到和早退、以及离开时间不算太长的话，举手次数相对比较多时课堂参与度也会相对来说较高，因此还是计入为好，故只计算课堂参与度低于0.3的情况
                     LivenessVO temp = livenessVOList.get(i);
                     if (temp.getLivenessRate() < 0.3) {
-//                        if (behaviorRipository.isApproval(cid, sid, temp.getDate(), temp.getTid()) != 0) {
-//                            attendTimes -= 1;
-//                            //以防万一，统一设置请假的统计指标为0,消除后面统一技术影响
-//                            temp.setHandsUpTimes(0);
-//                            temp.setLivenessRate(0);
-//                            temp.setConcentrationRate(0);
-//                        }
+                        if (behaviorRipository.countApproval(cid, sid, temp.getDate(), temp.getTid()) != 0) {
+                            attendTimes -= 1;
+                            //以防万一，统一设置请假的统计指标为0,消除后面统一技术影响
+                            temp.setHandsUpTimes(0);
+                            temp.setLivenessRate(0);
+                            temp.setConcentrationRate(0);
+                        }
                     }
                     sumLivenessRate += temp.getLivenessRate();
                     sumConcentrationRate += temp.getConcentrationRate();
@@ -288,6 +288,15 @@ public class StudentImpl implements StudentService {
     ;;
 
     public double getLivenessRate(int cid, int sid, int period, String subject) {
+
+        double result=0;
+        List<LivenessVO> livenessVOList = getLivenessInfo(cid,sid,period);
+        /**
+         * 各科的活跃度需要考虑 课堂参与度和课堂专注度的参数 设为0.7:0.3
+         * 总活跃度需要考虑各个课程的权重，目前根据在统计时间内各科各有多少课来设定权重 VO(ourse,times)
+         */
+
+
         return 0;
     }
 
