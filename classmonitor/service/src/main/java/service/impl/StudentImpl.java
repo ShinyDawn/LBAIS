@@ -79,6 +79,16 @@ public class StudentImpl implements StudentService {
         if (students == null || students.isEmpty()) {
             return studentInfoVOList;
         }
+        /**
+         * 旷课：只要缺勤不请假就算旷课
+         * 补课：出勤率不足 ？% 或者有非自习课的请假现象 几次？
+         * 偏科：各个科目的活跃度方差大于 ？
+         * 效率：发呆时间超过 ？%
+         * 纪律：自习有异常pattern 需要关注
+         * 退步：综合指标呈下降趋势
+         * 进步：综合指标呈上升趋势
+         */
+        String[] problemlist={"旷课","补课","偏科","效率","纪律","退步","进步"};
 
         for (Student student : students) {
             int sid = student.getSid();
@@ -86,9 +96,13 @@ public class StudentImpl implements StudentService {
             StudentInfoVO studentInfoVO = new StudentInfoVO();
             studentInfoVO.setSid(sid);
             studentInfoVO.setName(student.getName());
-            studentInfoVO.setAttendanceRate(getAttendencePrecent(cid, sid, 30));
-            studentInfoVO.setDeciplineRate(getDisciplinePercent(cid, sid, 30));
-            studentInfoVO.setLivenessRate(getGeneralLivenessPercent(cid, sid, 30));
+            double attendanceRate = getAttendencePrecent(cid, sid, 30);
+            double disciplineRate = getDisciplinePercent(cid, sid, 30);
+            double livenessRate = getGeneralLivenessPercent(cid, sid, 30);
+            studentInfoVO.setAttendanceRate(attendanceRate);
+            studentInfoVO.setDeciplineRate(disciplineRate);
+            studentInfoVO.setLivenessRate(livenessRate);
+
             studentInfoVOList.add(studentInfoVO);
         }
 
