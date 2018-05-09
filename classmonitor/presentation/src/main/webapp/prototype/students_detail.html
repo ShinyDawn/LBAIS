@@ -24,13 +24,13 @@
             <div class="nav-collapse collapse navbar-inverse-collapse">
                 <ul class="nav pull-left">
                     <li><a class='active' href="students.html">
-                        个体分析
+                        学生详情
                     </a></li>
                     <li><a href="lesson.html">
-                        课堂整体分析
+                        课堂分析
                     </a></li>
                     <li><a href="study.html">
-                        自习记录
+                        自习报警
                     </a></li>
                     <li><a href="leave.html">
                         请假录入
@@ -75,95 +75,64 @@
                         </div>
                     </div>
 
-                            <div class="module message">
-                                <div class="module-head">
-                                    <h3>出勤情况</h3>
-                                </div>
-                                <div class="module-option clearfix">
-                                    <div class="pull-left">
-                                        <div class="btn-group">
-                                            <button class="btn">最近一周</button>
-                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">今天</a></li>
-                                                <li><a href="#">最近一周</a></li>
-                                                <li><a href="#">最近一月</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#">本学期</a></li>
-                                                <li><a href="#">本学年</a></li>
-                                            </ul>
+                    <div class="module message">
+                        <div class="module-head">
+                            <h3>综合分析</h3>
+                        </div>
+
+                        <div class="btn-box-row row-fluid">
+                            <div class="span5"  style="height:250px" id = general_analyze>
+
+                            </div>
+                            <div class="span7">
+                                <div class="row-fluid">
+
+                                        <div class="module-option clearfix">
+                                            请假较多：最近一周语文课请假三次，需要补课
                                         </div>
-                                        &nbsp;出勤率100% &nbsp;
-                                    </div>
-                                    <div class="pull-right">
-                                        <a href="#" class="btn btn-primary">详细信息</a>
-                                    </div>
-                                </div>
-                                <div class="module-body table">
-
-                                    <table class="table table-message">
-                                        <tbody>
-                                        <tr class="heading">
-                                            <td class="cell-time ">日期</td>
-                                            <td class="cell-time">详情</td>
-                                            <td class="cell-status hidden-phone hidden-tablet">状态</td>
-
-                                        </tr>
-                                        <tr class="task">
-                                            <td class="cell-time ">2018-04-17</td>
-                                            <td class="cell-title"><div>第5节语文课缺勤</div></td>
-                                            <td class="cell-status hidden-phone hidden-tablet"><a class="due">请假</a></td>
-
-                                        </tr>
-                                        <tr class="task">
-                                            <td class="cell-time ">2018-04-16</td>
-                                            <td class="cell-title"><div>第1节课迟到</div></td>
-                                            <td class="cell-status hidden-phone hidden-tablet"><a class="due">迟到</a></td>
-                                        </tr>
-                                        <tr class="task">
-                                            <td class="cell-time ">2018-04-16</td>
-                                            <td class="cell-title"><div>第8节课早退</div></td>
-                                            <td class="cell-status hidden-phone hidden-tablet"><a class="due">早退</a></td>
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-
 
                                 </div>
-                                <div class="module-foot">
+                                <div class="row-fluid">
+
+                                        <div class="module-option clearfix">
+                                            兴趣较低：科学的课堂参与度明显下降，需要关注
+                                            <!--数学的课堂表现相对其他科目有明显差距，需要关注-->
+                                        </div>
+
+                                </div>
+                                <div class="row-fluid">
+
+                                        <div class="module-option clearfix">
+                                            纪律较差：最近一周迟到三次
+                                            <!--最近一周英语课旷课一次 -->
+                                            <!--最近一周自习课打架一次，需要注意-->
+                                        </div>
+
+                                </div>
+                                <div class="row-fluid">
+
+                                        <div class="module-option clearfix">
+                                            退步较大：课堂表现呈现下降趋势，自习表现呈现下降趋势
+                                            <!--数学课堂表现突然下降，需要持续关注-->
+                                        </div>
                                 </div>
                             </div>
 
+                        </div>
 
 
 
+                        <div class="module-foot">
+                        </div>
+                    </div>
 
-                    <div class="module">
+
+                    <div class="module message">
                         <div class="module-head">
-                            <h3>
-                                课堂活跃度</h3>
+                            <h3>出勤表现</h3>
                         </div>
                         <div class="module-option clearfix">
                             <div class="pull-left">
-                                <div class="pull-left">
-                                    <div class="btn-group">
-                                        <button class="btn">全部学科</button>
-                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">语文</a></li>
-                                            <li><a href="#">数学</a></li>
-                                            <li><a href="#">英语</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">品德</a></li>
-                                            <li><a href="#">科学</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
                                 <div class="btn-group">
                                     <button class="btn">今天</button>
                                     <button class="btn dropdown-toggle" data-toggle="dropdown">
@@ -171,83 +140,173 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a href="#">今天</a></li>
+                                        <li><a href="#">昨天</a></li>
+                                        <li><a href="#">最近三天</a></li>
                                         <li><a href="#">最近一周</a></li>
                                         <li><a href="#">最近一月</a></li>
                                         <li class="divider"></li>
                                         <li><a href="#">本学期</a></li>
-                                        <li><a href="#">本学年</a></li>
                                     </ul>
                                 </div>
-                                &nbsp;课堂活跃度优于73%的同学 &nbsp;
+                                &nbsp;出勤率90% ，&nbsp;出勤表现优于25%的同学
                             </div>
                             <!--<div class="pull-right">-->
-                                <!--<a href="#" class="btn btn-primary">详细信息</a>-->
+                            <!--<a href="#" class="btn btn-primary">详细信息</a>-->
                             <!--</div>-->
-                        </div>
-                        <div class="module-body">
-                                <div id="personal_pre" style="width:720px;height:400px;">
-                                </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="module message">
-                        <div class="module-head">
-                            <h3>自习情况</h3>
-                        </div>
-                        <div class="module-option clearfix">
-                            <div class="pull-left">
-                                <div class="btn-group">
-                                    <button class="btn">最近一周</button>
-                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">今天</a></li>
-                                        <li><a href="#">最近一周</a></li>
-                                        <li><a href="#">最近一月</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">本学期</a></li>
-                                        <li><a href="#">本学年</a></li>
-                                    </ul>
-                                </div>
-                                &nbsp;自习纪律优于83%的同学 &nbsp;
-                            </div>
-
-                            <div class="pull-right">
-                                <a href="#" class="btn btn-primary">详细信息</a>
-                            </div>
                         </div>
                         <div class="module-body table">
 
                             <table class="table table-message">
                                 <tbody>
                                 <tr class="heading">
-                                    <td class="cell-time align-center">日期</td>
-                                    <td class="cell-time align-right">时间</td>
-                                    <td class="cell-title">详情</td>
+                                    <td class="cell-time ">日期</td>
+                                    <td class="cell-time">详情</td>
                                     <td class="cell-status hidden-phone hidden-tablet">状态</td>
 
                                 </tr>
                                 <tr class="task">
-                                    <td class="cell-time align-right">2018-04-17</td>
-                                    <td class="cell-time align-right">17:50 </td>
-                                    <td class="cell-title"><div>检测到外出时间过长</div></td>
-                                    <td class="cell-status hidden-phone hidden-tablet"><a class="due">未处理</a></td>
+                                    <td class="cell-time ">2018-04-17</td>
+                                    <td class="cell-title">
+                                        <div>第5节语文课缺勤</div>
+                                    </td>
+                                    <td class="cell-status hidden-phone hidden-tablet"><a class="due">请假</a></td>
+
+                                </tr>
+                                <tr class="task">
+                                    <td class="cell-time ">2018-04-16</td>
+                                    <td class="cell-title">
+                                        <div>第1节课迟到</div>
+                                    </td>
+                                    <td class="cell-status hidden-phone hidden-tablet"><a class="due">迟到</a></td>
+                                </tr>
+                                <tr class="task">
+                                    <td class="cell-time ">2018-04-16</td>
+                                    <td class="cell-title">
+                                        <div>第8节课早退</div>
+                                    </td>
+                                    <td class="cell-status hidden-phone hidden-tablet"><a class="due">早退</a></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                        <div class="module-foot">
+                        </div>
+                    </div>
+
+
+                    <div class="module">
+                        <div class="module-head">
+                            <h3>
+                                课堂表现</h3>
+                        </div>
+                        <div class="module-option clearfix">
+                            <div class="pull-left">
+                                <div class="btn-group">
+                                    <button class="btn">今天</button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">今天</a></li>
+                                        <li><a href="#">昨天</a></li>
+                                        <li><a href="#">最近三天</a></li>
+                                        <li><a href="#">最近一周</a></li>
+                                        <li><a href="#">最近一月</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">本学期</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="btn-group">
+                                    <button class="btn">全部学科</button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a onclick=general_show('personal_pre')>全部</a></li>
+                                        <li><a onclick=subject_show('personal_yuwen')>语文</a></li>
+                                        <li><a href="#">数学</a></li>
+                                        <li><a href="#">英语</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">品德</a></li>
+                                        <li><a href="#">科学</a></li>
+                                    </ul>
+                                </div>
+                                &nbsp;课堂活跃度优于73%的同学 &nbsp;
+                            </div>
+                            <!--<div class="pull-right">-->
+                            <!--<a href="#" class="btn btn-primary">详细信息</a>-->
+                            <!--</div>-->
+                        </div>
+                        <div class="module-body">
+                            <div id="personal_pre" style="width:720px;height:400px;"></div>
+                            <div id="personal_yuwen" style="width:720px;height:400px;display: none"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="module message">
+                        <div class="module-head">
+                            <h3>自习表现</h3>
+                        </div>
+                        <div class="module-option clearfix">
+                            <div class="pull-left">
+                                <div class="btn-group">
+                                    <button class="btn">今天</button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">今天</a></li>
+                                        <li><a href="#">昨天</a></li>
+                                        <li><a href="#">最近三天</a></li>
+                                        <li><a href="#">最近一周</a></li>
+                                        <li><a href="#">最近一月</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">本学期</a></li>
+                                    </ul>
+                                </div>
+                                &nbsp;自习纪律优于83%的同学 &nbsp;
+                            </div>
+
+                            <!--<div class="pull-right">-->
+                            <!--<a href="#" class="btn btn-primary">详细信息</a>-->
+                            <!--</div>-->
+                        </div>
+                        <div class="module-body table">
+
+                            <table class="table table-message">
+                                <tbody>
+                                <tr class="heading">
+                                    <td class="cell-time">日期</td>
+                                    <td class="cell-time ">时间</td>
+                                    <td class="cell-problem">详情</td>
+
+                                </tr>
+                                <tr class="task">
+                                    <td class="cell-time ">2018-04-17</td>
+                                    <td class="cell-time ">17:50</td>
+                                    <td class="cell-problem">
+                                        <div>检测到外出时间过长</div>
+                                    </td>
                                 </tr>
                                 <tr class="task resolved">
-                                    <td class="cell-time align-right">2018-04-16</td>
-                                    <td class="cell-time align-right">16:50 </td>
-                                    <td class="cell-title"><div>检测出迟到</div></td>
-                                    <td class="cell-status hidden-phone hidden-tablet"><a class="due">已处理</a></td>
+                                    <td class="cell-time ">2018-04-16</td>
+                                    <td class="cell-time ">16:50</td>
+                                    <td class="cell-problem">
+                                        <div>检测出迟到</div>
+                                    </td>
 
                                 </tr>
                                 <tr class="task resolved">
-                                    <td class="cell-time align-right">2018-04-16</td>
-                                    <td class="cell-time align-right">17:30 </td>
-                                    <td class="cell-title"><div>检测到与两人一起外出</div></td>
-                                    <td class="cell-status hidden-phone hidden-tablet"><a class="due">已处理</a></td>
+                                    <td class="cell-time ">2018-04-16</td>
+                                    <td class="cell-time ">17:30</td>
+                                    <td class="cell-problem">
+                                        <div>检测到与两人一起外出</div>
+                                    </td>
 
                                 </tr>
 
@@ -273,7 +332,7 @@
 <!--/.wrapper-->
 <div class="footer">
     <!--<div class="container">-->
-        <!--<b class="copyright">&copy; 2017 EGrappler </b>All rights reserved.-->
+    <!--<b class="copyright">&copy; 2017 EGrappler </b>All rights reserved.-->
     <!--</div>-->
 </div>
 
@@ -287,13 +346,12 @@
 <script src="../scripts/js/students_detail.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.table-message tbody tr').click(
-            function()
-            {
+            function () {
                 $(this).toggleClass('resolved');
             }
         );
-    } );
+    });
 </script>
 </body>

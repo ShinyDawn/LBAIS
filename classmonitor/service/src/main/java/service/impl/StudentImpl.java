@@ -86,7 +86,7 @@ public class StudentImpl implements StudentService {
          * 效率：发呆时间超过 ？%
          * 纪律：自习有异常pattern 需要关注
          * 退步：综合指标呈下降趋势
-         * 进步：综合指标呈上升趋势
+         * 进步：综合指标呈上升趋势？？？需要存在吗？
          */
         String[] problemlist={"旷课","补课","偏科","效率","纪律","退步","进步"};
 

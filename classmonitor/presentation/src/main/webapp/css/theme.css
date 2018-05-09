@@ -1119,7 +1119,7 @@ border-top-left-radius: 3px;
 	padding: 0
 }
 .stream.new-update a, .stream.load-more a {
-	background: #background: #f7f7f7;;
+	background:  #f7f7f7;;
 	
 	color: #555;
 	font-weight: 600;
@@ -1271,11 +1271,17 @@ border-top-left-radius: 3px;
 .message .table-message tbody td.cell-time {
 	width: 70px
 }
+.message .table-message tbody td.cell-name {
+	width: 50px
+}
+.message .table-message tbody td.cell-problem {
+	width: 200px
+}
 .message .table-message tbody td.cell-status {
 	width: 100px;
 	text-align: center
 }
-.message .table-message tbody td.cell-status b {
+.message .table-message tbody td.cell-problem b {
 	background: #d74f2a;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
@@ -1287,7 +1293,7 @@ border-top-left-radius: 3px;
 	font-size: 11px;
 	text-transform: uppercase
 }
-.message .table-message tbody td.cell-status c {
+.message .table-message tbody td.cell-problem c {
 	background: #37a2da;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
@@ -1299,8 +1305,32 @@ border-top-left-radius: 3px;
 	font-size: 11px;
 	text-transform: uppercase
 }
-.message .table-message tbody td.cell-status d {
-	background: #b8d755;
+.message .table-message tbody td.cell-problem d {
+	background: #67e0e3;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	color: #fff;
+	color: rgba(255,255,255,0.8);
+	display: inline-block;
+	padding: 1px 5px;
+	font-size: 11px;
+	text-transform: uppercase
+}
+.message .table-message tbody td.cell-problem e {
+	background: #fbb8a2;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	color: #fff;
+	color: rgba(255,255,255,0.8);
+	display: inline-block;
+	padding: 1px 5px;
+	font-size: 11px;
+	text-transform: uppercase
+}
+.message .table-message tbody td.cell-problem f {
+	background: #e58dc2;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
