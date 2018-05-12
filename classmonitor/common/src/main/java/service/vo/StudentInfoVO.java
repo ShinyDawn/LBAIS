@@ -7,6 +7,12 @@ public class StudentInfoVO {
     private int sid;
     private String name;
     private String problem;
+    private String attendanceDetail;
+    private String attendanceProblem;
+    private String deciplineDetail;
+    private String deciplineProblem;
+    private String trendDetail;
+    private String trendProblem;
     private double attendanceRate;
     private double livenessRate;
     private double deciplineRate;
@@ -58,5 +64,29 @@ public class StudentInfoVO {
 
     public void setProblem(String problem) {
         this.problem = problem;
+    }
+
+    public String getAttendanceDetail() {
+        return attendanceDetail;
+    }
+
+    public String getAttendanceProblem() {
+        return attendanceProblem;
+    }
+
+    public String getDeciplineDetail() {
+        return deciplineDetail;
+    }
+
+    public String getDeciplineProblem() {
+        return deciplineProblem;
+    }
+
+    public String getTrendDetail() {
+        return trendDetail;
+    }
+
+    public String getTrendProblem() {
+        return trendProblem;
     }
 }

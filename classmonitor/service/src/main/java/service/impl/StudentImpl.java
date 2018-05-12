@@ -71,7 +71,7 @@ public class StudentImpl implements StudentService {
     //part of Personal Model
 
 
-    public List<StudentInfoVO> getStudentsInfoList(int cid) {
+    public List<StudentInfoVO> getStudentsInfoList(int cid, int period) {
 
         List<StudentInfoVO> studentInfoVOList = new ArrayList<>();
         List<Student> students = studentRepo.findByCid(cid);
@@ -88,7 +88,8 @@ public class StudentImpl implements StudentService {
          * 退步：综合指标呈下降趋势
          * 进步：综合指标呈上升趋势？？？需要存在吗？
          */
-        String[] problemlist={"旷课","补课","偏科","效率","纪律","退步","进步"};
+        String[] problemlist = {"请假较多", "兴趣较多", "纪律较差", "退步较大"};
+
 
         for (Student student : students) {
             int sid = student.getSid();
@@ -107,6 +108,39 @@ public class StudentImpl implements StudentService {
         }
 
         return studentInfoVOList;
+    }
+
+    public List<StudentInfoVO> getStudentProblemInfo(int cid, int sid, int period) {
+        List<StudentInfoVO> studentInfoVOList = new ArrayList<>();
+
+        /**
+         * 出勤较少：出勤率不足80%
+         * 兴趣较低：某一科课堂表现<=20% (偏科：课堂表现方差>0.6)
+         * 纪律较差：出现旷课>=1次 或者 迟到未请假>=3次 早退未请假>=3次 或者自习课<=20%
+         * 退步较大：任一指标下降>30%
+         * 进步较大：任一指标上升>30%
+         */
+        String[] problemlist = {"出勤较少", "兴趣较低", "纪律较差", "退步较大"};
+        String[] problemtDetail = {"出勤率不足","课堂表现低于20%。","偏科：","课堂表现很好","课堂表现仍须努力"};
+        String[] decipline = {"旷课","迟到","早退","自习纪律低于20%"};
+        String[] trend={"下降","上升"};
+        String detailFor = "详情请见";
+        String[] model = {"出勤表现","课堂表现","自习表现"};
+
+
+        //int sid,String name,double attendanceRate,double livenessRate,double deciplineRate
+        StudentInfoVO studentInfoVO = new StudentInfoVO();
+        studentInfoVO.setSid(sid);
+        double attendanceRate = getAttendencePrecent(cid, sid, period);
+        double disciplineRate = getDisciplinePercent(cid, sid,period);
+        double livenessRate = getGeneralLivenessPercent(cid, sid,period);
+        studentInfoVO.setAttendanceRate(attendanceRate);
+        studentInfoVO.setDeciplineRate(disciplineRate);
+        studentInfoVO.setLivenessRate(livenessRate);
+
+        studentInfoVOList.add(studentInfoVO);
+        return null;
+
     }
 
     ;
@@ -156,13 +190,13 @@ public class StudentImpl implements StudentService {
 
         double attendenceRate = 1;
 
-        if(totalperiods ==0){
+        if (totalperiods == 0) {
             return attendenceRate;
         }
 
         double absenctCourses = lateForClass + earlyOut + absentee + cuttingSchool;
 
-        if(absenctCourses>totalperiods){
+        if (absenctCourses > totalperiods) {
             absenctCourses = totalperiods;
         }
         attendenceRate = 1 - 1.0 * absenctCourses / totalperiods;

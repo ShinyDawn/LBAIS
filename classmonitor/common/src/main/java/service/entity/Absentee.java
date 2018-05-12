@@ -22,8 +22,10 @@ public class Absentee {
     private String date;
     //time period absent
     private int tid;
-    //illness or personal affairs
+    //具体理由
     private String reason;
+    //病假或者事假
+    private String type;
 
     public void setId(int id) {
         this.id = id;
@@ -71,5 +73,12 @@ public class Absentee {
 
     public void setTid(int tid) {
         this.tid = tid;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+    public String getType() {
+        return type;
     }
 }

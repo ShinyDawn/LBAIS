@@ -35,6 +35,8 @@ public interface StudentService {
 	public double getDisciplineRate(int cid,int sid,int period);
 	public double getDisciplinePercent(int cid,int sid,int period);
 
-	public List<StudentInfoVO> getStudentsInfoList(int cid);
+	public List<StudentInfoVO> getStudentProblemInfo(int cid, int sid, int period);
+
+	public List<StudentInfoVO> getStudentsInfoList(int cid,int period);
 
 }

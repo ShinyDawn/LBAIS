@@ -24,7 +24,7 @@ public class StudentController {
     @RequestMapping(value = "/student")
     @ResponseBody
     public List<StudentInfoVO> getStudentsInfo(@RequestParam("cid") int cid ){
-        return studentService.getStudentsInfoList(cid);
+        return studentService.getStudentsInfoList(cid,7);
     }
 	/**
 	 *
