@@ -1,12 +1,16 @@
 package process.service;
 
+import process.model.ClassBehaviorConfig;
+
 public interface InitService {
 	
-	public void init();
+	public void init(ClassBehaviorConfig config);
 	
-	public void initSourceProducer();
+	public SourceService initSource();
 	
-	public void initProcessor();
+	public PoseService initPose();
 	
-	public void initDebugProcessor();
+	public AnalyseService initProcessor();
+	
+	public AnalyseService initDebugProcessor();
 }

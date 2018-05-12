@@ -1,4 +1,4 @@
-package process.impl;
+package process;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
