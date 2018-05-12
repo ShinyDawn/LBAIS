@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import process.impl.Dispatcher;
 import process.impl.InitImpl;
 import process.model.ClassBehaviorConfig;
 import process.model.StudentPose;
 import process.service.AnalyseService;
+import process.service.DispatchService;
 import process.service.InitService;
 import process.service.PoseService;
 import process.service.SourceService;
@@ -20,6 +22,7 @@ public class Application {
 	private static PoseService pose = null;
 	private static AnalyseService analyseClassBehavior = null;
 	private static ClassBehaviorConfig conf = null;
+	private static DispatchService dispatcher;
 
 	public static void main(String[] args) {
 
@@ -29,6 +32,8 @@ public class Application {
 		InitService init = new InitImpl();
 		init.init(conf);
 
+		dispatcher = new Dispatcher();
+		dispatcher.init(conf.getClassroom());
 		source = init.initSource();
 		source.init(conf.getDir(), conf.getTarget());
 		pose = init.initPose();
@@ -46,9 +51,7 @@ public class Application {
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			public void run() {
-				String filename = source.getNextSource();
-				List<StudentPose> list = pose.getStudentPose(filename);
-				analyseClassBehavior.analyse(list);
+				dispatcher.dispatch(source, pose, analyseClassBehavior, analyseClassBehavior);
 			}
 		}, 1000, (long) (conf.getInterval() * 1000));
 	}
