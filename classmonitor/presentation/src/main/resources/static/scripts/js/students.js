@@ -2,89 +2,88 @@
  * Created by elva on 2018/4/25.
  */
 window.onload = function () {
+    changeUserInfo();
+    var sequenceId = $.session.get('current_sequence_id');//默认为0
+    var period = $.session.get('current_period');//默认为1，即今天
+    getClassInfo(sequenceId);//在这里获得cid
 
-    $('#time-tip').html(timeTip());
-    $('#name').html($.session);
+//        var divider;
+//        if (period === '1') {
+//            divider = '今天';
+//        } else if (period === '3') {
+//            divider = '未来三天';
+//        } else {
+//            divider = '未来一周';
+//        }
+//        $('#time_filter').html(divider);
+//
+    var cid = $.session.get('current_cid');
+    changeStudentList(cid, period);
+};
+
+function changeStudentList(cid,period){
+    $('#students_list').append(addtitle());
+    $.ajax({
+        url: 'http://localhost:10002/student',
+        dataType: 'json',
+        type: 'POST',
+        data: {'cid': cid, 'period': 30},
+        success: function (obj) {
+            for (var i = 0; i < obj.length; i++) {
+                $('#students_list').append(createStudentsList(obj[i]))
+            }
+        }
+    })
+};
+
+function addtitle() {
+
+    var tr = $('<tr class="heading"></tr>');
+    var td1 = $('<td class="cell-name">学号</td>');
+    var td2 = $('<td class="cell-name">姓名</td>');
+    var td3 = $('<td class="cell-name">出勤表现</td>');
+    var td4 = $('<td class="cell-name">课堂表现</td>');
+    var td5 = $('<td class="cell-name">自习表现</td>');
+    var td6 = $('<td class="cell-problem hidden-phone hidden-tablet">可能存在的问题</td>');
+    tr.append(td1, td2, td3, td4, td5, td6);
+    return tr;
+}
+function createStudentsList(data) {
 
 
-    // changeUserInfo()
-    // var username = $.cookie('username')
-    // $.ajax({
-    //     url: "/index.php/sportquickinfo",
-    //     type: 'get',
-    //     dataType: 'json',
-    //     data: {
-    //         'username': username
-    //     },
-    //     async: false,
-    //     success: function (obj) {
-    //         $('#total_days').html(obj.totalDays + '天')
-    //         $('#total_times').html(obj.trainTimes + '次')
-    //         $('#total_time').html(obj.trainTime + '分钟')
-    //         $('#total_energy').html(obj.energyCost + '千卡')
-    //     }
-    // })
-    //
-    // $.ajax({
-    //     url: "/index.php/activity/get_coming",
-    //     type: 'get',
-    //     dataType: 'json',
-    //     data: {'username': username},
-    //     success: function (obj) {
-    //         for (var i = 0; i < obj.length; i++) {
-    //             createActivityShow('coming_activities', obj[i])
-    //         }
-    //     }
-    // })
-    //
-    // var option = {
-    //     color: ['#3398DB'],
-    //     tooltip: {
-    //         trigger: 'axis',
-    //         axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-    //             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-    //         }
-    //     },
-    //     grid: {},
-    //     xAxis: [
-    //         {
-    //             type: 'category',
-    //             splitArea: {
-    //                 show: false
-    //             },
-    //             splitLine: {
-    //                 show: false
-    //             },
-    //             data: ['0min-20min', '20min-40min', '40min-60min', '60min-80min', '80min-100min', '100min-120min', '120min+'],
-    //             axisTick: {
-    //                 alignWithLabel: true
-    //             }
-    //         }
-    //     ],
-    //     yAxis: [
-    //         {
-    //             scale: true,
-    //             splitArea: {
-    //                 show: false
-    //             },
-    //             splitLine: {
-    //                 show: false
-    //             },
-    //             type: 'value'
-    //         }
-    //     ],
-    //     series: [
-    //         {
-    //             name: '人数',
-    //             type: 'line',
-    //             barWidth: '60%',
-    //             areaStyle: {normal: {}},
-    //             data: [1, 3, 10, 15, 17, 4, 3]
-    //         }
-    //     ]
-    // };
-    //
-    //
-    // var myChart = echarts.init(document.getElementById('sportTimeChart'));
-    // myChart.setOption(option);
+        // <td class="cell-problem hidden-phone hidden-tablet">
+        // <c>请假较多</c>
+        // <d>兴趣较低</d>
+        // <e>纪律较差</e>
+        // <f>退步较大</f>
+        // </td>
+    
+    var tr = $('<tr class="task"></tr>');
+    var td1 = $('<td class="cell-name"></td>');
+    var td2 = $('<td class="cell-name"></td>');
+    var td3 = $('<td class="cell-name"></td>');
+    var td4 = $('<td class="cell-name"></td>');
+    var td5 = $('<td class="cell-name"></td>');
+    var td6 = $('<td class="cell-problem hidden-phone hidden-tablet">');
+    var a = $('<a></a>')
+    var sid = data['sid'];
+
+    td1.html(data['sid']);
+    td2.html(data['name']);
+    td3.html(toPercent(data['attendanceRate']));
+    td4.html(toPercent(data['generalRate']));
+    td5.html(toPercent(data['deciplineRate']));
+    tr.append(td1, td2, td3, td4, td5, td6);
+
+    return tr;
+}
+
+function click_student() {
+
+}
+
+function toPercent(point){
+    var str=Number(point*100).toFixed(0);
+    str+="%";
+    return str;
 }

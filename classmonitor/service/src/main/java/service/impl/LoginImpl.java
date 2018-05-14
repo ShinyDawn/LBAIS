@@ -7,6 +7,8 @@ import service.entity.User;
 import service.repository.UserRepository;
 import service.service.LoginService;
 
+import java.util.List;
+
 @Service
 public class LoginImpl implements LoginService {
 	@Autowired
@@ -22,6 +24,14 @@ public class LoginImpl implements LoginService {
 			return "admin";
 		else
 			return user.getName();
+
+
+	}
+
+	public boolean verifyLogin(User user){
+
+		List<User> userList = userRepo.findAllByUidAndAndPassword(user.getUid(), user.getPassword());
+		return userList.size()>0;
 	}
 
 }

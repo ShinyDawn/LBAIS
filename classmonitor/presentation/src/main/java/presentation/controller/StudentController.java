@@ -8,6 +8,6 @@ public class StudentController {
 
 	@RequestMapping(value = "/students")
     public String index() {
-        return "teacher/students";
+        return "students";
     }
 }

@@ -1,5 +1,6 @@
 package service.impl;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,39 +80,35 @@ public class StudentImpl implements StudentService {
         if (students == null || students.isEmpty()) {
             return studentInfoVOList;
         }
-        /**
-         * 旷课：只要缺勤不请假就算旷课
-         * 补课：出勤率不足 ？% 或者有非自习课的请假现象 几次？
-         * 偏科：各个科目的活跃度方差大于 ？
-         * 效率：发呆时间超过 ？%
-         * 纪律：自习有异常pattern 需要关注
-         * 退步：综合指标呈下降趋势
-         * 进步：综合指标呈上升趋势？？？需要存在吗？
-         */
-        String[] problemlist = {"请假较多", "兴趣较多", "纪律较差", "退步较大"};
-
 
         for (Student student : students) {
             int sid = student.getSid();
             //int sid,String name,double attendanceRate,double livenessRate,double deciplineRate
-            StudentInfoVO studentInfoVO = new StudentInfoVO();
-            studentInfoVO.setSid(sid);
-            studentInfoVO.setName(student.getName());
-            double attendanceRate = getAttendencePrecent(cid, sid, 30);
-            double disciplineRate = getDisciplinePercent(cid, sid, 30);
-            double livenessRate = getGeneralLivenessPercent(cid, sid, 30);
-            studentInfoVO.setAttendanceRate(attendanceRate);
-            studentInfoVO.setDeciplineRate(disciplineRate);
-            studentInfoVO.setLivenessRate(livenessRate);
-
+            StudentInfoVO studentInfoVO = getStudentProblemInfo(cid,sid,period);
             studentInfoVOList.add(studentInfoVO);
         }
 
         return studentInfoVOList;
     }
 
-    public List<StudentInfoVO> getStudentProblemInfo(int cid, int sid, int period) {
-        List<StudentInfoVO> studentInfoVOList = new ArrayList<>();
+
+    public StudentInfoVO getStudentProblemInfo(int cid, int sid, int period) {
+        //int sid,String name,double attendanceRate,double livenessRate,double deciplineRate
+        StudentInfoVO studentInfoVO = new StudentInfoVO();
+        studentInfoVO.setSid(sid);
+        studentInfoVO.setName(studentRepo.getName(cid,sid));
+        double attendanceRate = getAttendancePrecent(cid, sid, period);
+        double disciplineRate = getDisciplinePercent(cid, sid, period);
+        LivenessVO livenessVO = getGeneralLivenessPercent(cid, sid, period);
+        double livenessRate = livenessVO.getLivenessRate();
+        double conRate = livenessVO.getConcentrationRate();
+        double genRate = livenessVO.getGeneralRate();
+        studentInfoVO.setAttendanceRate(attendanceRate);
+        studentInfoVO.setDeciplineRate(disciplineRate);
+        studentInfoVO.setGeneralRate(genRate);
+        studentInfoVO.setLivenessRate(livenessRate);
+        studentInfoVO.setConcentrationRate(conRate);
+
 
         /**
          * 出勤较少：出勤率不足80%
@@ -120,26 +117,178 @@ public class StudentImpl implements StudentService {
          * 退步较大：任一指标下降>30%
          * 进步较大：任一指标上升>30%
          */
-        String[] problemlist = {"出勤较少", "兴趣较低", "纪律较差", "退步较大"};
-        String[] problemtDetail = {"出勤率不足","课堂表现低于20%。","偏科：","课堂表现很好","课堂表现仍须努力"};
-        String[] decipline = {"旷课","迟到","早退","自习纪律低于20%"};
-        String[] trend={"下降","上升"};
-        String detailFor = "详情请见";
-        String[] model = {"出勤表现","课堂表现","自习表现"};
+        //默认分析一周的问题
+        List<ProblemVO> problemList = new ArrayList<>();
+
+        /**
+         * 出勤方面的问题
+         */
+        double rate = 0.0;
+
+        DecimalFormat df = new DecimalFormat("#.00%");
+        rate = getAttendanceRate(cid, sid, 7);
+        if (rate < 0.8) {
+            ProblemVO problem = new ProblemVO();
+            problem.setTitle("出勤较少");
+            problem.setDetail("出勤率为" + df.format(rate) + "。");
+            problem.setIsProgress(-1);
+            problemList.add(problem);
+        } else if (rate >= 0.8) {
+            ProblemVO problem = new ProblemVO();
+            problem.setTitle("出勤良好");
+            problem.setDetail("出勤率为" + df.format(rate) + "。");
+            problem.setIsProgress(0);
+            problemList.add(problem);
+        }
+
+        /**
+         * 课堂表现，可再细分专注度与活跃度
+         */
+        rate = genRate;
+        if (rate <= 0.2) {
+            ProblemVO problem = new ProblemVO();
+            problem.setTitle("兴趣较低");
+            problem.setDetail("最近课堂表现低迷，需要注意。");
+            problem.setIsProgress(-1);
+            problemList.add(problem);
+        } else if (rate >= 0.7) {
+            ProblemVO problem = new ProblemVO();
+            problem.setTitle("兴趣满满");
+            problem.setDetail("最近课堂表现活跃，值得肯定。");
+            problem.setIsProgress(0);
+            problemList.add(problem);
+        } else {
+            ProblemVO problem = new ProblemVO();
+            problem.setTitle("兴趣一般");
+            problem.setDetail("最近课堂表现不错，仍须努力。");
+            problem.setIsProgress(0);
+            problemList.add(problem);
+        }
+
+        /**
+         * 偏科
+         */
 
 
-        //int sid,String name,double attendanceRate,double livenessRate,double deciplineRate
-        StudentInfoVO studentInfoVO = new StudentInfoVO();
-        studentInfoVO.setSid(sid);
-        double attendanceRate = getAttendencePrecent(cid, sid, period);
-        double disciplineRate = getDisciplinePercent(cid, sid,period);
-        double livenessRate = getGeneralLivenessPercent(cid, sid,period);
-        studentInfoVO.setAttendanceRate(attendanceRate);
-        studentInfoVO.setDeciplineRate(disciplineRate);
-        studentInfoVO.setLivenessRate(livenessRate);
+        /**
+         * 自习纪律低于20%
+         * 出现旷课>=1次 或者 迟到未请假>=3次 早退未请假>=3次
+         */
+        rate = disciplineRate;
+        String date = DateUtil.getPassedDate(period, DateUtil.getDate());
+        List<Behavior> voilation = behaviorRipository.findAbsenteeVoilation(cid, sid, date);
+        String detail = "";
+        if (voilation == null || voilation.isEmpty()) {
 
-        studentInfoVOList.add(studentInfoVO);
-        return null;
+        } else {
+            //迟到
+            int lateForClass = 0;
+            //早退
+            int earlyOut = 0;
+            //缺勤旷课
+            int cuttingSchool = 0;
+            for (Behavior b : voilation) {
+                if (b.getAction().equals("迟到")) {
+                    lateForClass++;
+                } else if (b.getAction().equals("早退")) {
+                    earlyOut++;
+                } else if (b.getAction().equals("缺勤")) {
+                    cuttingSchool++;
+                }
+            }
+            detail = "迟到" + lateForClass + "次，早退" + earlyOut + "次，旷课" + cuttingSchool + "次，详情见出勤表现。";
+        }
+
+        if (rate <= 0.2) {
+            ProblemVO problem = new ProblemVO();
+            problem.setTitle("纪律较差");
+            problem.setDetail("最近自习表现低迷，需要注意。" + detail);
+            problem.setIsProgress(-1);
+            problemList.add(problem);
+        } else if (!detail.equals("")) {
+            ProblemVO problem = new ProblemVO();
+            problem.setTitle("纪律较差");
+            problem.setDetail(detail);
+            problem.setIsProgress(-1);
+            problemList.add(problem);
+        }
+
+        /**
+         * 退步较大：课堂指标下降>30%，出勤、纪律下降60%
+         %        * 进步较大：课堂指标上升>30%，出勤、纪律上升60% , period 再设计
+         */
+
+        double past_percent_a = 0.0;
+        double now_percent_a = 0.0;
+        double past_percent_d = 0.0;
+        double now_percent_d = 0.0;
+        double past_percent_l = 0.0;
+        double now_percent_l = 0.0;
+        now_percent_a = attendanceRate;
+        past_percent_a = getAttendancePrecent(cid, sid, 7);
+        now_percent_d = disciplineRate;
+        past_percent_d = getDisciplinePercent(cid, sid, 7);
+        now_percent_l = genRate;
+        past_percent_l = getGeneralLivenessPercent(cid, sid, 7).getGeneralRate();
+
+        double offset_a = now_percent_a - past_percent_a;
+        double offset_d = now_percent_d - past_percent_d;
+        double offset_l = now_percent_l - past_percent_l;
+
+        String detail_a = "";
+        String detail_d = "";
+        String detail_l = "";
+
+        //退步
+        boolean fall = false;
+        if (offset_a < -0.6) {
+            detail_a = "出勤表现退步明显，需要注意。";
+            fall = true;
+        }
+        if (offset_d < -0.6) {
+            detail_d = "自习表现退步明显，需要注意。";
+            fall = true;
+        }
+        if (offset_l < -0.3) {
+            detail_l = "课堂表现退步明显，需要注意。";
+            fall = true;
+        }
+
+        if (fall) {
+            ProblemVO problem = new ProblemVO();
+            problem.setTitle("退步较大");
+            problem.setDetail(detail_a + detail_d + detail_l);
+            problem.setIsProgress(-1);
+            problemList.add(problem);
+        }
+
+        detail_a = "";
+        detail_d = "";
+        detail_l = "";
+        boolean advance = false;
+        if (offset_a > 0.6) {
+            detail_a = "出勤表现进步明显，需要表扬。";
+            advance = true;
+        }
+        if (offset_d > 0.6) {
+            detail_d = "自习表现进步明显，需要表扬。";
+            advance = true;
+        }
+        if (offset_l > 0.3) {
+            detail_l = "课堂表现进步明显，需要表扬。";
+            advance = true;
+        }
+
+        if (advance) {
+            ProblemVO problem = new ProblemVO();
+            problem.setTitle("进步较大");
+            problem.setDetail(detail_a + detail_d + detail_l);
+            problem.setIsProgress(1);
+            problemList.add(problem);
+        }
+
+        studentInfoVO.setProblem(problemList);
+        return studentInfoVO;
 
     }
 
@@ -170,7 +319,7 @@ public class StudentImpl implements StudentService {
         return attendanceVOList;
     }
 
-    public double getAttendenceRate(int cid, int sid, int period) {
+    public double getAttendanceRate(int cid, int sid, int period) {
 
         String date = DateUtil.getPassedDate(period, DateUtil.getDate());
         int courses = curriculumRepository.countCoursesOneDay(cid);
@@ -204,7 +353,7 @@ public class StudentImpl implements StudentService {
         return attendenceRate;
     }
 
-    public double getAttendencePrecent(int cid, int sid, int period) {
+    public double getAttendancePrecent(int cid, int sid, int period) {
         double rankPercent = 0;
         int rank = 0;
         List<Integer> sidList = studentRepo.getSid(cid);
@@ -214,7 +363,7 @@ public class StudentImpl implements StudentService {
         List<StudentDataVO> rankList = new ArrayList<>();
         for (Integer integer : sidList) {
             int id = (int) integer;
-            StudentDataVO studentDataVO = new StudentDataVO(id, getAttendenceRate(cid, id, period));
+            StudentDataVO studentDataVO = new StudentDataVO(id, getAttendanceRate(cid, id, period));
             rankList.add(studentDataVO);
         }
         rank = getSort(rankList, sid);
@@ -223,77 +372,14 @@ public class StudentImpl implements StudentService {
         if (num == 0) {
             return rankPercent;
         }
-        rankPercent = 1 - 1.0 * rank / num;
+        rankPercent = 1 - 1.0 * (rank-0.9)/ num;
         return rankPercent;
     }
-
     ;
 
-    public List<LivenessVO> getLivenessInfo(int cid, int sid, int period) {
-
-        List<LivenessVO> resultList = new ArrayList<>();
-        String startDate = DateUtil.getPassedDate(period, DateUtil.getDate());
-
-        List<String> subjects = curriculumRepository.getDistinctSubject(cid);
-        if (subjects == null || subjects.isEmpty()) {
-            return resultList;
-        }
-
-        for (String s : subjects) {
-            if (s.equals("自习")) {
-                continue;
-            }
-            List<LivenessVO> livenessVOList = getLivenessInfoBysubject(cid, sid, period, s);
-            LivenessVO livenessVO = new LivenessVO();
-            livenessVO.setSubject(s);
-
-            double livenessRate = 0;
-            double concentrationRate = 0;
-            double handsUpTimes = 0;
-
-            if (livenessVOList == null || livenessVOList.isEmpty()) {
-
-            } else {
-                double sumLivenessRate = 0;
-                double sumConcentrationRate = 0;
-                double sumhandsUpTimes = 0;
-                int attendTimes = livenessVOList.size();
-
-                for (int i = 0; i < livenessVOList.size(); i++) {
-                    //这里需要处理请假，因为是各个科目的总体情况，需要处理极端数据：请假不计入计数，未请假仍计入
-                    //注意一种情况：迟到和早退、以及离开时间不算太长的话，举手次数相对比较多时课堂参与度也会相对来说较高，因此还是计入为好，故只计算课堂参与度低于0.3的情况
-                    LivenessVO temp = livenessVOList.get(i);
-                    if (temp.getLivenessRate() < 0.3) {
-                        if (behaviorRipository.countApproval(cid, sid, temp.getDate(), temp.getTid()) != 0) {
-                            attendTimes -= 1;
-                            //以防万一，统一设置请假的统计指标为0,消除后面统一技术影响
-                            temp.setHandsUpTimes(0);
-                            temp.setLivenessRate(0);
-                            temp.setConcentrationRate(0);
-                        }
-                    }
-                    sumLivenessRate += temp.getLivenessRate();
-                    sumConcentrationRate += temp.getConcentrationRate();
-                    sumhandsUpTimes += temp.getHandsUpTimes();
-                }
-
-                if (attendTimes != 0) {
-                    livenessRate = sumLivenessRate / attendTimes;
-                    concentrationRate = sumConcentrationRate / attendTimes;
-                    handsUpTimes = sumhandsUpTimes / attendTimes;
-                }
-
-            }
-
-            livenessVO.setLivenessRate(livenessRate);
-            livenessVO.setConcentrationRate(concentrationRate);
-            livenessVO.setHandsUpTimes(handsUpTimes);
-            resultList.add(livenessVO);
-        }
-
-        return resultList;
-    }
-
+    /**
+     * 每一门学科每一个课时的每个学生的课堂表现统计 数值 （活跃度、参与度、综合表现）
+     */
     public List<LivenessVO> getLivenessInfoBysubject(int cid, int sid, int period, String subject) {
 
         List<LivenessVO> resultList = new ArrayList<>();
@@ -376,20 +462,358 @@ public class StudentImpl implements StudentService {
             }
 
             /**
-             * 三个需要计算的指标之一 handsUp
+             * 三个需要计算的指标之一 handsUp ！！！！！！
+             * 更改：为综合表现度
+             * 参数定义
+             *         double general_a = 0.7;
+             *         double general_b = 0.3;
              */
+//
+//            double handsUp = timesOfHandsUp;
 
-            double handsUp = timesOfHandsUp;
+            double general_a = 0.7;
+            double general_b = 0.3;
+
+            double generalRate = general_a * livenessRate + general_b * concentrationRate;
 
             LivenessVO livenessVO = new LivenessVO();
             livenessVO.setDate(date);
             livenessVO.setTid(tid);
             livenessVO.setSubject(subject);
-            livenessVO.setHandsUpTimes(handsUp);
+//            livenessVO.setHandsUpTimes(handsUp);
+            livenessVO.setGeneralRate(generalRate);
             livenessVO.setLivenessRate(livenessRate);
             livenessVO.setConcentrationRate(concentrationRate);
             resultList.add(livenessVO);
+        }
 
+        return resultList;
+    }
+
+
+    /**
+     * 每一门学科每一个课时的每个学生的课堂表现统计 排名percent （活跃度、参与度、综合表现）（echarts 学科-图接口）
+     */
+    public List<LivenessVO> getLivenessPercentBySubject(int cid, int sid, int period, String subject) {
+        List<LivenessVO> percentList = new ArrayList<>();
+
+        List<Integer> sidList = studentRepo.getSid(cid);
+        if (sidList == null || sidList.isEmpty()) {
+            return percentList;
+        }
+        //stuNum 不可能为零
+        int stuNum = sidList.size();
+
+        List<LivenessVO> primitiveList = getLivenessInfoBysubject(cid, sid, period, subject);
+        if (primitiveList == null || primitiveList.isEmpty()) {
+            return percentList;
+        }
+
+
+        for (int i = 0; i < primitiveList.size(); i++) {
+            LivenessVO currentStu = primitiveList.get(i);
+            int rank_con, rank_live, rank_gen;
+            List<StudentDataVO> rankList_con = new ArrayList<>();
+            List<StudentDataVO> rankList_live = new ArrayList<>();
+            List<StudentDataVO> rankList_gen = new ArrayList<>();
+            for (Integer integer : sidList) {
+                int id = (int) integer;
+                List<LivenessVO> compareList = getLivenessInfoBysubject(cid, id, period, subject);
+                for (int j = 0; j < compareList.size(); j++) {
+                    LivenessVO compareStu = compareList.get(j);
+                    if (currentStu.getDate().equals(compareStu.getDate()) && currentStu.getTid() == compareStu.getTid()) {
+
+                        StudentDataVO data_con = new StudentDataVO(id, compareStu.getConcentrationRate());
+                        rankList_con.add(data_con);
+
+                        StudentDataVO data_live = new StudentDataVO(id, compareStu.getLivenessRate());
+                        rankList_live.add(data_live);
+
+                        StudentDataVO data_gen = new StudentDataVO(id, compareStu.getGeneralRate());
+                        rankList_gen.add(data_gen);
+                        //提高性能
+                        compareList.remove(j);
+                        break;
+                    }
+                }
+            }
+
+            rank_con = getSort(rankList_con, sid);
+            rank_gen = getSort(rankList_gen, sid);
+            rank_live = getSort(rankList_live, sid);
+
+            double percent_con = 0.0;
+            double percent_live = 0.0;
+            double percent_gen = 0.0;
+
+            if (stuNum != 0) {
+                percent_con = 1 - 1.0 * (rank_con - 0.9) / stuNum;
+                percent_live = 1 - 1.0 * (rank_live - 0.9) / stuNum;
+                percent_gen = 1 - 1.0 * (rank_gen - 0.9) / stuNum;
+            }
+            LivenessVO percentVO = new LivenessVO();
+            percentVO.setGeneralRate(percent_gen);
+            percentVO.setLivenessRate(percent_live);
+            percentVO.setConcentrationRate(percent_con);
+
+            percentVO.setDate(currentStu.getDate());
+            percentVO.setTid(currentStu.getTid());
+            percentVO.setSubject(subject);
+            percentList.add(percentVO);
+        }
+
+        return percentList;
+    }
+
+    /**
+     * 每一门学科每天每个学生的课堂表现统计 数值（活跃度、参与度、综合表现）
+     */
+
+    public List<LivenessVO> getLivenessDailyBySubject(int cid, int sid, int period, String subject) {
+
+        List<LivenessVO> resultList = new ArrayList<>();
+        List<LivenessVO> primitiveList = getLivenessInfoBysubject(cid, sid, period, subject);
+
+        if (primitiveList == null || primitiveList.isEmpty()) {
+            return resultList;
+        }
+        for (int i = 0; i < primitiveList.size(); i++) {
+            LivenessVO current = primitiveList.get(i);
+            for (int j = i + 1; j < primitiveList.size(); j++) {
+                LivenessVO compare = primitiveList.get(j);
+                if (current.getDate().equals(compare.getDate()) && current.getTid() != compare.getTid()) {
+                    current.setConcentrationRate(0.5 * (current.getConcentrationRate() + compare.getConcentrationRate()));
+                    current.setLivenessRate(0.5 * (current.getLivenessRate() + compare.getLivenessRate()));
+                    current.setGeneralRate(0.5 * (current.getGeneralRate() + compare.getGeneralRate()));
+                    current.setHandsUpTimes(0.5 * (current.getHandsUpTimes() + compare.getHandsUpTimes()));
+                    primitiveList.remove(j);
+                    break;
+                }
+            }
+            resultList.add(current);
+        }
+
+        return resultList;
+    }
+
+    /**
+     * 每一门学科每天每个学生的课堂表现统计 排名percent（活跃度、参与度、综合表现）每天都填充
+     */
+    public List<LivenessVO> getLivenessInfoDaily(int cid, int sid, int period, String subject) {
+        List<LivenessVO> resultList = new ArrayList<>();
+
+        List<LivenessVO> primitivelist = getLivenessPercentDaily(cid, sid, period, subject);
+
+        if (primitivelist == null || primitivelist.isEmpty()) {
+            return resultList;
+        }
+
+        if (period == primitivelist.size()) {
+            return primitivelist;
+        }
+        String endDate = DateUtil.getDate();
+        for (int i = period - 1; i >= 0; i--) {
+            String date = DateUtil.getPassedDate(i, endDate);
+            boolean dateExist = false;
+            for (int j = 0; j < primitivelist.size(); j++) {
+                LivenessVO livenessVO = primitivelist.get(j);
+                if (livenessVO.getDate().equals(date)) {
+                    resultList.add(livenessVO);
+                    primitivelist.remove(j);
+                    dateExist = true;
+                    break;
+                }
+            }
+            if (!dateExist) {
+                LivenessVO livenessVO = new LivenessVO();
+                livenessVO.setDate(date);
+                livenessVO.setSubject(subject);
+                resultList.add(livenessVO);
+            }
+        }
+
+        return resultList;
+    }
+
+    /**
+     * 每一门学科每天每个学生的课堂表现统计 排名percent（活跃度、参与度、综合表现）
+     */
+    private List<LivenessVO> getLivenessPercentDaily(int cid, int sid, int period, String subject) {
+
+
+        List<LivenessVO> percentList = new ArrayList<>();
+
+        List<Integer> sidList = studentRepo.getSid(cid);
+        if (sidList == null || sidList.isEmpty()) {
+            return percentList;
+        }
+        //stuNum 不可能为零
+        int stuNum = sidList.size();
+
+        List<LivenessVO> primitiveList = getLivenessDailyBySubject(cid, sid, period, subject);
+        if (primitiveList == null || primitiveList.isEmpty()) {
+            return percentList;
+        }
+        for (int i = 0; i < primitiveList.size(); i++) {
+            LivenessVO currentStu = primitiveList.get(i);
+            int rank_con, rank_live, rank_gen;
+            List<StudentDataVO> rankList_con = new ArrayList<>();
+            List<StudentDataVO> rankList_live = new ArrayList<>();
+            List<StudentDataVO> rankList_gen = new ArrayList<>();
+            for (Integer integer : sidList) {
+                int id = (int) integer;
+                List<LivenessVO> compareList = getLivenessDailyBySubject(cid, id, period, subject);
+                for (int j = 0; j < compareList.size(); j++) {
+                    LivenessVO compareStu = compareList.get(j);
+                    if (currentStu.getDate().equals(compareStu.getDate())) {
+
+                        StudentDataVO data_con = new StudentDataVO(id, compareStu.getConcentrationRate());
+                        rankList_con.add(data_con);
+
+                        StudentDataVO data_live = new StudentDataVO(id, compareStu.getLivenessRate());
+                        rankList_live.add(data_live);
+
+                        StudentDataVO data_gen = new StudentDataVO(id, compareStu.getGeneralRate());
+                        rankList_gen.add(data_gen);
+                        //提高性能
+                        compareList.remove(j);
+                        break;
+                    }
+                }
+            }
+
+            rank_con = getSort(rankList_con, sid);
+            rank_gen = getSort(rankList_gen, sid);
+            rank_live = getSort(rankList_live, sid);
+
+            double percent_con = 0.0;
+            double percent_live = 0.0;
+            double percent_gen = 0.0;
+
+            if (stuNum != 0) {
+                percent_con = 1 - 1.0 * (rank_con - 0.9) / stuNum;
+                percent_live = 1 - 1.0 * (rank_live - 0.9) / stuNum;
+                percent_gen = 1 - 1.0 * (rank_gen - 0.9) / stuNum;
+            }
+            LivenessVO percentVO = new LivenessVO();
+            percentVO.setGeneralRate(percent_gen);
+            percentVO.setLivenessRate(percent_live);
+            percentVO.setConcentrationRate(percent_con);
+
+            percentVO.setDate(currentStu.getDate());
+            percentVO.setTid(currentStu.getTid());
+            percentVO.setSubject(currentStu.getSubject());
+            percentList.add(percentVO);
+        }
+
+        return percentList;
+    }
+
+
+    /**
+     * 每一门学科每天每个学生的课堂表现统计 percent（活跃度、参与度、综合表现）时间段内 所有学科 (echarts 全部-图接口)
+     */
+    public List<LivenessShowVO> getLivenessPercentDaily(int cid, int sid, int period) {
+
+        List<LivenessShowVO> resultList = new ArrayList<>();
+
+        List<String> initList = curriculumRepository.getDistinctSubject(cid);
+
+        if (initList == null || initList.isEmpty()) {
+            return resultList;
+        }
+
+        for (String s : initList) {
+            if (s.equals("自习")) {
+                continue;
+            }
+            List<LivenessVO> primitiveList = getLivenessInfoDaily(cid, sid, period, s);
+            LivenessShowVO livenessShowVO = new LivenessShowVO();
+            livenessShowVO.setSubject(s);
+            livenessShowVO.setData(primitiveList);
+            resultList.add(livenessShowVO);
+        }
+        return resultList;
+    }
+
+
+    private LivenessVO getGenaralInfoBySubject(int cid, int sid, int period, String subject) {
+
+
+        LivenessVO livenessVO = new LivenessVO();
+        livenessVO.setSubject(subject);
+
+        List<LivenessVO> livenessVOList = getLivenessInfoBysubject(cid, sid, period, subject);
+        if (livenessVOList == null || livenessVOList.isEmpty()) {
+            return livenessVO;
+        }
+
+
+        double livenessRate = 0;
+        double concentrationRate = 0;
+        double handsUpTimes = 0;
+
+        if (livenessVOList == null || livenessVOList.isEmpty()) {
+
+        } else {
+            double sumLivenessRate = 0;
+            double sumConcentrationRate = 0;
+            double sumhandsUpTimes = 0;
+            int attendTimes = livenessVOList.size();
+
+            for (int i = 0; i < livenessVOList.size(); i++) {
+                //这里需要处理请假，因为是各个科目的总体情况，需要处理极端数据：请假不计入计数，未请假仍计入
+                //注意一种情况：迟到和早退、以及离开时间不算太长的话，举手次数相对比较多时课堂参与度也会相对来说较高，因此还是计入为好，故只计算课堂参与度低于0.3的情况
+                LivenessVO temp = livenessVOList.get(i);
+                if (temp.getLivenessRate() < 0.3) {
+                    if (behaviorRipository.countApproval(cid, sid, temp.getDate(), temp.getTid()) != 0) {
+                        attendTimes -= 1;
+                        //以防万一，统一设置请假的统计指标为0,消除后面统一技术影响
+                        temp.setHandsUpTimes(0);
+                        temp.setLivenessRate(0);
+                        temp.setConcentrationRate(0);
+                    }
+                }
+                sumLivenessRate += temp.getLivenessRate();
+                sumConcentrationRate += temp.getConcentrationRate();
+                sumhandsUpTimes += temp.getHandsUpTimes();
+            }
+
+            if (attendTimes != 0) {
+                livenessRate = sumLivenessRate / attendTimes;
+                concentrationRate = sumConcentrationRate / attendTimes;
+                handsUpTimes = sumhandsUpTimes / attendTimes;
+            }
+
+        }
+
+        livenessVO.setLivenessRate(livenessRate);
+        livenessVO.setConcentrationRate(concentrationRate);
+        livenessVO.setHandsUpTimes(handsUpTimes);
+        livenessVO.setGeneralRate();
+
+        return livenessVO;
+
+    }
+
+    /**
+     * 获得某学生各科在某个时间段内的课堂表现统计 数值（活跃度、参与度、综合表现）
+     */
+    public List<LivenessVO> getLivenessInfo(int cid, int sid, int period) {
+
+        List<LivenessVO> resultList = new ArrayList<>();
+        String startDate = DateUtil.getPassedDate(period, DateUtil.getDate());
+
+        List<String> subjects = curriculumRepository.getDistinctSubject(cid);
+        if (subjects == null || subjects.isEmpty()) {
+            return resultList;
+        }
+        for (String s : subjects) {
+            if (s.equals("自习")) {
+                continue;
+            }
+            LivenessVO livenessVO = getGenaralInfoBySubject(cid, sid, period, s);
+            resultList.add(livenessVO);
         }
 
         return resultList;
@@ -397,63 +821,147 @@ public class StudentImpl implements StudentService {
 
     ;
 
-    public double getGeneralLivenessRateBySubject(int cid, int sid, int period, String subject) {
-
-        List<LivenessVO> livenessVOList = getLivenessInfo(cid, sid, period);
-
-        /**
-         * 各科的综合活跃度需要考虑 课堂参与度和课堂专注度的参数 暂时设为0.7:0.3
-         */
-
-        double general_a = 0.7;
-        double general_b = 0.3;
-
-        double generalRate = 0;
-
-        if (livenessVOList == null || livenessVOList.isEmpty()) {
-            return generalRate;
-        }
-        for (LivenessVO livenessVO : livenessVOList) {
-            if (livenessVO.getSubject().equals(subject)) {
-                generalRate = general_a * livenessVO.getLivenessRate() * 1.0 + general_b * livenessVO.getConcentrationRate() * 1.0;
-            }
-        }
-        return generalRate;
-    }
-
-    public double getGeneralLivenessRate(int cid, int sid, int period) {
+    /**
+     * 获得某学生在某个时间段内的综合课堂表现统计 数值（活跃度、参与度、综合表现）
+     */
+    public LivenessVO getGeneralLivenessRate(int cid, int sid, int period) {
         /**
          * 总活跃度需要考虑各个课程的权重，目前根据在统计时间内各科各有多少课来设定权重 VO(course,times)
          */
 
         List<String> subjects = curriculumRepository.getDistinctSubject(cid);
-        double generalRate = 0;
+        LivenessVO result = new LivenessVO();
 
         if (subjects == null || subjects.isEmpty()) {
-            return generalRate;
+            return result;
         }
 
         String startDate = DateUtil.getPassedDate(period, DateUtil.getDate());
         String endDate = DateUtil.getDate();
         int totalCourse = 0;
 
+
+        double gen_rate = 0.0;
+        double con_rate = 0.0;
+        double live_rate = 0.0;
         for (String s : subjects) {
             if (s.equals("自习")) {
                 continue;
             }
             int weight = curriculumRepository.countWeight(cid, startDate, endDate, s);
-            double generalSubjectRate = getGeneralLivenessRateBySubject(cid, sid, period, s);
-            generalRate += generalSubjectRate * weight * 1.0;
+            LivenessVO livenessVO = getGenaralInfoBySubject(cid, sid, period, s);
+            gen_rate += livenessVO.getGeneralRate() * weight * 1.0;
+            con_rate += livenessVO.getConcentrationRate() * weight * 1.0;
+            live_rate += livenessVO.getLivenessRate() * weight * 1.0;
             totalCourse += weight;
         }
 
         if (totalCourse == 0) {
-            return generalRate;
+            return result;
         }
 
-        generalRate /= totalCourse;
-        return generalRate;
+        gen_rate /= totalCourse;
+        con_rate /= totalCourse;
+        live_rate /= totalCourse;
+
+        result.setGeneralRate(gen_rate);
+        result.setLivenessRate(live_rate);
+        result.setConcentrationRate(con_rate);
+
+        return result;
     }
+
+    /**
+     * 获得某学生在某个时间段内的综合课堂表现统计 percent（活跃度、参与度、综合表现）
+     */
+
+    public LivenessVO getGeneralLivenessPercent(int cid, int sid, int period) {
+        LivenessVO percent = new LivenessVO();
+
+        List<Integer> sidList = studentRepo.getSid(cid);
+        if (sidList == null || sidList.isEmpty()) {
+            return percent;
+        }
+        //stuNum 不可能为零
+        int stuNum = sidList.size();
+
+        LivenessVO currentStu = getGeneralLivenessRate(cid, sid, period);
+
+
+        int rank_con, rank_live, rank_gen;
+        List<StudentDataVO> rankList_con = new ArrayList<>();
+        List<StudentDataVO> rankList_live = new ArrayList<>();
+        List<StudentDataVO> rankList_gen = new ArrayList<>();
+
+        for (Integer integer : sidList) {
+            int id = (int) integer;
+            LivenessVO compareStu = getGeneralLivenessRate(cid, id, period);
+
+            StudentDataVO data_con = new StudentDataVO(id, compareStu.getConcentrationRate());
+            rankList_con.add(data_con);
+
+            StudentDataVO data_live = new StudentDataVO(id, compareStu.getLivenessRate());
+            rankList_live.add(data_live);
+
+            StudentDataVO data_gen = new StudentDataVO(id, compareStu.getGeneralRate());
+            rankList_gen.add(data_gen);
+        }
+
+        rank_con = getSort(rankList_con, sid);
+        rank_gen = getSort(rankList_gen, sid);
+        rank_live = getSort(rankList_live, sid);
+
+        double percent_con = 0.0;
+        double percent_live = 0.0;
+        double percent_gen = 0.0;
+
+        if (stuNum != 0) {
+            percent_con = 1 - 1.0 * (rank_con - 0.9) / stuNum;
+            percent_live = 1 - 1.0 * (rank_live - 0.9) / stuNum;
+            percent_gen = 1 - 1.0 * (rank_gen - 0.9) / stuNum;
+        }
+
+        percent.setGeneralRate(percent_gen);
+        percent.setLivenessRate(percent_live);
+        percent.setConcentrationRate(percent_con);
+
+        percent.setDate(currentStu.getDate());
+        percent.setTid(currentStu.getTid());
+        percent.setSubject(currentStu.getSubject());
+
+        return percent;
+    }
+
+    /**
+     * 作废
+     */
+//    public double getGeneralLivenessRateBySubject(int cid, int sid, int period, String subject) {
+//
+//        List<LivenessVO> livenessVOList = getLivenessInfo(cid, sid, period);
+//
+//        /**
+//         * 各科的综合活跃度需要考虑 课堂参与度和课堂专注度的参数 暂时设为0.7:0.3
+//         */
+//
+//        double general_a = 0.7;
+//        double general_b = 0.3;
+//
+//        double generalRate = 0;
+//
+//        if (livenessVOList == null || livenessVOList.isEmpty()) {
+//            return generalRate;
+//        }
+//        for (LivenessVO livenessVO : livenessVOList) {
+//            if (livenessVO.getSubject().equals(subject)) {
+//                generalRate = general_a * livenessVO.getLivenessRate() * 1.0 + general_b * livenessVO.getConcentrationRate() * 1.0;
+//            }
+//        }
+//        return generalRate;
+//    }
+
+    /**
+     * 获得各科的rank，可以看方差
+     */
 
     public double getGeneralLivenessPercentBySubject(int cid, int sid, int period, String subject) {
         double rankPercent = 0;
@@ -465,7 +973,7 @@ public class StudentImpl implements StudentService {
         List<StudentDataVO> rankList = new ArrayList<>();
         for (Integer integer : sidList) {
             int id = (int) integer;
-            StudentDataVO studentDataVO = new StudentDataVO(id, getGeneralLivenessRateBySubject(cid, id, period, subject));
+            StudentDataVO studentDataVO = new StudentDataVO(id, getGenaralInfoBySubject(cid, id, period, subject).getGeneralRate());
             rankList.add(studentDataVO);
         }
         rank = getSort(rankList, sid);
@@ -476,38 +984,12 @@ public class StudentImpl implements StudentService {
             return rankPercent;
         }
 
-        rankPercent = 1.0 * rank / num;
+        rankPercent = 1.0 * (rank - 0.9) / num;
 
         return rankPercent;
     }
 
-    ;
-
-    public double getGeneralLivenessPercent(int cid, int sid, int period) {
-
-        double rankPercent = 0;
-        int rank = 0;
-        List<Integer> sidList = studentRepo.getSid(cid);
-        if (sidList == null || sidList.isEmpty()) {
-            return rankPercent;
-        }
-        List<StudentDataVO> rankList = new ArrayList<>();
-        for (Integer integer : sidList) {
-            int id = (int) integer;
-            StudentDataVO studentDataVO = new StudentDataVO(id, getGeneralLivenessRate(cid, id, period));
-            rankList.add(studentDataVO);
-        }
-        rank = getSort(rankList, sid);
-        int num = sidList.size();
-
-        if (num == 0) {
-            return rankPercent;
-        }
-        rankPercent = 1 - 1.0 * rank / num;
-        return rankPercent;
-    }
-
-    ;
+    ;;
 
     /**
      * 需要再设计
@@ -530,6 +1012,8 @@ public class StudentImpl implements StudentService {
 
         for (Behavior b : behaviorList) {
             DisciplineVO disciplineVO = new DisciplineVO(b.getDate(), b.getEnd(), b.getAction(), b.getTotal_time(), b.getStatus());
+            //需要在这里检查出勤吗？
+
             disciplineVOList.add(disciplineVO);
         }
 
@@ -555,7 +1039,6 @@ public class StudentImpl implements StudentService {
     public double getDisciplineRate(int cid, int sid, int period) {
         String startDate = DateUtil.getPassedDate(period, DateUtil.getDate());
         String endDate = DateUtil.getDate();
-
 
         double disciplineRate = 1;
 
@@ -608,7 +1091,7 @@ public class StudentImpl implements StudentService {
         if (num == 0) {
             return rankPercent;
         }
-        rankPercent = 1 - 1.0 * rank / num;
+        rankPercent = 1 - 1.0 * (rank-0.9) / num;
         return rankPercent;
 
     }

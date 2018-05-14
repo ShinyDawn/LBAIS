@@ -1,5 +1,6 @@
 package service.controller;
 
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,4 +38,12 @@ public class ApprovalController {
     public ApprovalVO showInfo(@RequestParam("id") int id){
         return approvalService.showInfo(id);
     }
+
+    @RequestMapping(value = "/approval/del")
+    @ResponseBody
+    public  int del(@RequestParam("id") int id){
+        return approvalService.deleteApproval(id);
+    }
+
+
 }

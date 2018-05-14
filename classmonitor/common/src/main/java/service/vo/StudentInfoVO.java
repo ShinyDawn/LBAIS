@@ -1,22 +1,35 @@
 package service.vo;
 
+import java.util.List;
+
 /**
  * Created by elva on 2018/4/30.
  */
 public class StudentInfoVO {
     private int sid;
     private String name;
-    private String problem;
-    private String attendanceDetail;
-    private String attendanceProblem;
-    private String deciplineDetail;
-    private String deciplineProblem;
-    private String trendDetail;
-    private String trendProblem;
+    private List<ProblemVO> problem;
     private double attendanceRate;
     private double livenessRate;
     private double deciplineRate;
+    private double generalRate;
+    private double concentrationRate;
 
+    public void setGeneralRate(double generalRate) {
+        this.generalRate = generalRate;
+    }
+
+    public double getGeneralRate() {
+        return generalRate;
+    }
+
+    public void setConcentrationRate(double concentrationRate) {
+        this.concentrationRate = concentrationRate;
+    }
+
+    public double getConcentrationRate() {
+        return concentrationRate;
+    }
 
     public void setLivenessRate(double livenessRate) {
         this.livenessRate = livenessRate;
@@ -46,7 +59,11 @@ public class StudentInfoVO {
         return name;
     }
 
-    public String getProblem() {
+    public void setProblem(List<ProblemVO> problem) {
+        this.problem = problem;
+    }
+
+    public List<ProblemVO> getProblem() {
         return problem;
     }
 
@@ -62,31 +79,4 @@ public class StudentInfoVO {
         this.name = name;
     }
 
-    public void setProblem(String problem) {
-        this.problem = problem;
-    }
-
-    public String getAttendanceDetail() {
-        return attendanceDetail;
-    }
-
-    public String getAttendanceProblem() {
-        return attendanceProblem;
-    }
-
-    public String getDeciplineDetail() {
-        return deciplineDetail;
-    }
-
-    public String getDeciplineProblem() {
-        return deciplineProblem;
-    }
-
-    public String getTrendDetail() {
-        return trendDetail;
-    }
-
-    public String getTrendProblem() {
-        return trendProblem;
-    }
 }

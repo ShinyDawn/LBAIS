@@ -1,6 +1,12 @@
 /**
  * Created by elva on 2018/4/25.
  */
+
+var id;
+var period;
+var cnames=[];
+var cids =[];
+
 /**
  * 按照传入的键值，提取出datas数组里的对应值
  * 如datas=[{'date':'1970-01-01','value'=1},{'date':'1970-01-02','value'=2}]
@@ -30,123 +36,80 @@ function getArray(datas) {
 }
 
 
-function timeTip(){
+function timeTip() {
     var localDate = new Date();
     hour = localDate.getHours();
-    if((hour>=0 && hour<=5)||(hour>=18&&hour<=23))
+    if ((hour >= 0 && hour <= 5) || (hour >= 18 && hour <= 23))
         return "晚上好,";
-    else if (hour>=6&&hour<=11)
+    else if (hour >= 6 && hour <= 11)
         return "早上好,";
-    else if (hour>=12&&hour<=2)
+    else if (hour >= 12 && hour <= 2)
         return "中午好,";
     else
         return "下午好,";
 }
 
-/**
- * 发起一次请求到url，成功失败都只提示
- * @param type "POST" or "GET"
- * @param form_id 表单id
- * @param url 请求的url
- * @param success_redirect_url 成功后跳转的url
- */
-function my_ajax_redirect(type, form_id, url, success_redirect_url) {
-    $.ajax({
-        type: type,
-        url: url,
-        data: new FormData($('#' + form_id)[0]),
-        processData: false,
-        contentType: false,
-        cache: false,
-        success: function (data) {
-            if (data.status == "SUCCESS") {
-                window.location.href = success_redirect_url;
-            } else {
-                alert(data.reason);
-            }
-        },
-        error: function (request) {
-            alert("服务器出错啦，请联系管理员");
-        }
-    });
+function toPercent(point){
+    var str=Number(point*100).toFixed(0);
+    str+="%";
+    return str;
 }
 
-/**
- * 发起一次请求到url，成功失败都只提示
- * @param type "POST" or "GET"
- * @param form_id 表单id
- * @param url 请求的url
- */
-function my_ajax_alert(type, form_id, url) {
-    $.ajax({
-        type: type,
-        url: url,
-        data: new FormData($('#' + form_id)[0]),
-        processData: false,
-        contentType: false,
-        cache: false,
-        success: function (data) {
-            alert(data.reason);
-        },
-        error: function (request) {
-            alert("服务器出错啦，请联系管理员");
-        }
-    });
-}
-
-/**
- * 发起一次请求到url，使用handle_result处理结果
- * @param type "POST"/"GET"
- * @param form_id 表单id，input要有对应的name属性和后台controller对应
- * @param url 发送的目标url
- * @param handle_result 处理结果的函数对象，data作为参数
- */
-function my_ajax(type, form_id, url, handle_result) {
-    $.ajax({
-        type: type,
-        url: url,
-        data: new FormData($('#' + form_id)[0]),
-        processData: false,
-        contentType: false,
-        cache: false,
-        success: function (data) {
-            handle_result(data);
-        },
-        error: function (request) {
-            alert("服务器出错啦，请联系管理员");
-        }
-    });
-}
-
-function my_ajax_a(url, success_redirect_url) {
-    $.ajax({
-        type: 'GET',
-        url: url,
-        processData: false,
-        contentType: false,
-        cache: false,
-        success: function (data) {
-            if (data.status == "SUCCESS") {
-                window.location.href = success_redirect_url;
-            } else {
-                alert(data.reason);
-            }
-        },
-        error: function (request) {
-            alert("服务器出错啦，请联系管理员");
-        }
-    });
-}
 
 function changeUserInfo() {
-    // $.ajax({
-    //     url: "/index.php/user/",
-    //     type: 'get',
-    //     dataType: 'json',
-    //     data: {'username': $.cookie('username')},
-    //     success: function (obj) {
-    //         $('.usernickname').html(obj.nickname)
-    //         $('.user_image_nav').attr('src', '/img/user/' + obj.username + '.jpg')
-    //     }
-    // })
+    var name = $.session.get('name');
+    $('#teacher_name').html(name);
+    $('#time_tip').html(timeTip());
 }
+
+function getClassInfo(sequenceId) {
+    var uid = $.session.get('uid');
+    $.ajax({
+        url: "http://localhost:10002/classes",
+        type: 'GET',
+        dataType: 'json',
+        data: {'uid': uid},
+        success: function (obj) {
+            for (var i = 0; i < obj.length; i++){
+                var classInfo = obj[i];
+                cnames.push(classInfo.cname);
+                cids.push(classInfo.id);
+                var li = $('<li><a href="#"></a></li>');
+                var a = $('<a onclick="changeClass(' + i + ')"></a>');
+                li.append(a);
+                a.html(cnames[i]);
+                $('#class_list').append(li);
+            }
+
+            $.session.set('current_sequence_id',sequenceId);
+            $.session.set('current_cid',cids[sequenceId]);
+            $('#current_cname').html(cnames[sequenceId]);
+        }
+    });
+}
+
+
+function changeClass(sequenceId) {
+    $.session.set('current_cid',cids[sequenceId]);
+    $.session.set('current_sequence_id',sequenceId);
+    $('#current_cname').html(cnames[sequenceId]);
+    // changeApprovalList(cids[sequenceId], 1);
+    window.location.reload();
+}
+
+function changeTime(period){
+    $.session.set('current_period',period);
+    var divider;
+    if (period === 1) {
+        divider = '今天';
+    } else if (period === 3) {
+        divider = '未来三天';
+    } else {
+        divider = '未来一周';
+    }
+    $('#time_filter').html(divider);
+    window.location.reload();
+}
+
+
+

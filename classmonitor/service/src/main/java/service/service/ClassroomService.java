@@ -7,6 +7,8 @@ import service.vo.StudentInfoVO;
 
 public interface ClassroomService {
 
+	public List<Classroom> findAllClassesByteacher(String uid);
+
 	public List<Classroom> findAllClasses();
 	
 	public Classroom getInfo(int id);

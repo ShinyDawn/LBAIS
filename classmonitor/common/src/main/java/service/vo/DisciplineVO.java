@@ -1,5 +1,7 @@
 package service.vo;
 
+import java.util.List;
+
 /**
  * Created by elva on 2018/4/30.
  */
@@ -9,6 +11,7 @@ public class DisciplineVO {
     private String action;
     private int total_time;
     private String status;
+    private List<String> problems;
 
     public DisciplineVO(String date, String discover_time, String action, int total_time, String status) {
         this.date = date;
@@ -17,6 +20,14 @@ public class DisciplineVO {
         this.total_time = total_time;
         this.status = status;
 
+    }
+
+    public List<String> getProblems() {
+        return problems;
+    }
+
+    public void setProblems(List<String> problems) {
+        this.problems = problems;
     }
 
     public String getDate() {

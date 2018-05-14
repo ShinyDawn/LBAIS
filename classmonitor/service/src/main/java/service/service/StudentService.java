@@ -3,10 +3,7 @@ package service.service;
 import java.util.List;
 
 import service.entity.Student;
-import service.vo.AttendanceVO;
-import service.vo.DisciplineVO;
-import service.vo.LivenessVO;
-import service.vo.StudentInfoVO;
+import service.vo.*;
 
 public interface StudentService {
 
@@ -20,23 +17,31 @@ public interface StudentService {
 
 	//part of Personal Model
 	public List<AttendanceVO> getAttendanceInfo(int cid,int sid,int period);
-	public double getAttendenceRate(int cid,int sid,int period);
-	public double getAttendencePrecent(int cid,int sid,int period);
+	public double getAttendanceRate(int cid,int sid,int period);
+	public double getAttendancePrecent(int cid,int sid,int period);
 
 	public List<LivenessVO> getLivenessInfoBysubject(int cid,int sid,int period,String subject);
+	public List<LivenessVO> getLivenessPercentBySubject(int cid,int sid,int period,String subject);
+
+	public List<LivenessVO> getLivenessDailyBySubject(int cid, int sid, int period, String subject);
+	public List<LivenessVO> getLivenessInfoDaily(int cid, int sid, int period, String subject);
+
+	public List<LivenessShowVO> getLivenessPercentDaily(int cid, int sid, int period);
+
 	public List<LivenessVO> getLivenessInfo(int cid,int sid,int period);
-	public double getGeneralLivenessRateBySubject(int cid,int sid,int period,String subject);
-	public double getGeneralLivenessRate(int cid,int sid,int period);
+//	public double getGeneralLivenessRateBySubject(int cid,int sid,int period,String subject);
+	public LivenessVO getGeneralLivenessRate(int cid,int sid,int period);
 
 	public double getGeneralLivenessPercentBySubject(int cid,int sid,int period,String subject);
-	public double getGeneralLivenessPercent(int cid,int sid,int period);
+	public LivenessVO getGeneralLivenessPercent(int cid,int sid,int period);
 
 	public List<DisciplineVO> getDisplineInfo(int cid,int sid,int period);
 	public double getDisciplineRate(int cid,int sid,int period);
 	public double getDisciplinePercent(int cid,int sid,int period);
 
-	public List<StudentInfoVO> getStudentProblemInfo(int cid, int sid, int period);
+	public StudentInfoVO getStudentProblemInfo(int cid, int sid, int period);
 
 	public List<StudentInfoVO> getStudentsInfoList(int cid,int period);
+
 
 }

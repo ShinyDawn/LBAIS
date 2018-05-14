@@ -11,6 +11,36 @@ import java.util.List;
  */
 public class MathUtil {
 
+    //方差s^2=[(x1-x)^2 +...(xn-x)^2]/n
+    public static double Variance(double[] x) {
+        int m = x.length;
+        double sum = 0;
+        for (int i = 0; i < m; i++) {//求和
+            sum += x[i];
+        }
+        double dAve = sum / m;//求平均值
+        double dVar = 0;
+        for (int i = 0; i < m; i++) {//求方差
+            dVar += (x[i] - dAve) * (x[i] - dAve);
+        }
+        return dVar / m;
+    }
+
+    //标准差σ=sqrt(s^2)
+    public static double StandardDiviation(double[] x) {
+        int m = x.length;
+        double sum = 0;
+        for (int i = 0; i < m; i++) {//求和
+            sum += x[i];
+        }
+        double dAve = sum / m;//求平均值
+        double dVar = 0;
+        for (int i = 0; i < m; i++) {//求方差
+            dVar += (x[i] - dAve) * (x[i] - dAve);
+        }
+        return Math.sqrt(dVar / m);
+    }
+
     public static int getSort(List<StudentDataVO> list, int sid) {
         //因为是排名,所以降序排序
         Collections.sort(list, new Comparator<StudentDataVO>() {

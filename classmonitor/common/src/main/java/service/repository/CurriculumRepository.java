@@ -17,10 +17,10 @@ public interface CurriculumRepository extends JpaRepository<Curriculum, Integer>
     public Curriculum findByTidAndCidAndDay(int tid, int cid, int day);
 
     @Query("SELECT c.course FROM Curriculum c WHERE c.cid=?1 and c.tid=?2 and c.date=?3")
-    public String getCourseName(int cid,int tid,String date);
+    public String getCourseName(int cid, int tid, String date);
 
     @Query("SELECT count(c.id) FROM Curriculum c WHERE c.cid=?1 and c.tid=?2 and c.date=?3")
-    public int isOnSchool(int cid,int tid,String date);
+    public int isOnSchool(int cid, int tid, String date);
 
 
     @Query("SELECT count(id) FROM Curriculum where cid = ?1 AND date>?2 and date<=?3 and course=?4 ")
@@ -32,7 +32,11 @@ public interface CurriculumRepository extends JpaRepository<Curriculum, Integer>
     public int countCoursesOneDay(int cid);
 
     @Query("SELECT new service.vo.LessonDataVO(date,tid) FROM Curriculum WHERE cid = ?1 AND course=?2 AND  date >?3 and date<=?4 ORDER BY date,tid ASC")
-    public List<LessonDataVO> getDistinctCourse(int cid, String course, String strat, String end);
+    public List<LessonDataVO> getDistinctCourse(int cid, String course, String start, String end);
+
+    @Query("SELECT DISTINCT course from Curriculum WHERE cid = ?1 and date>?2 and date<=?3")
+    public List<String> getDistinctSubjectInCertainPeriod(int cid, String start, String end);
+
 
     @Query("SELECT DISTINCT course from Curriculum WHERE cid = ?1")
     public List<String> getDistinctSubject(int cid);

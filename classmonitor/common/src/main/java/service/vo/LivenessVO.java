@@ -13,6 +13,16 @@ public class LivenessVO {
     private double concentrationRate;
     //课堂举手次数
     private double handsUpTimes;
+    //课堂综合表现
+    private double generalRate;
+
+    public double getGeneralRate() {
+        return generalRate;
+    }
+
+    public void setGeneralRate(double generalRate) {
+        this.generalRate = generalRate;
+    }
 
     public void setDate(String date) {
         Date = date;
@@ -47,7 +57,12 @@ public class LivenessVO {
     }
 
     public void setLivenessRate(double livenessRate) {
+
         this.livenessRate = livenessRate;
+    }
+
+    public void setGeneralRate() {
+        this.generalRate = this.concentrationRate * 0.3 + this.livenessRate * 0.7;
     }
 
     public void setSubject(String subject) {
@@ -57,6 +72,7 @@ public class LivenessVO {
     public int getTid() {
         return tid;
     }
+
     public void setTid(int tid) {
         this.tid = tid;
     }

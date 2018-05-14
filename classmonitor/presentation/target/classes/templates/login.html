@@ -40,7 +40,11 @@
                             window.location.href = "http://localhost:10001/admin";
                         } else {
                             $.session.set('login', 'login');
-                            window.location.href = "http://localhost:10001/class";
+                            $.session.set('uid',uid);
+                            $.session.set('name',data);
+                            $.session.set('current_sequence_id',0);
+                            $.session.set('current_period',1);
+                            window.location.href = "http://localhost:10001/students";
                         }
                     }
                 });

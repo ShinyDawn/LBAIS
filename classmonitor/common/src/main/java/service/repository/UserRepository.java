@@ -7,8 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import service.entity.User;
 
+import java.util.List;
+
 public interface
 UserRepository extends JpaRepository<User, Integer> {
+
+	public List<User> findAllByUidAndAndPassword(String uid, String password);
 
 	public User findByUidAndPassword(String uid, String password);
 
