@@ -17,12 +17,43 @@ public class StudentController {
 	@Autowired
 	private StudentService studentService;
 
+	/**
+	 * 用来获得首页所有信息
+	 * @param cid
+	 * @param period
+	 * @return
+	 */
 
-    @RequestMapping(value = "/student")
+    @RequestMapping(value = "/students")
     @ResponseBody
     public List<StudentInfoVO> getStudentsInfo(@RequestParam("cid") int cid,@RequestParam("period") int period){
         return studentService.getStudentsInfoList(cid,period);
     }
+
+	/**
+	 * 用来获得综合分析模块
+	 * @param cid
+	 * @param sid
+	 * @param period
+	 * @return
+	 */
+	@RequestMapping(value = "/studentInfo")
+	@ResponseBody
+	public StudentInfoVO getStudentInfo(@RequestParam("cid") int cid,@RequestParam("sid") int sid,@RequestParam("period") int period){
+		return studentService.getStudentProblemInfo(cid,sid,period);
+	}
+
+	/**
+	 * 用来获得学生信息
+	 * @param cid
+	 * @param sid
+	 * @return
+	 */
+	@RequestMapping(value = "/student/get")
+	@ResponseBody
+	public Student index(@RequestParam("cid") int cid,@RequestParam("sid") int sid) {
+		return studentService.getOneInfo(cid,sid);
+	}
 
 	/**
 	 *
@@ -37,12 +68,26 @@ public class StudentController {
 		return studentService.getAttendanceInfo(cid,sid,period);
 	}
 
+	/**
+	 * 用来获得出勤率
+	 * @param cid
+	 * @param sid
+	 * @param period
+	 * @return
+	 */
 	@RequestMapping(value = "/student/attendanceRate")
 	@ResponseBody
 	public double getAttendenceRate(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period ){
 		return studentService.getAttendanceRate(cid,sid,period);
 	}
 
+	/**
+	 * 用来获得出勤排名
+	 * @param cid
+	 * @param sid
+	 * @param period
+	 * @return
+	 */
     @RequestMapping(value = "/student/attendancePercent")
     @ResponseBody
     public double getAttendencePrecent(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
@@ -100,6 +145,15 @@ public class StudentController {
 //		return studentService.getGeneralLivenessRateBySubject(cid,sid,period,subject);
 //	}
 
+	/**
+	 * 获得各科的活跃度排名percent
+	 * @param cid
+	 * @param sid
+	 * @param period
+	 * @param subject
+	 * @return
+	 */
+
 	@RequestMapping(value = "/student/livenessPercent/subject")
 	@ResponseBody
 	public double getLivenessRateBySubjectPercent(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period,@RequestParam("subject") String subject){
@@ -112,6 +166,14 @@ public class StudentController {
 		return studentService.getGeneralLivenessRate(cid,sid,period);
 	}
 
+	/**
+	 * 用来获得课堂活跃排名
+	 * @param cid
+	 * @param sid
+	 * @param period
+	 * @return
+	 */
+
 	@RequestMapping(value = "/student/livenessPercent")
 	@ResponseBody
 	public LivenessVO getLivenessPercent(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
@@ -119,18 +181,33 @@ public class StudentController {
 
 	}
 
+	/**
+	 * 用来获得自习纪律情况
+	 * @param cid
+	 * @param sid
+	 * @param period
+	 * @return
+	 */
     @RequestMapping(value = "/student/discipline")
     @ResponseBody
     public List<DisciplineVO> getDisplineInfo(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
         return studentService.getDisplineInfo(cid,sid,period);
     }
 
-    @RequestMapping(value = "/student/disciplineRate")
-    @ResponseBody
-    public double getDisciplineRate(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
-        return studentService.getDisciplineRate(cid,sid,period);
+//    @RequestMapping(value = "/student/disciplineRate")
+//    @ResponseBody
+//    public double getDisciplineRate(@RequestParam("cid") int cid, @RequestParam("sid")int sid, @RequestParam("period")int period){
+//        return studentService.getDisciplineRate(cid,sid,period);
+//
+//    }
 
-    }
+	/**
+	 * 用来获得自习纪律排名
+	 * @param cid
+	 * @param sid
+	 * @param period
+	 * @return
+	 */
 
     @RequestMapping(value = "/student/disciplinePercent")
     @ResponseBody
@@ -139,30 +216,26 @@ public class StudentController {
 
     }
 
-	@RequestMapping(value = "/students")
-	@ResponseBody
-	public List<Student> index(@RequestParam("cid") int cid) {
-		return studentService.getInfo(cid);
-	}
 
-	@RequestMapping(value = "/students/add")
-	@ResponseBody
-	public int add(@RequestParam("id") int id, @RequestParam("cid") int cid, @RequestParam("sid") int sid,
-			@RequestParam("name") String name, @RequestParam("gender") String gender, @RequestParam("x") int x,
-			@RequestParam("y") int y) {
-		return studentService.add(cid, sid, name, gender, x, y);
-	}
+//
+//	@RequestMapping(value = "/students/add")
+//	@ResponseBody
+//	public int add(@RequestParam("id") int id, @RequestParam("cid") int cid, @RequestParam("sid") int sid,
+//			@RequestParam("name") String name, @RequestParam("gender") String gender, @RequestParam("x") int x,
+//			@RequestParam("y") int y) {
+//		return studentService.add(cid, sid, name, gender, x, y);
+//	}
 
-	@RequestMapping(value = "/students/update")
-	@ResponseBody
-	public int update(@RequestParam("id") int id, @RequestParam("cid") int cid, @RequestParam("sid") int sid,
-			@RequestParam("name") String name, @RequestParam("gender") String gender, @RequestParam("x") int x, @RequestParam("y") int y) {
-		return studentService.update(id, cid, sid, name, gender, x, y);
-	}
-
-	@RequestMapping(value = "/students/delete")
-	@ResponseBody
-	public void delete(@RequestParam("id") int id) {
-		studentService.delete(id);
-	}
+//	@RequestMapping(value = "/students/update")
+//	@ResponseBody
+//	public int update(@RequestParam("id") int id, @RequestParam("cid") int cid, @RequestParam("sid") int sid,
+//			@RequestParam("name") String name, @RequestParam("gender") String gender, @RequestParam("x") int x, @RequestParam("y") int y) {
+//		return studentService.update(id, cid, sid, name, gender, x, y);
+//	}
+//
+//	@RequestMapping(value = "/students/delete")
+//	@ResponseBody
+//	public void delete(@RequestParam("id") int id) {
+//		studentService.delete(id);
+//	}
 }

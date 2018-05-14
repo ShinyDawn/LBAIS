@@ -16,6 +16,9 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 	@Query("select s.name from Student s where s.cid=?1 and s.sid=?2")
 	public String getName(int cid,int sid);
 
+
+	public Student findByCidAndSid(int cid,int sid);
+
 	@Query("select s.sid from Student s where s.cid=?1 order by s.sid")
 	public List<Integer> getSid(int cid);
 

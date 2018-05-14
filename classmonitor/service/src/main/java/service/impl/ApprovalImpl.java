@@ -119,13 +119,14 @@ public class ApprovalImpl implements ApprovalService {
         if (tids.length ==0){;
             return new MessageInfo(false,"请假时间段不可为空");
         }
+
         for (int i =0;i<tids.length;i++){
             int tid =Integer.parseInt(tids[i]);
             if (absenteeRepository.isApproved(cid,sid,date,tid)==1){
-                return new MessageInfo(false,date+" "+tid+" 该时段已请假，不可重复添加");
+                return new MessageInfo(false,date+" 第"+tid+"节 该时段已请假，不可重复添加");
             }
             if(curriculumRepository.isOnSchool(cid,tid,date)==0){
-                return new MessageInfo(false,date+" "+tid+" 该时段没有课程，不需请假");
+                return new MessageInfo(false,date+" 第"+tid+"第 该时段没有课程，不需请假");
             }
         }
         for (int i =0;i<tids.length;i++){

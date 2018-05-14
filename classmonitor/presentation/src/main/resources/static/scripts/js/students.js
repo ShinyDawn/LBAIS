@@ -7,35 +7,84 @@ window.onload = function () {
     var period = $.session.get('current_period');//默认为1，即今天
     getClassInfo(sequenceId);//在这里获得cid
 
-//        var divider;
-//        if (period === '1') {
-//            divider = '今天';
-//        } else if (period === '3') {
-//            divider = '未来三天';
-//        } else {
-//            divider = '未来一周';
-//        }
-//        $('#time_filter').html(divider);
-//
+    if (period === null) {
+        period = 1;
+    }
+
+    var divider;
+    if (period === '1') {
+        divider = '今天';
+    } else if (period === '3') {
+        divider = '最近三天';
+    } else if (period === '7') {
+        divider = '最近一周';
+    } else if (period === '30') {
+        divider = '最近一月';
+    } else {
+        divider = '本学期';
+    }
+    $('#time_filter').html(divider);
+    $('#time_pro').html(divider);
+
     var cid = $.session.get('current_cid');
+
+    while (cid === null) {
+        cid = $.session.get('current_cid');
+    }
     changeStudentList(cid, period);
 };
 
-function changeStudentList(cid,period){
+function changeStudentList(cid, period) {
     $('#students_list').append(addtitle());
     $.ajax({
-        url: 'http://localhost:10002/student',
+        url: 'http://localhost:10002/students',
         dataType: 'json',
         type: 'POST',
-        data: {'cid': cid, 'period': 30},
+        data: {'cid': cid, 'period': period},
         success: function (obj) {
+            createProgress(obj);
             for (var i = 0; i < obj.length; i++) {
                 $('#students_list').append(createStudentsList(obj[i]))
             }
+
         }
     })
 };
 
+function createProgress(data) {
+    var stuNum = 0;
+    var proNum = 0;
+    var name = [];
+    for (var i = 0; i < data.length; i++) {
+        stuNum++;
+        var obj = data[i];
+        var problemList = obj['problem'];
+        for (var j = 0; j < problemList.length; j++) {
+            var problem = problemList[j];
+            if (problem['isProgress'] === 1) {
+                proNum++;
+                name.push(obj['name']);
+                break
+            }
+        }
+    }
+
+    $('#pro_Num').html(proNum);
+    if (stuNum===0){
+        $('#pro_percent').html(0);
+        var d = $('<div class="bar bar-info" style="width: 0%;"></div>');
+        $('#pro_cent').append(d);
+
+    } else{
+        var pro_percent = toPercent(Number(proNum) *1.0/Number(stuNum));
+        $('#pro_percent').html(pro_percent);
+        var d = $('<div class="bar bar-info" style="width: '+pro_percent+'"></div>');
+        $('#pro_cent').append(d);
+    }
+    $('#pro_name').html(name.toString());
+
+
+}
 function addtitle() {
 
     var tr = $('<tr class="heading"></tr>');
@@ -50,40 +99,75 @@ function addtitle() {
 }
 function createStudentsList(data) {
 
-
-        // <td class="cell-problem hidden-phone hidden-tablet">
-        // <c>请假较多</c>
-        // <d>兴趣较低</d>
-        // <e>纪律较差</e>
-        // <f>退步较大</f>
-        // </td>
-    
-    var tr = $('<tr class="task"></tr>');
+    var sid = data['sid'];
+    var tr = $('<tr class="task" onclick="detail_show(' + sid + ')"></tr>');
     var td1 = $('<td class="cell-name"></td>');
     var td2 = $('<td class="cell-name"></td>');
     var td3 = $('<td class="cell-name"></td>');
     var td4 = $('<td class="cell-name"></td>');
     var td5 = $('<td class="cell-name"></td>');
     var td6 = $('<td class="cell-problem hidden-phone hidden-tablet">');
-    var a = $('<a></a>')
-    var sid = data['sid'];
+
 
     td1.html(data['sid']);
     td2.html(data['name']);
     td3.html(toPercent(data['attendanceRate']));
     td4.html(toPercent(data['generalRate']));
     td5.html(toPercent(data['deciplineRate']));
+    var problemList = data['problem'];
+    for (var i = 0; i < problemList.length; i++) {
+        var problem = problemList[i];
+
+        if (problem['title'] === "出勤较少") {
+            var c = $('<c style="margin-left: 4px">出勤较少</c>&nbsp;');
+            td6.append(c);
+        }
+        if (problem['title'] === "兴趣较低") {
+            var d = $('<d style="margin-left: 4px">兴趣较低</d>&nbsp;');
+            td6.append(d);
+
+        }
+        if (problem['title'] === "纪律较差") {
+            var e = $('<e style="margin-left: 4px">纪律较差</e>&nbsp;');
+            td6.append(e);
+
+        }
+        if (problem['title'] === "退步较大") {
+            var f = $('<f style="margin-left: 4px">退步较大</f>&nbsp;')
+            td6.append(f);
+
+        }
+    }
     tr.append(td1, td2, td3, td4, td5, td6);
 
     return tr;
 }
-
-function click_student() {
-
+function detail_show(sid) {
+    window.location.href = "http://localhost:10001/student?sid=" + sid;
 }
 
-function toPercent(point){
-    var str=Number(point*100).toFixed(0);
-    str+="%";
+
+function toPercent(point) {
+    var str = Number(point * 100).toFixed(0);
+    str += "%";
     return str;
+}
+
+function changeTimeStu(period) {
+    $.session.set('current_period', period);
+    var divider;
+    if (period === 1) {
+        divider = '今天';
+    } else if (period === 3) {
+        divider = '最近三天';
+    } else if (period === 7) {
+        divider = '最近一周';
+    } else if (period === 30) {
+        divider = '最近一月';
+    } else {
+        divider = '本学期';
+    }
+    $('#time_filter').html(divider);
+    $('#time_pro').html(divider);
+    window.location.reload();
 }

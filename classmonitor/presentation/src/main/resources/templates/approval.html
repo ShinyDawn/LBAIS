@@ -71,7 +71,7 @@
                         <div class="module-head">
                             <div class="dropdown">
                                 <div data-toggle="dropdown">
-                                    <a class="icon-sort-down pull-left" ></a>
+                                    <a class="icon-sort-down pull-left"></a>
                                     <h3 class='' style="margin-left: 30px" id="current_cname"></h3>
                                 </div>
                                 <ul class="dropdown-menu" id="class_list">
@@ -116,12 +116,11 @@
                                     </div>
                                     <div class="modal-body">
 
-
                                         <form class="form-horizontal row-fluid">
                                             <div class="control-group">
-                                                <label class="control-label" for="basicinput">学生学号</label>
+                                                <label class="control-label" for="sid">学生学号</label>
                                                 <div class="controls">
-                                                    <input type="text" id="basicinput"
+                                                    <input type="text" id="sid"
                                                            placeholder="输入后两位即可"
                                                            class="span8"/>
                                                     <span class="help-inline"></span>
@@ -129,9 +128,9 @@
                                             </div>
 
                                             <div class="control-group">
-                                                <label class="control-label" for="dateInput">请假日期</label>
+                                                <label class="control-label" for="date">请假日期</label>
                                                 <div class="controls">
-                                                    <input type="text" placeholder="YYYY-MM-DD" id="dateInput"
+                                                    <input type="text" placeholder="YYYY-MM-DD" id="date"
                                                            class="span8"/>
                                                     <span class="help-inline"></span>
                                                 </div>
@@ -140,56 +139,58 @@
 
                                             <div class="control-group">
                                                 <label class="control-label">请假课程</label>
-                                                <div class="controls">
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" value=""/>
-                                                        第1节
-                                                    </label>
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" value=""/>
-                                                        第2节
-                                                    </label>
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" value=""/>
-                                                        第3节
-                                                    </label>
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" value=""/>
-                                                        第4节
-                                                    </label>
+                                                <div id="tid">
+                                                    <div class="controls">
+                                                        <label class="checkbox inline">
+                                                            <input type="checkbox" name="timeId" value="1"/>
+                                                            第1节
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="checkbox" name="timeId" value="2"/>
+                                                            第2节
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="checkbox" name="timeId" value="3"/>
+                                                            第3节
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="checkbox" name="timeId" value="4"/>
+                                                            第4节
+                                                        </label>
+                                                    </div>
+                                                    <div class="controls">
+                                                        <label class="checkbox inline">
+                                                            <input type="checkbox" name="timeId" value="5"/>
+                                                            第5节
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="checkbox" name="timeId" value="6"/>
+                                                            第6节
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="checkbox" name="timeId" value="7"/>
+                                                            第7节
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="checkbox" name="timeId" value="8"/>
+                                                            第8节
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                                <div class="controls">
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" value=""/>
-                                                        第5节
-                                                    </label>
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" value=""/>
-                                                        第6节
-                                                    </label>
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" value=""/>
-                                                        第7节
-                                                    </label>
-                                                    <label class="checkbox inline">
-                                                        <input type="checkbox" value=""/>
-                                                        第8节
-                                                    </label>
 
-                                                </div>
                                             </div>
 
                                             <div class="control-group">
                                                 <label class="control-label">请假类型</label>
-                                                <div class="controls">
+                                                <div class="controls" id="type">
                                                     <label class="radio inline">
                                                         <input type="radio" name="optionsRadios" id="optionsRadios1"
-                                                               value="option1" checked=""/>
+                                                               value="病假" checked=""/>
                                                         病假
                                                     </label>
                                                     <label class="radio inline">
                                                         <input type="radio" name="optionsRadios" id="optionsRadios2"
-                                                               value="option2"/>
+                                                               value="事假"/>
                                                         事假
                                                     </label>
                                                 </div>
@@ -197,20 +198,47 @@
 
 
                                             <div class="control-group">
-                                                <label class="control-label" for="basicinput">请假理由</label>
+                                                <label class="control-label">请假理由</label>
                                                 <div class="controls">
-                                                    <textarea class="span8" rows="5"
-                                                              placeholder="具体理由，如去医院等"></textarea>
+                                                    <textarea class="span8" rows="5" placeholder="具体理由，如去医院等"
+                                                              id="reason"></textarea>
                                                 </div>
                                             </div>
                                         </form>
+                                        <div id="alertInfo">
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                        <button type="button" class="btn btn-primary">提交更改</button>
+                                        <button type="button" class="btn btn-primary" onclick="submit()">提交更改</button>
                                     </div>
                                 </div><!-- /.modal-content -->
                             </div><!-- /.modal -->
+                        </div>
+
+
+
+
+                        <div class="modal modal-success fade" id="success-modal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <!--<button type="button" class="close" data-dismiss="modal"-->
+                                                <!--aria-label="Close">-->
+                                            <!--<span aria-hidden="true">×</span></button>-->
+                                        <h4 class="modal-title">成功</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>请假信息更新成功</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" onclick="reload()" class="btn btn-outline pull-right"
+                                                data-dismiss="modal">关闭
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
                         </div>
 
 
@@ -275,6 +303,7 @@
 <script th:src="@{scripts/jquery-ui-1.10.1.custom.min.js}"></script>
 <script th:src="@{bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{js/ref/jquerysession.js}"></script>
+<script th:src="@{scripts/sweetalert.min.js}"></script>
 <script th:src="@{scripts/flot/jquery.flot.js}"></script>
 <script th:src="@{scripts/js/util.js}"></script>
 <script th:src="@{scripts/js/approval.js}"></script>
@@ -282,8 +311,9 @@
 <script th:src="@{bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
 <script th:src="@{bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js}"></script>
 
+
 <script>
-    $('#dateInput').datepicker({
+    $('#date').datepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
         autoclose: true,
@@ -309,6 +339,15 @@
 
             }
         });
+        window.location.reload();
+    }
+
+    function submit() {
+
+        addApproval();
+    }
+
+    function reload() {
         window.location.reload();
     }
 

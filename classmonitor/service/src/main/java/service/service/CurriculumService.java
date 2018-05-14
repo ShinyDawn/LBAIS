@@ -12,5 +12,7 @@ public interface CurriculumService {
 
 	public void addCourse(int cid, int tid, int day, String course);
 
+	public void addCourseNew(int cid, int tid, int day, String course,String date);
+
 	public void deleteOneLine(int cid, int tid);
 }

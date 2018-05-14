@@ -10,4 +10,9 @@ public class StudentController {
     public String index() {
         return "students";
     }
+
+    @RequestMapping(value = "/student")
+    public String getDetail() {
+        return "studentsDetail";
+    }
 }

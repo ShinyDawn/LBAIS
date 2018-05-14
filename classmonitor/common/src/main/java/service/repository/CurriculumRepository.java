@@ -15,6 +15,7 @@ public interface CurriculumRepository extends JpaRepository<Curriculum, Integer>
     public List<Curriculum> findByCid(int cid);
 
     public Curriculum findByTidAndCidAndDay(int tid, int cid, int day);
+    public Curriculum findByTidAndCidAndDate(int tid, int cid, String date);
 
     @Query("SELECT c.course FROM Curriculum c WHERE c.cid=?1 and c.tid=?2 and c.date=?3")
     public String getCourseName(int cid, int tid, String date);

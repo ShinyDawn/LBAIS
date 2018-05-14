@@ -13,31 +13,39 @@ import service.vo.CurriculumVO;
 
 @Controller
 public class CurriculumController {
-	@Autowired
-	private CurriculumService curriculumService;
+    @Autowired
+    private CurriculumService curriculumService;
 
-	@RequestMapping(value = "/curriculum")
-	@ResponseBody
-	public List<CurriculumVO> index(@RequestParam("cid") int cid) {
-		return curriculumService.getCurriculum(cid);
-	}
+    @RequestMapping(value = "/curriculum")
+    @ResponseBody
+    public List<CurriculumVO> index(@RequestParam("cid") int cid) {
+        return curriculumService.getCurriculum(cid);
+    }
 
-	@RequestMapping(value = "/curriculum/ac")
-	@ResponseBody
-	public void addCurriculum(@RequestParam("cid") int cid, @RequestParam("tid") int tid, @RequestParam("day") int day,
-			@RequestParam("course") String course) {
-		curriculumService.addCourse(cid, tid, day, course);
-	}
+    @RequestMapping(value = "/curriculum/ac")
+    @ResponseBody
+    public void addCurriculum(@RequestParam("cid") int cid, @RequestParam("tid") int tid, @RequestParam("day") int day,
+                              @RequestParam("course") String course) {
+        curriculumService.addCourse(cid, tid, day, course);
+    }
 
-	@RequestMapping(value = "/curriculum/at")
-	@ResponseBody
-	public int addTime(@RequestParam("id") int id, @RequestParam("cid") int cid, @RequestParam("time") String time) {
-		return curriculumService.addTime(id, cid, time);
-	}
+    @RequestMapping(value = "/curriculum/add")
+    @ResponseBody
+    public void addCurriculumNew(@RequestParam("cid") int cid, @RequestParam("tid") int tid, @RequestParam("day") int day,
+                                 @RequestParam("course") String course, @RequestParam("date") String date) {
+        curriculumService.addCourseNew(cid, tid, day, course, date);
+    }
 
-	@RequestMapping(value = "/curriculum/delete")
-	@ResponseBody
-	public void deleteLine(@RequestParam("cid") int cid, @RequestParam("tid") int tid) {
-		curriculumService.deleteOneLine(cid, tid);
-	}
+
+    @RequestMapping(value = "/curriculum/at")
+    @ResponseBody
+    public int addTime(@RequestParam("id") int id, @RequestParam("cid") int cid, @RequestParam("time") String time) {
+        return curriculumService.addTime(id, cid, time);
+    }
+
+    @RequestMapping(value = "/curriculum/delete")
+    @ResponseBody
+    public void deleteLine(@RequestParam("cid") int cid, @RequestParam("tid") int tid) {
+        curriculumService.deleteOneLine(cid, tid);
+    }
 }

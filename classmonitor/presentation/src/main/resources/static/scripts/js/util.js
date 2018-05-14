@@ -4,8 +4,8 @@
 
 var id;
 var period;
-var cnames=[];
-var cids =[];
+var cnames = [];
+var cids = [];
 
 /**
  * 按照传入的键值，提取出datas数组里的对应值
@@ -49,9 +49,9 @@ function timeTip() {
         return "下午好,";
 }
 
-function toPercent(point){
-    var str=Number(point*100).toFixed(0);
-    str+="%";
+function toPercent(point) {
+    var str = Number(point * 100).toFixed(0);
+    str += "%";
     return str;
 }
 
@@ -70,7 +70,7 @@ function getClassInfo(sequenceId) {
         dataType: 'json',
         data: {'uid': uid},
         success: function (obj) {
-            for (var i = 0; i < obj.length; i++){
+            for (var i = 0; i < obj.length; i++) {
                 var classInfo = obj[i];
                 cnames.push(classInfo.cname);
                 cids.push(classInfo.id);
@@ -81,8 +81,8 @@ function getClassInfo(sequenceId) {
                 $('#class_list').append(li);
             }
 
-            $.session.set('current_sequence_id',sequenceId);
-            $.session.set('current_cid',cids[sequenceId]);
+            $.session.set('current_sequence_id', sequenceId);
+            $.session.set('current_cid', cids[sequenceId]);
             $('#current_cname').html(cnames[sequenceId]);
         }
     });
@@ -90,15 +90,15 @@ function getClassInfo(sequenceId) {
 
 
 function changeClass(sequenceId) {
-    $.session.set('current_cid',cids[sequenceId]);
-    $.session.set('current_sequence_id',sequenceId);
+    $.session.set('current_cid', cids[sequenceId]);
+    $.session.set('current_sequence_id', sequenceId);
     $('#current_cname').html(cnames[sequenceId]);
     // changeApprovalList(cids[sequenceId], 1);
     window.location.reload();
 }
 
-function changeTime(period){
-    $.session.set('current_period',period);
+function changeTime(period) {
+    $.session.set('current_period', period);
     var divider;
     if (period === 1) {
         divider = '今天';
@@ -110,6 +110,5 @@ function changeTime(period){
     $('#time_filter').html(divider);
     window.location.reload();
 }
-
 
 

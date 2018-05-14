@@ -79,6 +79,21 @@ public class CurriculumImpl implements CurriculumService {
 		}
 	}
 
+	public void addCourseNew(int cid, int tid, int day, String course,String date){
+		Curriculum current = curriculumRepo.findByTidAndCidAndDate(tid, cid,date);
+		if (current == null) {
+			Curriculum c = new Curriculum();
+			c.setCid(cid);
+			c.setTid(tid);
+			c.setDay(day);
+			c.setCourse(course);
+			c.setDate(date);
+			curriculumRepo.save(c);
+		} else {
+			curriculumRepo.updateCurriculum(course, cid, tid, day);
+		}
+	}
+
 	@Override
 	public void deleteOneLine(int cid, int tid) {
 		timeRepo.deleteTime(tid);

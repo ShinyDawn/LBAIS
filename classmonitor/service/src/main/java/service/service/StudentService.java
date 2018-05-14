@@ -9,6 +9,7 @@ public interface StudentService {
 
 	public List<Student> getInfo(int cid);
 
+
 	public int add(int cid, int sid, String name, String gender, int x, int y);
 
 	public int update(int id, int cid, int sid, String name, String gender, int x, int y);
@@ -16,6 +17,7 @@ public interface StudentService {
 	public void delete(int id);
 
 	//part of Personal Model
+	public Student getOneInfo(int cid,int sid);
 	public List<AttendanceVO> getAttendanceInfo(int cid,int sid,int period);
 	public double getAttendanceRate(int cid,int sid,int period);
 	public double getAttendancePrecent(int cid,int sid,int period);

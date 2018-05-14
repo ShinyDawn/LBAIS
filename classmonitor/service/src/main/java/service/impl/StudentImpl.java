@@ -14,6 +14,7 @@ import service.repository.StudentRepository;
 import service.repository.TimeRepository;
 import service.service.StudentService;
 import service.util.DateUtil;
+import service.util.MathUtil;
 import service.vo.*;
 
 import static service.util.MathUtil.getSort;
@@ -71,6 +72,9 @@ public class StudentImpl implements StudentService {
 
     //part of Personal Model
 
+    public Student getOneInfo(int cid, int sid) {
+        return studentRepo.findByCidAndSid(cid, sid);
+    }
 
     public List<StudentInfoVO> getStudentsInfoList(int cid, int period) {
 
@@ -84,7 +88,7 @@ public class StudentImpl implements StudentService {
         for (Student student : students) {
             int sid = student.getSid();
             //int sid,String name,double attendanceRate,double livenessRate,double deciplineRate
-            StudentInfoVO studentInfoVO = getStudentProblemInfo(cid,sid,period);
+            StudentInfoVO studentInfoVO = getStudentProblemInfo(cid, sid, period);
             studentInfoVOList.add(studentInfoVO);
         }
 
@@ -96,7 +100,7 @@ public class StudentImpl implements StudentService {
         //int sid,String name,double attendanceRate,double livenessRate,double deciplineRate
         StudentInfoVO studentInfoVO = new StudentInfoVO();
         studentInfoVO.setSid(sid);
-        studentInfoVO.setName(studentRepo.getName(cid,sid));
+        studentInfoVO.setName(studentRepo.getName(cid, sid));
         double attendanceRate = getAttendancePrecent(cid, sid, period);
         double disciplineRate = getDisciplinePercent(cid, sid, period);
         LivenessVO livenessVO = getGeneralLivenessPercent(cid, sid, period);
@@ -141,6 +145,22 @@ public class StudentImpl implements StudentService {
             problemList.add(problem);
         }
 
+
+        /**
+         * 偏科
+         */
+        double[] sub_per = new double[5];
+        sub_per[0]=getGeneralLivenessPercentBySubject(cid,sid,10,"语文");
+        sub_per[1]=getGeneralLivenessPercentBySubject(cid,sid,10,"数学");
+        sub_per[2]=getGeneralLivenessPercentBySubject(cid,sid,10,"英语");
+        sub_per[3]=getGeneralLivenessPercentBySubject(cid,sid,10,"品德");
+        sub_per[4]=getGeneralLivenessPercentBySubject(cid,sid,10,"科学");
+        String lesson_detail = "";
+        double sv = MathUtil.StandardDiviation(sub_per);
+        if (sv>0.5){
+            lesson_detail = "\n有偏科现象，详情请见课堂表现。";
+        }
+
         /**
          * 课堂表现，可再细分专注度与活跃度
          */
@@ -148,26 +168,23 @@ public class StudentImpl implements StudentService {
         if (rate <= 0.2) {
             ProblemVO problem = new ProblemVO();
             problem.setTitle("兴趣较低");
-            problem.setDetail("最近课堂表现低迷，需要注意。");
+            problem.setDetail("最近课堂表现低迷，需要注意。"+lesson_detail);
             problem.setIsProgress(-1);
             problemList.add(problem);
         } else if (rate >= 0.7) {
             ProblemVO problem = new ProblemVO();
             problem.setTitle("兴趣满满");
-            problem.setDetail("最近课堂表现活跃，值得肯定。");
+            problem.setDetail("最近课堂表现活跃，值得肯定。"+lesson_detail);
             problem.setIsProgress(0);
             problemList.add(problem);
         } else {
             ProblemVO problem = new ProblemVO();
             problem.setTitle("兴趣一般");
-            problem.setDetail("最近课堂表现不错，仍须努力。");
+            problem.setDetail("最近课堂表现不错，仍须努力。"+lesson_detail);
             problem.setIsProgress(0);
             problemList.add(problem);
         }
 
-        /**
-         * 偏科
-         */
 
 
         /**
@@ -196,7 +213,7 @@ public class StudentImpl implements StudentService {
                     cuttingSchool++;
                 }
             }
-            detail = "迟到" + lateForClass + "次，早退" + earlyOut + "次，旷课" + cuttingSchool + "次，详情见出勤表现。";
+            detail = "\n迟到" + lateForClass + "次，早退" + earlyOut + "次，旷课" + cuttingSchool + "次，详情见出勤表现。";
         }
 
         if (rate <= 0.2) {
@@ -372,9 +389,10 @@ public class StudentImpl implements StudentService {
         if (num == 0) {
             return rankPercent;
         }
-        rankPercent = 1 - 1.0 * (rank-0.9)/ num;
+        rankPercent = 1 - 1.0 * (rank - 0.9) / num;
         return rankPercent;
     }
+
     ;
 
     /**
@@ -614,6 +632,14 @@ public class StudentImpl implements StudentService {
         String endDate = DateUtil.getDate();
         for (int i = period - 1; i >= 0; i--) {
             String date = DateUtil.getPassedDate(i, endDate);
+
+            try {
+                if (DateUtil.dayForWeek(date) == 6 || DateUtil.dayForWeek(date) == 7) {
+                    continue;
+                }
+            } catch (Exception e) {
+
+            }
             boolean dateExist = false;
             for (int j = 0; j < primitivelist.size(); j++) {
                 LivenessVO livenessVO = primitivelist.get(j);
@@ -984,7 +1010,7 @@ public class StudentImpl implements StudentService {
             return rankPercent;
         }
 
-        rankPercent = 1.0 * (rank - 0.9) / num;
+        rankPercent = 1 - 1.0 * (rank - 0.9) / num;
 
         return rankPercent;
     }
@@ -1091,7 +1117,7 @@ public class StudentImpl implements StudentService {
         if (num == 0) {
             return rankPercent;
         }
-        rankPercent = 1 - 1.0 * (rank-0.9) / num;
+        rankPercent = 1 - 1.0 * (rank - 0.9) / num;
         return rankPercent;
 
     }

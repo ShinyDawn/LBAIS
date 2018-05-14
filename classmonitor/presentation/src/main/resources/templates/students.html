@@ -22,7 +22,7 @@
 
             <div class="nav-collapse collapse navbar-inverse-collapse">
                 <ul class="nav pull-left">
-                    <li><a class='active' href="http://localhost:10001/student">
+                    <li><a class='active' href="http://localhost:10001/students">
                         学生详情
                     </a></li>
                     <li><a href="lesson.html">
@@ -88,23 +88,18 @@
                             <ul class="widget widget-usage unstyled span12">
                                 <li>
                                     <p>
-                                        <strong>今天进步较大的同学有4人</strong> <span class="pull-right small muted">10%</span>
+                                        <strong><span id="time_pro">今天</span>进步较大的同学有<span id="pro_Num"></span>人</strong>
+                                        <span class="pull-right small muted" id="pro_percent"></span>
                                     </p>
-                                    <div class="progress tight">
-                                        <div class="bar bar-info" style="width: 10%;">
-                                        </div>
+                                    <div class="progress tight"  id="pro_cent">
+
                                     </div>
                                 </li>
                                 <li>
                                     <p>
                                         <strong>他们是：</strong>
-                                        王小明，程玉海，李念儿，赵卫国
-                                        <!--<span class="pull-right small muted">44</span>-->
+                                        <span id="pro_name"></span>
                                     </p>
-                                    <!--<div class="progress tight">-->
-                                    <!--<div class="bar bar-info" style="width: 22%;">-->
-                                    <!--</div>-->
-                                    <!--</div>-->
                                 </li>
                             </ul>
                         </div>
@@ -119,40 +114,39 @@
                             <div class="pull-left">
                                 时间 : &nbsp;
                                 <div class="btn-group">
-                                    <button class="btn">今天</button>
+                                    <button class="btn" id="time_filter">今天</button>
                                     <button class="btn dropdown-toggle" data-toggle="dropdown">
                                         <span class="caret"></span>
                                     </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">今天</a></li>
-                                        <li><a href="#">昨天</a></li>
-                                        <li><a href="#">最近三天</a></li>
-                                        <li><a href="#">最近一周</a></li>
-                                        <li><a href="#">最近一月</a></li>
+                                    <ul class="dropdown-menu" id="time_list">
+                                        <li><a onclick="changeTimeStu(1)">今天</a></li>
+                                        <li><a onclick="changeTimeStu(3)">最近三天</a></li>
+                                        <li><a onclick="changeTimeStu(7)">最近一周</a></li>
+                                        <li><a onclick="changeTimeStu(30)">最近一月</a></li>
                                         <li class="divider"></li>
-                                        <li><a href="#">本学期</a></li>
+                                        <li><a onclick="changeTimeStu(90)">本学期</a></li>
                                     </ul>
                                 </div>
                             </div>
 
-                            <div class="pull-left offset1">
-                                可能存在的问题 : &nbsp;
-                                <div class="btn-group">
-                                    <button class="btn">全部</button>
-                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">全部</a></li>
-                                        <li><a href="#">请假较多</a></li>
-                                        <li><a href="#">兴趣较低</a></li>
-                                        <li><a href="#">纪律较差</a></li>
-                                        <li><a href="#">退步较大</a></li>
-                                        <!--<li class="divider"></li>-->
-                                        <!--<li><a href="#">进步</a></li>-->
-                                    </ul>
-                                </div>
-                            </div>
+                            <!--<div class="pull-left offset1">-->
+                                <!--可能存在的问题 : &nbsp;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<button class="btn">全部</button>-->
+                                    <!--<button class="btn dropdown-toggle" data-toggle="dropdown">-->
+                                        <!--<span class="caret"></span>-->
+                                    <!--</button>-->
+                                    <!--<ul class="dropdown-menu">-->
+                                        <!--<li><a href="#">全部</a></li>-->
+                                        <!--<li><a href="#">出勤较少</a></li>-->
+                                        <!--<li><a href="#">兴趣较低</a></li>-->
+                                        <!--<li><a href="#">纪律较差</a></li>-->
+                                        <!--<li><a href="#">退步较大</a></li>-->
+                                        <!--&lt;!&ndash;<li class="divider"></li>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<li><a href="#">进步</a></li>&ndash;&gt;-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
                             <!--<div class="pull-right">-->
                             <!--<a href="#" class="btn btn-primary">高级筛选</a>-->
                             <!--</div>-->
@@ -214,12 +208,6 @@
 <!--});-->
 <!--</script>-->
 
-<!--<script type="text/javascript">-->
-<!--function show() {-->
-<!--window.location.hrefstudentsDetail.htmlhtml"-->
-<!--}-->
-
-<!--</script>-->
 
 </body>
 

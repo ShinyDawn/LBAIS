@@ -20,7 +20,7 @@ window.onload = function () {
 
     var cid = $.session.get('current_cid');
     changeApprovalList(cid, period);
-}
+};
 
 function changeApprovalList(cid, period) {
     $('#approval_list').append(addtitle());
@@ -70,7 +70,7 @@ function createApprovalList(data) {
     // td7.attr('id', data['id']);
 
 
-    td1.html(data['sid']);
+    td1.html(data['date']);
     td2.html(data['name']);
     td3.html(data['courseTime']);
     td4.html(data['course']);
@@ -80,6 +80,46 @@ function createApprovalList(data) {
     tr.append(td1, td2, td3, td4, td5, td6, td8);
     return tr;
 }
+
+function addApproval() {
+    var cid = $.session.get('current_cid');
+
+    var sid = $("#sid").val();
+    var date = $('#date').val();
+    var tids = [];
+    var obj = document.getElementsByName('timeId');
+    for (var i = 0; i < obj.length; i++) {
+        if (obj[i].checked) {
+            tids.push(obj[i].value);
+        } //如果选中，将value添加到变量s中
+    }
+    var type = $('#type :input:checked').val();
+    var reason = $('#reason').val();
+
+    $.ajax({
+        url: "http://localhost:10002//approval/add",
+        type: 'PUT',
+        data: {
+            'sid': sid, 'cid': cid, 'date': date, 'tids': tids.toString(), 'type': type,
+            'reason': reason
+        },
+        // async: false,
+        success: function (obj) {
+            if (obj['result'] === true) {
+
+                $('#ApprovalForLeaving').modal('hide');
+                $('#success-modal').modal()
+
+            } else {
+                $('#alertInfo').html("添加失败! " + obj['reason']);
+                $('#alertInfo').addClass('alert');
+            }
+
+        }
+    });
+
+}
+
 
 function click_modify_Approval(id) {
 
