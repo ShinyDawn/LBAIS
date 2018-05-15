@@ -17,7 +17,7 @@ import service.tool.PathConfig;
 public class IOHelper {
 
 	public BufferedReader read(String tar) {
-		String pathname = PathConfig.baseDir + tar;
+		String pathname = tar;
 		BufferedReader br = null;
 		try {
 			File filename = new File(pathname);
