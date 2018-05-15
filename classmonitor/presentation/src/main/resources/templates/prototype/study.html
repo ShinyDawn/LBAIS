@@ -1,0 +1,349 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>学习行为智能分析助手</title>
+        <!-- <link type="text/css" href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link type="text/css" href="../bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link type="text/css" href="../css/theme.css" rel="stylesheet">
+        <link type="text/css" href="../images/icons/css/font-awesome.css" rel="stylesheet">
+        <link type="text/css" href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600'
+              rel='stylesheet'> -->
+        <link th:href="@{bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+        <link th:href="@{bootstrap/css/bootstrap-responsive.min.css}" rel="stylesheet" />
+        <link th:href="@{css/theme.css}" rel="stylesheet" />
+        <link th:href="@{images/icons/css/font-awesome.css}" rel="stylesheet" />
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600' rel='stylesheet' />
+    </head>
+<body>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+                <i class="icon-reorder shaded"></i></a>
+
+            <a class="brand" href="students.html">学习行为智能分析助手 </a>
+
+            <div class="nav-collapse collapse navbar-inverse-collapse">
+                <ul class="nav pull-left">
+                    <li><a href="students.html">
+                        个体分析
+                    </a></li>
+                    <li><a href="lesson.html">
+                        课堂整体分析
+                    </a></li>
+                    <li><a class='active' href="study.html">
+                        自习记录
+                    </a></li>
+                    <li><a href="leave.html">
+                        请假录入
+                    </a></li>
+
+                </ul>
+
+
+                <ul class="nav pull-right">
+
+                    <li><a href="#">早上好，胡风老师</a></li>
+                    <li class="nav-user dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="../images/user.png" class="nav-avatar"/>
+                        <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">座位表录入</a></li>
+                            <li><a href="#">学生录入</a></li>
+                            <li><a href="#">账户设置</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">登出</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div><!-- /.nav-collapse -->
+
+        </div>
+    </div>
+    <!-- /navbar-inner -->
+</div>
+<!-- /navbar -->
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+
+            <div class="span8 offset2">
+                <div class="content">
+                    <div class="module">
+                        <div class="module-head">
+                            <a class="icon-sort-down pull-left" href="#"></a>
+                            <h3 class='' style="margin-left: 30px">一年级3班</h3>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                        <div class="btn-box-row row-fluid">
+                            <a href="#" class="btn-box big span4"><i class=" icon-random"></i><b>1</b>
+                                <p class="text-muted">
+                                    待处理警报</p>
+                            </a><a href="#" class="btn-box big span4"><i class="icon-user"></i><b>2</b>
+                            <p class="text-muted">
+                                待核实警报</p>
+                        </a><a href="#" class="btn-box big span4"><i class="icon-bullhorn"></i><b>1</b>
+                            <p class="text-muted">
+                                待处理模式</p>
+                        </a>
+                        </div>
+
+
+                    <div class="module message">
+                        <div class="module-head">
+                            <h3>历史报警</h3>
+                        </div>
+                        <div class="module-option clearfix">
+                            <div class="pull-left">
+                                <div class="btn-group">
+                                    <button class="btn">最近一周</button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">今天</a></li>
+                                        <li><a href="#">最近一周</a></li>
+                                        <li><a href="#">最近一月</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">本学期</a></li>
+                                        <li><a href="#">本学年</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="pull-right">
+                                <a href="#" class="btn btn-primary">详细信息</a>
+                            </div>
+                        </div>
+                        <div class="module-body table">
+
+                            <table class="table table-message">
+                                <tbody>
+                                <tr class="heading">
+                                    <td class="cell-time align-center">日期</td>
+                                    <td class="cell-time align-right">时间</td>
+                                    <td class="cell-title">详情</td>
+                                    <td class="cell-status hidden-phone hidden-tablet">状态</td>
+
+                                </tr>
+                                <tr class="task">
+                                    <td class="cell-time align-right">2018-05-09</td>
+                                    <td class="cell-time align-right">17:50 </td>
+                                    <td class="cell-title"><div>检测到XXX外出时间过长。</div></td>
+                                    <td class="cell-status hidden-phone hidden-tablet" ><a class="due" onclick="handle_alarm()">未处理</a></td>
+                                </tr>
+                                <tr class="task">
+                                    <td class="cell-time align-right">2018-05-05</td>
+                                    <td class="cell-time align-right">11:22 </td>
+                                    <td class="cell-title"><div>检测到XXX外出时间过长。XX睡觉时间过长</div></td>
+                                    <td class="cell-status hidden-phone hidden-tablet" ><a class="due" onclick="handle_alarm()">未核实</a></td>
+                                </tr>
+                                <tr class="task resolved">
+                                    <td class="cell-time align-right">2018-04-16</td>
+                                    <td class="cell-time align-right">16:50 </td>
+                                    <td class="cell-title"><div>检测出XXX干扰他人。</div></td>
+                                    <td class="cell-status hidden-phone hidden-tablet"><a class="due">已处理</a></td>
+
+                                </tr>
+                                <tr class="task resolved">
+                                    <td class="cell-time align-right">2018-04-16</td>
+                                    <td class="cell-time align-right">17:30 </td>
+                                    <td class="cell-title"><div>检测到XXX与XXX一起外出。</div></td>
+                                    <td class="cell-status hidden-phone hidden-tablet"><a class="due">已处理</a></td>
+
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                        <div class="module-foot">
+                        </div>
+                    </div>
+
+                    <div class="module message">
+                        <div class="module-head">
+                            <h3>模式提醒</h3>
+                        </div>
+                        <div class="module-option clearfix">
+                            <div class="pull-left">
+                                <div class="btn-group">
+                                    <button class="btn">最近一周</button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">今天</a></li>
+                                        <li><a href="#">最近一周</a></li>
+                                        <li><a href="#">最近一月</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">本学期</a></li>
+                                        <li><a href="#">本学年</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="pull-right">
+                                <a href="#" class="btn btn-primary">详细信息</a>
+                            </div>
+                        </div>
+                        <div class="module-body table">
+
+                            <table class="table table-message">
+                                <tbody>
+                                <tr class="heading">
+                                    <td class="cell-time align-center">人物</td>
+                                    <td class="cell-time align-right">时段</td>
+                                    <td class="cell-title">描述</td>
+                                    <td class="cell-status hidden-phone hidden-tablet">状态</td>
+
+                                </tr>
+                                <tr class="task">
+                                    <td class="cell-time align-right">XXXX</td>
+                                    <td class="cell-time align-right">17:50-18:30</td>
+                                    <td class="cell-title"><div>XXXX</div></td>
+                                    <td class="cell-status hidden-phone hidden-tablet"><a class="due" onclick="handle_pattern()">未处理</a></td>
+                                </tr>
+                                <tr class="task resolved">
+                                    <td class="cell-time align-right">XXXX</td>
+                                    <td class="cell-time align-right">17:30-18:30 </td>
+                                    <td class="cell-title"><div>XXXX</div></td>
+                                    <td class="cell-status hidden-phone hidden-tablet"><a class="due">已处理</a></td>
+
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                        <div class="module-foot">
+                        </div>
+                    </div>
+
+                    <!--/.module-->
+                </div>
+                <!--/.content-->
+            </div>
+            <!--/.span9-->
+
+        </div>
+    </div>
+    <!--/.container-->
+</div>
+<!--/.wrapper-->
+<div class="footer">
+    <!--<div class="container">-->
+        <!--<b class="copyright">&copy; 2017 EGrappler </b>All rights reserved.-->
+    <!--</div>-->
+</div>
+
+
+
+<!-- <div id="fade" class="black_overlay"></div>
+
+<div id="add_act" class="white_content">
+	<div style="text-align: right; cursor: default; height: 40px;">  
+		<span style="font-size: 16px;" onclick="CloseDiv('add_act','fade')">关闭</span>
+  	</div>
+  	<form method="POST" action="MyActivity.php">
+  		<div class="field">
+  			<div style="text-align: center">
+  				<p class="title">处理警报</p>
+  			</div>
+  			<br>
+  			<br>
+            <div class="item">
+            	<span class="n">学生：</span>
+            	<input class="reg-input info-input" type="text" name="title"/>
+            </div>
+            <div class="item">
+            	<span class="n">动作：</span>
+            	<input class="reg-input info-input" type="text" name="time"/>
+            </div>
+            <div class="field is-grouped has-addons has-addons-right">
+                <p class="control">
+                    <button class="button is-info" name="add_act" type="submit">确定</button>
+                </p>
+            </div>
+            <div class="field is-grouped has-addons has-addons-right">
+                <p class="control">
+                    <button class="button is-info" name="add_act" type="submit">误报</button>
+                </p>
+            </div>
+       	</div>
+	</form>
+</div> -->
+
+
+
+
+<!-- <script src="../scripts/jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="../scripts/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
+<script src="../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="../scripts/flot/jquery.flot.js" type="text/javascript"></script>
+<script src="../scripts/datatables/jquery.dataTables.js" type="text/javascript"></script>
+<script src="../scripts/echarts.common.min.js" type="text/javascript"></script>
+<script src="../scripts/echarts.min.js" type="text/javascript"></script>
+<script src="../scripts/js/students_detail.js" type="text/javascript"></script> -->
+
+<script th:src="@{scripts/jquery-1.9.1.min.js}" type="text/javascript"></script>
+<script th:src="@{scripts/jquery-ui-1.10.1.custom.min.js}" type="text/javascript"></script>
+<script th:src="@{bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+<script th:src="@{scripts/flot/jquery.flot.js}" type="text/javascript"></script>
+<script th:src="@{scripts/datatables/jquery.dataTables.js}" type="text/javascript"></script>
+<script th:src="@{scripts/echarts.common.min.js}" type="text/javascript"></script>
+<script th:src="@{scripts/echarts.min.js}" type="text/javascript"></script>
+<script th:src="@{scripts/js/students_detail.js}" type="text/javascript"></script>
+<script th:src="@{js/websocket.js}" type="text/javascript"></script>
+<script th:src="@{js/layer/layer.js}" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.table-message tbody tr').click(
+            function()
+            {
+                $(this).toggleClass('resolved');
+            }
+        );
+    } );
+
+    function handle_alarm(){
+    	layer.open({
+  		  type: 2 //Page层类型
+  		  ,skin: 'layui-layer-lan'
+  		  ,closeBtn: 1
+  		  ,area: ['600px', '700px']
+  		  ,title: '警报处理'
+  		  ,shade: 0.1 //遮罩透明度
+  		  ,maxmin: true //允许全屏最小化
+  		  ,anim: 2 //0-6的动画形式，-1不开启
+  		  ,content: 'http://localhost:10001/handle_alarm.html'
+  		  });
+        }
+    function handle_pattern(){
+    	layer.open({
+  		  type: 2 //Page层类型
+  		  ,skin: 'layui-layer-lan'
+  		  ,closeBtn: 1
+  		  ,area: ['600px', '400px']
+  		  ,title: '模式处理'
+  		  ,shade: 0.1 //遮罩透明度
+  		  ,maxmin: true //允许全屏最小化
+  		  ,anim: 2 //0-6的动画形式，-1不开启
+  		  ,content: 'http://localhost:10001/handle_pattern.html'
+  		  });
+        }
+
+
+  
+</script>
+</body>
+</html>
