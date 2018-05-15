@@ -11,7 +11,12 @@ import java.util.List;
  * Created by elva on 2018/4/30.
  */
 public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
+	@Query("select count(id) from Behavior b where b.cid=?1 and b.sid=?2 and b.action='举手' and b.place=?3 and b.date=?4")
+	public int countRaiseHand(int cid, int sid, String cname, String date);
 
+	@Query("select count(id) from Behavior b where b.cid=?1 and b.sid=?2 and b.action='回答问题' and b.place=?3 and b.date=?4")
+	public int countAnswerQuestion(int cid, int sid, String cname, String date);
+	
     @Query("select b from Behavior b where b.cid=?1 and b.sid=?2 and (b.action='缺勤' or b.action = '迟到'or b.action='早退')and b.date>?3 order by b.date desc")
     public List<Behavior> findAbsentee(int cid, int sid, String period);
 
@@ -46,6 +51,5 @@ public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
 
     @Query("SELECT b FROM Behavior b WHERE b.cid = ?1 AND b.sid = ?2 AND b.date > ?3 AND b.place = '自习' AND b.status <> '误报'")
     public List<Behavior> findBehaviorsDuringStudy(int cid, int sid, String period);
-
-
 }
+

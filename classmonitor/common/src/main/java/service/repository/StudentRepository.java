@@ -16,6 +16,8 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 	@Query("select s.name from Student s where s.cid=?1 and s.sid=?2")
 	public String getName(int cid,int sid);
 
+	@Query("select s.name from Student s where s.cid=?1 and s.sid=?2")
+	public String findName(int cid, int sid);
 
 	public Student findByCidAndSid(int cid,int sid);
 
@@ -43,3 +45,4 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 	@Query("delete from Student s where s.id=?1")
 	public void deleteOne(int id);
 }
+
