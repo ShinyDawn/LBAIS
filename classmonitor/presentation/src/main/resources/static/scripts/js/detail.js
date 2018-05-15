@@ -10,7 +10,7 @@ window.onload = function () {
     if (period === null) {
         period = 1;
     }
-    console.log(period);
+    // console.log(period);
 
     var divider;
     if (period === '1') {
@@ -99,22 +99,22 @@ function getAddendance(period) {
         cid = $.session.get('current_cid');
     }
 
+    // $.ajax({
+    //         url: 'http://localhost:10002/student/attendanceRate',
+    //         dataType: 'json',
+    //         type: 'get',
+    //         data: {'sid': sid, 'cid': cid, 'period': period},
+    //         success: function (obj) {
+    //             $('#attendance_rate').html(toPercent(obj));
+    //         }
+    //     }
+    // );
+
     $.ajax({
             url: 'http://localhost:10002/student/attendanceRate',
             dataType: 'json',
             type: 'get',
             data: {'sid': sid, 'cid': cid, 'period': period},
-            success: function (obj) {
-                $('#attendance_rate').html(toPercent(obj));
-            }
-        }
-    );
-
-    $.ajax({
-            url: 'http://localhost:10002/student/attendancePercent',
-            dataType: 'json',
-            type: 'get',
-            data: {'sid': sid, 'cid': cid, 'period': 30},
             success: function (obj) {
                 $('#attendance_percent').html(toPercent(obj));
             }
@@ -126,7 +126,7 @@ function getAddendance(period) {
             url: 'http://localhost:10002//student/attendance',
             dataType: 'json',
             type: 'get',
-            data: {'sid': sid, 'cid': cid, 'period': 30},
+            data: {'sid': sid, 'cid': cid, 'period': period},
             success: function (obj) {
                 for (var i = 0; i < obj.length; i++) {
                     $('#attencen_list').append(creatAttendanceList(obj[i]))

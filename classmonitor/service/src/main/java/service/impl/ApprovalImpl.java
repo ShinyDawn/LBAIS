@@ -30,7 +30,6 @@ public class ApprovalImpl implements ApprovalService {
     public List<ApprovalVO> getApprovalList(int cid, int period) {
         List<ApprovalVO> approvalVOS = new ArrayList<>();
 
-//        String start="2018-05-07";
         String start = DateUtil.getDate();
         String end = DateUtil.getFutureDate(period, start);
 

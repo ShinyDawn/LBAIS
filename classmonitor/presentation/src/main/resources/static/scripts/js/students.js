@@ -122,8 +122,8 @@ function createStudentsList(data) {
             var c = $('<c style="margin-left: 4px">出勤较少</c>&nbsp;');
             td6.append(c);
         }
-        if (problem['title'] === "兴趣较低") {
-            var d = $('<d style="margin-left: 4px">兴趣较低</d>&nbsp;');
+        if (problem['title'] === "表现一般") {
+            var d = $('<d style="margin-left: 4px">表现一般</d>&nbsp;');
             td6.append(d);
 
         }

@@ -41,6 +41,25 @@ public class MathUtil {
         return Math.sqrt(dVar / m);
     }
 
+    //标准差σ=sqrt(s^2)
+    public static double StandardDiv(List<Double> x) {
+        int m = x.size();
+        if (m == 0) {
+            return 0;
+        }
+        double sum = 0;
+        for (int i = 0; i < m; i++) {//求和
+            sum += x.get(i);
+        }
+        double dAve = sum * 1.0 / m;//求平均值
+
+        double dVar = 0;
+        for (int i = 0; i < m; i++) {//求方差
+            dVar += (x.get(i) - dAve) * (x.get(i) - dAve);
+        }
+        return Math.sqrt(dVar / m);
+    }
+
     public static int getSort(List<StudentDataVO> list, int sid) {
         //因为是排名,所以降序排序
         Collections.sort(list, new Comparator<StudentDataVO>() {
