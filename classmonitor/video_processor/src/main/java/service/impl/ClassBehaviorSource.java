@@ -33,18 +33,18 @@ public class ClassBehaviorSource implements SourceService {
 	public String getNextSource() {
 		if (current.size() == 0) {
 			index++;
+			if (index == sources.length)
+				index = 0;
 			File file = new File(dir + "/" + sources[index]);
 			String[] fileList = file.list();
 			for (int i = 0; i < fileList.length; i++) {
 				current.add(fileList[i]);
 			}
-			if (index == sources.length)
-				index = 0;
 		}
 		String currentPath = dir + "/" + sources[index];
 		String filename = current.get(0);
 		current.remove(0);
-		System.out.println(currentPath + "/" + filename);
+		System.out.println(filename);
 
 		return currentPath + "/" + filename;
 	}

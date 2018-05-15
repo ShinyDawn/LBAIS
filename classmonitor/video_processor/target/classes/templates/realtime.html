@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>LBAIS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script th:src="@{/js/ref/jquery-3.2.1.min.js}"></script>
+<script th:src="@{js/ref/jquerysession.js}"></script>
+<script th:src="@{js/ref/bootstrap.min.js}"></script>
+<script th:src="@{js/ref/echarts-all.js}"></script>
+<link rel="stylesheet" th:href="@{css/bootstrap.css}" />
+<style>
+#t_class {
+	width: 100%;
+}
+
+#t_title {
+	text-align: center;
+	height: 35px;
+	width: 120px;
+	margin: 0 auto;
+	color: rgb(51, 122, 183);
+	background: white;
+}
+
+#t {
+	width: 100%;
+}
+
+#t_d {
+	text-align: center;
+	text-size: 16px;
+	margin-top: 30px;
+	margin-bottom: 20px;
+	color: rgb(51, 122, 183);
+}
+</style>
+<script>
+	$.session.set('raiseHand', 0);
+	$.session.set('answerQuestion', 0);
+</script>
+
+</head>
+
+<body>
+	<div id="t">
+		<h4 id="t_d">
+			学生专注度分布图&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当前平均专注度<span id="percent"></span>%
+		</h4>
+	</div>
+	<div id="list"
+		style="width: 700px; height: 420px; margin-right: auto; margin-left: auto; margin-top: 10px; margin-bottom: 30px"></div>
+
+
+	<script type="text/javascript">
+		/*<![CDATA[*/
+		function heatMap() {
+			$.ajax({
+				type : "POST",
+				url : "http://localhost:10003/realTime/focus",
+				crossDomain : true,
+				success : function(data) {
+					var heatData = [];
+					var x = data.length;
+					var y = data[0].length;
+					var x_insert = 650 / x;
+					var y_insert = 390 / y;
+					var gradient = 150 / x;
+					var avg = 0;
+					for (var i = 0; i < data.length; i++) {
+						for (var j = 0; j < data[i].length; j++) {
+							var val = 1 - data[i][j];
+							avg += data[i][j];
+							heatData.push([ 650 - i * x_insert,
+									390 - j * y_insert, val ]);
+							for (var k = 1; k < gradient / 1.5; k++) {
+								n = k / gradient;
+								heatData.push([ 650 - (i - n) * x_insert,
+										390 - j * y_insert, val * (1 - n) ]);
+								heatData.push([ 650 - (i + n) * x_insert,
+										390 - j * y_insert, val * (1 - n) ]);
+								heatData
+										.push([ 650 - i * x_insert,
+												390 - (j - n) * y_insert,
+												val * (1 - n) ]);
+								heatData
+										.push([ 650 - i * x_insert,
+												390 - (j + n) * y_insert,
+												val * (1 - n) ]);
+								heatData
+										.push([ 650 - (i - n) * x_insert,
+												390 - (j - n) * y_insert,
+												val * (1 - n) ]);
+								heatData
+										.push([ 650 - (i - n) * x_insert,
+												390 - (j + n) * y_insert,
+												val * (1 - n) ]);
+								heatData
+										.push([ 650 - (i + n) * x_insert,
+												390 - (j - n) * y_insert,
+												val * (1 - n) ]);
+								heatData
+										.push([ 650 - (i + n) * x_insert,
+												390 - (j + n) * y_insert,
+												val * (1 - n) ]);
+							}
+						}
+					}
+					avg = avg / (x * y) * 100;
+					avg = avg.toFixed(1);
+					document.getElementById("percent").innerText = avg;
+					var chart = echarts.init(document.getElementById('list'));
+					option = {
+						series : [ {
+							type : 'heatmap',
+							data : heatData,
+							hoverable : false,
+							blurSize : 50,
+							gradientColors : [ {
+								offset : 0.5,
+								color : '#4dbe13'
+							}, {
+								offset : 0.8,
+								color : '#d6e62d'
+							}, {
+								offset : 0.92,
+								color : '#f93f39'
+							}, {
+								offset : 0.95,
+								color : '#f82c25'
+							} ],
+							valueScale : 1,
+							opacity : 0.8
+						} ]
+					};
+					chart.setOption(option);
+				}
+			});
+		}
+		heatMap();
+		setInterval("heatMap()", "30000");
+		/*]]>*/
+	</script>
+
+	<script type="text/javascript">
+		/*<![CDATA[*/
+		function close() {
+			$("#close_btn").trigger('click');
+		}
+		setInterval("close()", "27777");
+		function raiseHand() {
+			$
+					.ajax({
+						type : "POST",
+						timeout : 100000,//单次超时长连接时间为分钟
+						url : "http://localhost:10003/realTime/raise",
+						crossDomain : true,
+						success : function(data) {
+							if (data[0].answer == 0) {
+								var r = $.session.get('raiseHand');
+								if (r == 0) {
+									$.session.set('raiseHand', 1);
+									$("#t_title").trigger('click');
+								} else {
+									document.getElementById("container").innerHTML = "";
+								}
+								var html = "";
+								for (var i = 0; i < data.length; i++) {
+									html += "<h4 style='color:grey'>"
+											+ data[i].sid
+											+ "号&nbsp;&nbsp;&nbsp;&nbsp;"
+											+ data[i].sname
+											+ "&nbsp;&nbsp;&nbsp;&nbsp;("
+											+ data[i].standup + "/"
+											+ data[i].raiseHand + ")" + "</h4>";
+								}
+								document.getElementById("container").innerHTML = html;
+							} else if (data[0].answer == 1) {
+								document.getElementById("container").innerHTML = "";
+								$.session.set('raiseHand', 0);
+								$("#close_btn").trigger('click');
+							}
+						},
+						error : function(XMLHttpRequest, textStatus,
+								errorThrown) {
+							$("#close_btn").trigger('click');
+							raiseHand();
+						}
+					});
+		}
+		raiseHand();
+		setInterval("raiseHand()", "10000");
+		/*]]>*/
+	</script>
+
+	<div id="t_class">
+		<h4 class="btn btn-primary btn-block" data-toggle="modal"
+			data-target="#myModal" id="t_title">讲&nbsp;&nbsp;&nbsp;&nbsp;台</h4>
+	</div>
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" id="close_btn"
+						data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel"
+						style="padding-left: 13px; color: #38a626">LBAIS</h4>
+				</div>
+				<div class="modal-body">
+					<div class="container" id="container"></div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+</body>
+</html>
