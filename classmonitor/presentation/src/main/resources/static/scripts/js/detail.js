@@ -188,7 +188,7 @@ function getLessonALL() {
                 type: 'get',
                 data: {'sid': sid, 'cid': cid, 'period': period},
                 success: function (obj) {
-                    lineTableAll(obj, period);
+                    lineTableNew(obj, period);
                 }
             }
         );
@@ -364,19 +364,20 @@ function redar(data, id) {
 function lineTableAll(obj, flag) {
     var myChart = echarts.init(document.getElementById('lesson_show'));
     var subject = getArray(obj, 'subject');
-    // var data = getArray(obj, 'data');
-    // var date = getArray(data[0], 'date');
-    var data = getArray(obj, 'generalRate');
-    console.log(data);
-    // var data1 = arrayToFix(getArray(data[1], 'generalRate'));
-    // var data2 = arrayToFix(getArray(data[2], 'generalRate'));
-    // var data3 = arrayToFix(getArray(data[3], 'generalRate'));
-    // var data4 = arrayToFix(getArray(data[4], 'generalRate'));
-    // var avg = arrayAverage(data0, data1, data2, data3, data4);
+    var data = getArray(obj, 'data');
+    var date = getArray(data[0], 'date');
+    // var data = getArray(obj, 'generalRate');
+    // console.log(data);
+    var data0 = arrayToFix(getArray(data[0], 'generalRate'));
+    var data1 = arrayToFix(getArray(data[1], 'generalRate'));
+    var data2 = arrayToFix(getArray(data[2], 'generalRate'));
+    var data3 = arrayToFix(getArray(data[3], 'generalRate'));
+    var data4 = arrayToFix(getArray(data[4], 'generalRate'));
+    var avg = arrayAverage(data0, data1, data2, data3, data4);
 
     var type = ['line', 'bar'];
-    var t = type[1];
-    // subject.push('平均');
+    var t = type[0];
+    subject.push('平均');
 
     option = {
         title: {
@@ -405,7 +406,7 @@ function lineTableAll(obj, flag) {
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: subject
+            data: date
         },
         yAxis: {
             type: 'value',
@@ -422,34 +423,33 @@ function lineTableAll(obj, flag) {
             {
                 name: subject[0],
                 type: t,
-                data: [98]
+                data: data0
             },
             {
                 name: subject[1],
                 type: t,
-                data: [98]
+                data: data1
             },
             {
                 name: subject[2],
                 type: t,
-                data: [98]
+                data: data2
             },
             {
                 name: subject[3],
                 type: t,
-                data: [98]
+                data: data3
             },
             {
                 name: subject[4],
                 type: t,
-                data:[98]
+                data:data4
+            },
+            {
+                name: '平均',
+                type: t,
+                data: avg
             }
-            // ,
-            // {
-            //     name: '平均',
-            //     type: t,
-            //     data: avg
-            // }
 
         ]
     };
@@ -461,6 +461,95 @@ function lineTableAll(obj, flag) {
     myChart.setOption(option);
 }
 
+
+function lineTableNew(obj, flag) {
+    var myChart = echarts.init(document.getElementById('lesson_show'));
+    var subject = getArray(obj, 'subject');
+    // var data = getArray(obj, 'data');
+    // var date = getArray(data[0], 'date');
+    var data = arrayToFix(getArray(obj, 'generalRate'));
+    console.log(data);
+    // var data1 = arrayToFix(getArray(data[1], 'generalRate'));
+    // var data2 = arrayToFix(getArray(data[2], 'generalRate'));
+    // var data3 = arrayToFix(getArray(data[3], 'generalRate'));
+    // var data4 = arrayToFix(getArray(data[4], 'generalRate'));
+    // var avg = arrayAverage(data0, data1, data2, data3, data4);
+
+    var type = ['line', 'bar'];
+    var t = type[1];
+    // subject.push('平均');
+
+
+
+    option = {
+            title: {
+                text: '课堂综合表现情况'
+
+            },
+        tooltip : {
+            trigger : 'axis'
+        },
+        legend : {
+            data : subject
+        },
+        grid : {
+            left : '3%',
+            right : '4%',
+            bottom : '3%',
+            containLabel : true
+        },
+        xAxis : {
+            type : 'category',
+            data : subject,
+            axisTick : {
+                alignWithLabel : true
+            }
+        },
+
+        yAxis: {
+            type: 'value',
+            name: '优于？%的同学',
+            min: 0,
+            max: 100,
+            interval: 20,
+            axisLabel: {
+                formatter: '{value} %'
+            }
+        },
+        //
+        // label : {
+        //     normal : {
+        //         show : true,
+        //         position : 'top',
+        //         textStyle : {
+        //             color : 'grey'
+        //         }
+        //     }
+        // },
+        series : [ {
+            type : 'bar',
+            data : data,
+            barWidth : '50%',
+            itemStyle : {
+                normal : {
+                    color : function(params) {
+                        var colorList = ['#37a2da', '#67e0e3', '#ffe080', '#fbb8a2', '#e58dc2', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
+                        return colorList[params.dataIndex];
+                    },
+                    lineStyle : {
+                        color : '#37a2da'
+                    }
+                }
+            },
+        } ]
+    };
+
+
+    $(window).resize(function () {
+        myChart.resize();
+    });
+    myChart.setOption(option);
+}
 
 function lineTableSubject(data, flag) {
     var myChart = echarts.init(document.getElementById('lesson_show'));
