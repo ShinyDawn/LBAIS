@@ -1,9 +1,11 @@
 package service.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import service.entity.Behavior;
+import org.springframework.transaction.annotation.Transactional;
 
+import service.entity.Behavior;
 
 import java.util.List;
 
@@ -11,13 +13,25 @@ import java.util.List;
  * Created by elva on 2018/4/30.
  */
 public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
-    @Query("select count(id) from Behavior b where b.cid=?1 and b.sid=?2 and b.action='举手' and b.place=?3 and b.date=?4")
-    public int countRaiseHand(int cid, int sid, String cname, String date);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "truncate table behavior", nativeQuery = true)
+	public void deleteAll();
+	
+	@Query("select b from Behavior b where b.cid=?1 and b.place<>'自习' and (b.action='举手' or b.action='回答问题') and b.date>=?2 order by b.date")
+	public List<Behavior> findPositivity(int cid, String date);
+	
+	@Query("select count(id) from Behavior b where b.cid=?1 and b.place=?2 and (b.action='举手' or b.action='回答问题') and b.date=?3")
+	public int findPositivity(int cid, String cname,String date);
 
-    @Query("select count(id) from Behavior b where b.cid=?1 and b.sid=?2 and b.action='回答问题' and b.place=?3 and b.date=?4")
-    public int countAnswerQuestion(int cid, int sid, String cname, String date);
+	@Query("select count(id) from Behavior b where b.cid=?1 and b.sid=?2 and b.action='举手' and b.place=?3 and b.date=?4")
+	public int countRaiseHand(int cid, int sid, String cname, String date);
 
-    @Query("select b from Behavior b where b.cid=?1 and b.sid=?2 and (b.action='缺勤' or b.action = '迟到'or b.action='早退')and b.date>?3 and b.date<=?4 order by b.date desc")
+	@Query("select count(id) from Behavior b where b.cid=?1 and b.sid=?2 and b.action='回答问题' and b.place=?3 and b.date=?4")
+	public int countAnswerQuestion(int cid, int sid, String cname, String date);
+
+	@Query("select b from Behavior b where b.cid=?1 and b.sid=?2 and (b.action='缺勤' or b.action = '迟到'or b.action='早退')and b.date>?3 and b.date<=?4 order by b.date desc")
     public List<Behavior> findAbsentee(int cid, int sid, String startDate, String endDate);
 
 
@@ -44,4 +58,9 @@ public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
     @Query("SELECT b FROM Behavior b WHERE b.cid = ?1 AND b.sid = ?2 AND b.date > ?3 and b.date<=?4 AND b.place = '自习' AND b.status <> '误报'")
     public List<Behavior> findBehaviorsDuringStudy(int cid, int sid, String startDate, String endDate);
 }
+
+
+
+
+
 

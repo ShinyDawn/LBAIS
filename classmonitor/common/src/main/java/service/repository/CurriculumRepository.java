@@ -11,8 +11,18 @@ import service.entity.Curriculum;
 import service.vo.LessonDataVO;
 
 public interface CurriculumRepository extends JpaRepository<Curriculum, Integer> {
+	
+	@Transactional
+	@Modifying
+	@Query(value = "truncate table curriculum", nativeQuery = true)
+	public void deleteAll();
+
+	@Query("SELECT distinct(c.course) FROM Curriculum c WHERE c.cid=?1 and c.course<>'自习'")
+	public List<String> getCourseName(int cid);
 
 	public List<Curriculum> findByCid(int cid);
+
+	public List<Curriculum> findByCidAndDayAndCourse(int cid, int day, String cname);
 
 	public Curriculum findByTidAndCidAndDay(int tid, int cid, int day);
 
@@ -23,7 +33,7 @@ public interface CurriculumRepository extends JpaRepository<Curriculum, Integer>
 
 	@Query("SELECT count(c.id) FROM Curriculum c WHERE c.cid=?1 and c.tid=?2 and c.date=?3")
 	public int isOnSchool(int cid, int tid, String date);
-	
+
 	@Query("SELECT c.course FROM Curriculum c WHERE c.cid=?1 and c.tid=?2 and c.day=?3")
 	public String getCourseName(int cid, int id, int day);
 
