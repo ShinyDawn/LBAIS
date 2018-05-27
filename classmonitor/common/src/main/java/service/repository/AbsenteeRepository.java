@@ -16,8 +16,8 @@ public interface AbsenteeRepository extends JpaRepository<Absentee, Integer> {
     @Query("SELECT a FROM Absentee a WHERE a.cid=?1 AND a.date>=?2 AND a.date <?3 ORDER BY a.date DESC,a.tid ASC")
     public List<Absentee> findAll(int cid, String start, String end);
 
-    @Query("SELECT count(a.id) FROM Absentee a WHERE a.cid=?1 AND a.sid=?2 AND a.date=?3 and a.tid=?4")
-    public int isApproved(int cid, int sid, String date, int tid);
+//    @Query("SELECT count(a.id) FROM Absentee a WHERE a.cid=?1 AND a.sid=?2 AND a.date=?3 and a.tid=?4")
+    public int countByCidAndSidAndDateAndTid(int cid, int sid, String date, int tid);
 
     @Transactional
     @Modifying
@@ -28,5 +28,7 @@ public interface AbsenteeRepository extends JpaRepository<Absentee, Integer> {
     @Modifying
     @Query("delete from Absentee a where a.id=?1")
     public void deleteById(int id);
+
+
 
 }

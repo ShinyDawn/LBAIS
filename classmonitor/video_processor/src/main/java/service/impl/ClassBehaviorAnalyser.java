@@ -144,7 +144,7 @@ public class ClassBehaviorAnalyser implements AnalyseService {
 					behaviorRepo.save(b);
 					int raise = behaviorRepo.countRaiseHand(student.getCid(), student.getSid(), cname, date);
 					int answer = behaviorRepo.countAnswerQuestion(student.getCid(), student.getSid(), cname, date);
-					String name = studentRepo.findName(student.getCid(), student.getSid());
+					String name = studentRepo.findByCidAndSid(student.getCid(), student.getSid()).getName();
 					student.setSname(name);
 					student.setRaiseHand(raise);
 					student.setStandup(answer);

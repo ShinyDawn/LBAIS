@@ -23,16 +23,16 @@
             <div class="nav-collapse collapse navbar-inverse-collapse">
                 <ul class="nav pull-left">
                     <li><a class='active' href="http://localhost:10001/students">
-                        学生详情
+                        学生分析
                     </a></li>
                     <li><a href="lesson.html">
-                        课堂分析
+                        课堂状态
                     </a></li>
                     <li><a href="study.html">
                         自习报警
                     </a></li>
                     <li><a href="http://localhost:10001/approval">
-                        请假录入
+                        请假管理
                     </a></li>
 
                 </ul>
@@ -41,7 +41,7 @@
                 <ul class="nav pull-right">
 
 
-                    <li><a><i id="time_tip">早上好</i>&nbsp;<i id="teacher_name">XX</i>老师</a></li>
+                    <li><a><span id="time_tip">早上好</span>&nbsp;<span id="teacher_name">XX</span>老师</a></li>
                     <li class="nav-user dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="../images/user.png" class="nav-avatar"/>
                         <b class="caret"></b></a>
@@ -71,12 +71,33 @@
                     <div class="module">
                         <div class="module-head">
                             <div class="dropdown">
-                                <div data-toggle="dropdown">
-                                    <a class="icon-sort-down pull-left"></a>
-                                    <h3 class='' style="margin-left: 30px" id="current_cname"></h3>
+                                <div class="pull-left">
+                                    <div data-toggle="dropdown">
+                                        <a class="icon-sort-down pull-left"></a>
+                                        <h3 class='' style="margin-left: 30px" id="current_cname"></h3>
+                                    </div>
+                                    <ul class="dropdown-menu" id="class_list">
+                                    </ul>
                                 </div>
-                                <ul class="dropdown-menu" id="class_list">
-                                </ul>
+                                <div class="pull-right">
+                                    <div class="btn-group">
+                                        <button class="btn" id="time_filter">今天</button>
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" id="time_list">
+                                            <li><a onclick="changeTimeStu(1)">今天</a></li>
+                                            <li><a onclick="changeTimeStu(3)">最近三天</a></li>
+                                            <li><a onclick="changeTimeStu(7)">最近一周</a></li>
+                                            <li><a onclick="changeTimeStu(30)">最近一月</a></li>
+                                            <li class="divider"></li>
+                                            <li><a onclick="changeTimeStu(90)">本学期</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <h3>
+                                    <!--使得module-head有留白-->
+                                </h3>
                             </div>
                         </div>
                     </div>
@@ -89,6 +110,8 @@
                                 <li>
                                     <p>
                                         <strong><span id="time_pro">今天</span>进步较大的同学有<span id="pro_Num"></span>人</strong>
+                                        <strong>他们是：</strong>
+                                        <span id="pro_name"></span>
                                         <span class="pull-right small muted" id="pro_percent"></span>
                                     </p>
                                     <div class="progress tight"  id="pro_cent">
@@ -97,8 +120,18 @@
                                 </li>
                                 <li>
                                     <p>
+                                        <strong><span id="time_pro1">今天</span>退步较大的同学有<span id="pro_Num1"></span>人</strong>
                                         <strong>他们是：</strong>
-                                        <span id="pro_name"></span>
+                                        <span id="pro_name1"></span>
+                                        <span class="pull-right small muted" id="pro_percent1"></span>
+                                    </p>
+                                    <div class="progress tight"  id="pro_cent1">
+
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>
+
                                     </p>
                                 </li>
                             </ul>
@@ -109,54 +142,6 @@
                         <div class="module-head">
                             <h3>学生列表</h3>
                         </div>
-                        <div class="module-option clearfix">
-
-                            <div class="pull-left">
-                                时间 : &nbsp;
-                                <div class="btn-group">
-                                    <button class="btn" id="time_filter">今天</button>
-                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" id="time_list">
-                                        <li><a onclick="changeTimeStu(1)">今天</a></li>
-                                        <li><a onclick="changeTimeStu(3)">最近三天</a></li>
-                                        <li><a onclick="changeTimeStu(7)">最近一周</a></li>
-                                        <li><a onclick="changeTimeStu(30)">最近一月</a></li>
-                                        <li class="divider"></li>
-                                        <li><a onclick="changeTimeStu(90)">本学期</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!--<div class="pull-left offset1">-->
-                                <!--可能存在的问题 : &nbsp;-->
-                                <!--<div class="btn-group">-->
-                                    <!--<button class="btn">全部</button>-->
-                                    <!--<button class="btn dropdown-toggle" data-toggle="dropdown">-->
-                                        <!--<span class="caret"></span>-->
-                                    <!--</button>-->
-                                    <!--<ul class="dropdown-menu">-->
-                                        <!--<li><a href="#">全部</a></li>-->
-                                        <!--<li><a href="#">出勤较少</a></li>-->
-                                        <!--<li><a href="#">兴趣较低</a></li>-->
-                                        <!--<li><a href="#">纪律较差</a></li>-->
-                                        <!--<li><a href="#">退步较大</a></li>-->
-                                        <!--&lt;!&ndash;<li class="divider"></li>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<li><a href="#">进步</a></li>&ndash;&gt;-->
-                                    <!--</ul>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="pull-right">-->
-                            <!--<a href="#" class="btn btn-primary">高级筛选</a>-->
-                            <!--</div>-->
-                        </div>
-
-                        <!--<div class="module-option clearfix">-->
-                        <!--<div>-->
-                        <!--<a class="btn btn-primary pull-right" href="#">高级筛选</a>-->
-                        <!--</div>-->
-                        <!--</div>-->
 
 
                         <div class="module-body table">

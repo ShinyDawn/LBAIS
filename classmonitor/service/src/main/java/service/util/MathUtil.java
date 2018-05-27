@@ -90,4 +90,74 @@ public class MathUtil {
         }
         return sort;
     }
+
+    public static double estimate(List<Double> x, List<Double> y, double input)
+    {
+        double a = getA(x, y);
+        double b = getB(x, y);
+        System.out.println("线性回归系数a值：\t" + a + "\n" + "线性回归系数b值：\t" + b);
+        return (a * input + b);
+    }
+
+    /*
+     * 杜航 功能：返回x的系数a 公式：a = ( n sum( xy ) - sum( x ) sum( y ) ) / ( n sum( x^2 )
+     * - sum(x) ^ 2 )
+     */
+    public static double getA(List<Double> x, List<Double> y)
+    {
+        int n = x.size();
+        return (double) ((n * pSum(x, y) - sum(x) * sum(y)) / (n * sqSum(x) - Math
+                .pow(sum(x), 2)));
+    }
+
+    /*
+     * 功能：返回常量系数系数b 公式：b = sum( y ) / n - a sum( x ) / n
+     */
+    public static double getB(List<Double> x, List<Double> y)
+    {
+        int n = x.size();
+        double a = getA(x, y);
+        return sum(y) / n - a * sum(x) / n;
+    }
+
+    /*
+     * 功能：求和
+     */
+    private static double sum(List<Double> ds)
+    {
+        double s = 0;
+        for (double d : ds)
+        {
+            s = s + d;
+        }
+        return s;
+    }
+
+    /*
+     * 功能：求平方和
+     */
+    private static double sqSum(List<Double> ds)
+    {
+        double s = 0;
+        for (double d : ds)
+        {
+            s = (double) (s + Math.pow(d, 2));
+        }
+        return s;
+    }
+
+    /*
+     * 功能：返回对应项相乘后的和
+     */
+    private static double pSum(List<Double> x, List<Double> y)
+    {
+        double s = 0;
+        for (int i = 0; i < x.size(); i++)
+        {
+            s = s + x.get(i) * y.get(i);
+        }
+        return s;
+    }
+
+
 }

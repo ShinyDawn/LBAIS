@@ -51,8 +51,9 @@ function getAnalysis(period) {
                 var data = [];
                 data.push(obj['attendanceRate']);
                 data.push(obj['deciplineRate']);
-                data.push(obj['livenessRate']);
-                data.push(obj['concentrationRate']);
+                data.push(obj['generalRate'])
+                // data.push(obj['livenessRate']);
+                // data.push(obj['concentrationRate']);
                 redar(data, "general_analyze");
                 var problem = (obj['problem']);
 
@@ -178,17 +179,31 @@ function getLessonALL() {
             }
         }
     );
+    console.log(period);
 
-    $.ajax({
-            url: 'http://localhost:10002/student/lesson',
-            dataType: 'json',
-            type: 'get',
-            data: {'sid': sid, 'cid': cid, 'period': period},
-            success: function (obj) {
-                lineTableAll(obj, period);
+    if (period === '1' || period === '7' || period === '3') {
+        $.ajax({
+                url: 'http://localhost:10002/student/lesson',
+                dataType: 'json',
+                type: 'get',
+                data: {'sid': sid, 'cid': cid, 'period': period},
+                success: function (obj) {
+                    lineTableAll(obj, period);
+                }
             }
-        }
-    )
+        );
+    } else {
+        $.ajax({
+                url: 'http://localhost:10002/student/lessonweek',
+                dataType: 'json',
+                type: 'get',
+                data: {'sid': sid, 'cid': cid, 'period': period},
+                success: function (obj) {
+                    lineTableAll(obj, period);
+                }
+            }
+        );
+    }
     ;
 
 
@@ -207,7 +222,7 @@ function getLesson(subject) {
             type: 'get',
             data: {'sid': sid, 'cid': cid, 'period': period, 'subject': subject},
             success: function (obj) {
-                $('#lesson_percent').html(toPercent(obj));
+                $('#lesson_percent').html(toPercent(obj['generalRate']));
             }
         }
     );
@@ -313,9 +328,9 @@ function redar(data, id) {
             {
                 indicator: [
                     {text: '出勤', max: 1},
-                    {text: '纪律', max: 1},
-                    {text: '课堂活跃', max: 1},
-                    {text: '课堂专注', max: 1}
+                    {text: '自习', max: 1},
+                    {text: '课堂', max: 1}
+                    // {text: '课堂专注', max: 1}
                 ],
                 center: ['50%', '50%'],
                 radius: 90
@@ -349,21 +364,19 @@ function redar(data, id) {
 function lineTableAll(obj, flag) {
     var myChart = echarts.init(document.getElementById('lesson_show'));
     var subject = getArray(obj, 'subject');
-    var data = getArray(obj, 'data');
-    var date = getArray(data[0], 'date');
-    var data0 = arrayToFix(getArray(data[0], 'generalRate'));
-    var data1 = arrayToFix(getArray(data[1], 'generalRate'));
-    var data2 = arrayToFix(getArray(data[2], 'generalRate'));
-    var data3 = arrayToFix(getArray(data[3], 'generalRate'));
-    var data4 = arrayToFix(getArray(data[4], 'generalRate'));
-    var avg = arrayAverage(data0, data1, data2, data3, data4);
+    // var data = getArray(obj, 'data');
+    // var date = getArray(data[0], 'date');
+    var data = getArray(obj, 'generalRate');
+    console.log(data);
+    // var data1 = arrayToFix(getArray(data[1], 'generalRate'));
+    // var data2 = arrayToFix(getArray(data[2], 'generalRate'));
+    // var data3 = arrayToFix(getArray(data[3], 'generalRate'));
+    // var data4 = arrayToFix(getArray(data[4], 'generalRate'));
+    // var avg = arrayAverage(data0, data1, data2, data3, data4);
 
     var type = ['line', 'bar'];
-    var t = type[0];
-    if (flag === '1') {
-        t = type[1];
-    }
-    subject.push('平均');
+    var t = type[1];
+    // subject.push('平均');
 
     option = {
         title: {
@@ -392,7 +405,7 @@ function lineTableAll(obj, flag) {
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: date
+            data: subject
         },
         yAxis: {
             type: 'value',
@@ -409,33 +422,34 @@ function lineTableAll(obj, flag) {
             {
                 name: subject[0],
                 type: t,
-                data: data0
+                data: [98]
             },
             {
                 name: subject[1],
                 type: t,
-                data: data1
+                data: [98]
             },
             {
                 name: subject[2],
                 type: t,
-                data: data2
+                data: [98]
             },
             {
                 name: subject[3],
                 type: t,
-                data: data3
+                data: [98]
             },
             {
                 name: subject[4],
                 type: t,
-                data: data4
-            },
-            {
-                name: '平均',
-                type: t,
-                data: avg
+                data:[98]
             }
+            // ,
+            // {
+            //     name: '平均',
+            //     type: t,
+            //     data: avg
+            // }
 
         ]
     };
@@ -451,7 +465,7 @@ function lineTableAll(obj, flag) {
 function lineTableSubject(data, flag) {
     var myChart = echarts.init(document.getElementById('lesson_show'));
     var data0 = [];
-    var data1 =[];
+    var data1 = [];
     var data2 = [];
     for (var i = 0; i < data.length; i++) {
         var obj = data[i];
@@ -473,14 +487,14 @@ function lineTableSubject(data, flag) {
                 }
             }
         },
-        toolbox: {
-            feature: {
-                dataView: {show: true, readOnly: false},
-                magicType: {show: true, type: ['line', 'bar']},
-                restore: {show: true},
-                saveAsImage: {show: true}
-            }
-        },
+        // toolbox: {
+        //     feature: {
+        //         dataView: {show: true, readOnly: false},
+        //         magicType: {show: true, type: ['line', 'bar']},
+        //         restore: {show: true},
+        //         saveAsImage: {show: true}
+        //     }
+        // },
         legend: {
             data: ['活跃度', '专注度', '综合表现']
         },
@@ -505,7 +519,7 @@ function lineTableSubject(data, flag) {
                 }
             }
         ],
-        color: ['#37a2da', '#67e0e3', '#ffe080'],
+        color:  ['#37a2da','#91c7ae','#ffe080', '#67e0e3',  '#fbb8a2', '#e58dc2', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
         series: [
             {
                 name: '活跃度',

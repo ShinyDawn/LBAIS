@@ -48,7 +48,7 @@ function addtitle() {
     // var td7 = $('<td class="cell-icon">修改</td>');
     var td8 = $('<td class="cell-icon">删除</td>');
 
-    tr.append(td1, td2, td3, td4, td5, td6, td8);
+    tr.append(td1, td2, td3, td4, td5, td6,td8);
     return tr;
 }
 function createApprovalList(data) {
@@ -60,7 +60,7 @@ function createApprovalList(data) {
     var td4 = $('<td class="cell-name"></td>');
     var td5 = $('<td class="cell-name"></td>');
     var td6 = $('<td class="cell-reason"></td>');
-    // var td7 = $('<td class="cell-icon"><i class="icon-edit" onclick="click_modify_Approval(this)"</i></td>');
+    // var td7 = $('<td class="cell-icon"><i class="icon-edit" onclick=""</i></td>');
     var td8 = $('<td class="cell-icon"></td>');
 
     var i = $('<i class="icon-remove" onclick="click_delete_Approval(this)"></i>');
@@ -80,6 +80,35 @@ function createApprovalList(data) {
     tr.append(td1, td2, td3, td4, td5, td6, td8);
     return tr;
 }
+var isCheckM = false;
+function swapCheckM() {
+    if (isCheckM) {
+        $("input[name='timeM']").each(function() {
+            this.checked = false;
+        });
+        isCheckM = false;
+    } else {
+        $("input[name='timeM']").each(function() {
+            this.checked = true;
+        });
+        isCheckM = true;
+    }
+}
+
+var isCheckA = false;
+function swapCheckA() {
+    if (isCheckA) {
+        $("input[name='timeA']").each(function() {
+            this.checked = false;
+        });
+        isCheckA = false;
+    } else {
+        $("input[name='timeA']").each(function() {
+            this.checked = true;
+        });
+        isCheckA = true;
+    }
+}
 
 function addApproval() {
     var cid = $.session.get('current_cid');
@@ -87,20 +116,27 @@ function addApproval() {
     var sid = $("#sid").val();
     var date = $('#date').val();
     var tids = [];
-    var obj = document.getElementsByName('timeId');
+    var obj = document.getElementsByName('timeM');
     for (var i = 0; i < obj.length; i++) {
         if (obj[i].checked) {
             tids.push(obj[i].value);
         } //如果选中，将value添加到变量s中
     }
+    var o = document.getElementsByName('timeA');
+    for (var j = 0; j < o.length; j++) {
+        if (o[j].checked) {
+            tids.push(o[j].value);
+        } //如果选中，将value添加到变量s中
+    }
     var type = $('#type :input:checked').val();
     var reason = $('#reason').val();
 
+
     $.ajax({
-        url: "http://localhost:10002//approval/add",
+        url: "http://localhost:10002/approval/add",
         type: 'PUT',
         data: {
-            'sid': sid, 'cid': cid, 'date': date, 'tids': tids.toString(), 'type': type,
+            'sid': sid, 'cid': cid, 'dates': date,'tids': tids.toString(), 'type': type,
             'reason': reason
         },
         // async: false,

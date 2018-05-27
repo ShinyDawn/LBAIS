@@ -111,7 +111,7 @@ public class StudentController {
     @RequestMapping(value = "/student/lesson/subject")
     @ResponseBody
     public List<LivenessVO> getLivenessPercentBySubject(@RequestParam("cid") int cid, @RequestParam("sid") int sid, @RequestParam("period") int period, @RequestParam("subject") String subject) {
-        String endDate = DateUtil.getDate();
+        String endDate = "2018-05-22";
         String startDate = DateUtil.getPassedDate(period, endDate);
         return studentService.getLivenessPercentBySubject(cid, sid, startDate, endDate, subject);
     }
@@ -127,10 +127,10 @@ public class StudentController {
      */
     @RequestMapping(value = "/student/lesson")
     @ResponseBody
-    public List<LivenessShowVO> getLivenessPercentDaily(@RequestParam("cid") int cid, @RequestParam("sid") int sid, @RequestParam("period") int period) {
+    public List<LivenessVO> getLivenessPercentDaily(@RequestParam("cid") int cid, @RequestParam("sid") int sid, @RequestParam("period") int period) {
         String endDate = DateUtil.getDate();
         String startDate = DateUtil.getPassedDate(period, endDate);
-        return studentService.getLivenessPercentEveryDay(cid, sid, startDate,endDate);
+        return studentService.getLivenessPercentDay(cid, sid, startDate,endDate);
     }
 
     /**
@@ -141,7 +141,7 @@ public class StudentController {
      * @param period
      * @return
      */
-    @RequestMapping(value = "/student/lesson/week")
+    @RequestMapping(value = "/student/lessonweek")
     @ResponseBody
     public List<LivenessShowVO> getLivenessPercentEveryWeek(@RequestParam("cid") int cid, @RequestParam("sid") int sid, @RequestParam("period") int period) {
         String endDate = DateUtil.getDate();

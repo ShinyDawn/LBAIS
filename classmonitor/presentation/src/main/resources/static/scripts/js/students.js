@@ -25,6 +25,7 @@ window.onload = function () {
     }
     $('#time_filter').html(divider);
     $('#time_pro').html(divider);
+    $('#time_pro1').html(divider);
 
     var cid = $.session.get('current_cid');
 
@@ -55,6 +56,8 @@ function createProgress(data) {
     var stuNum = 0;
     var proNum = 0;
     var name = [];
+    var fallNum = 0;
+    var fallName=[];
     for (var i = 0; i < data.length; i++) {
         stuNum++;
         var obj = data[i];
@@ -64,24 +67,39 @@ function createProgress(data) {
             if (problem['isProgress'] === 1) {
                 proNum++;
                 name.push(obj['name']);
-                break
+                break;
+            }
+            if (problem['isProgress'] === -1) {
+                fallNum++;
+                fallName.push(obj['name']);
+                break;
             }
         }
+
     }
 
     $('#pro_Num').html(proNum);
+    $('#pro_Num1').html(fallNum);
     if (stuNum===0){
         $('#pro_percent').html(0);
         var d = $('<div class="bar bar-info" style="width: 0%;"></div>');
         $('#pro_cent').append(d);
+        $('#pro_percent1').html(0);
+        var d1 = $('<div class="bar bar-info" style="width: 0%;"></div>');
+        $('#pro_cent1').append(d1);
 
     } else{
         var pro_percent = toPercent(Number(proNum) *1.0/Number(stuNum));
         $('#pro_percent').html(pro_percent);
-        var d = $('<div class="bar bar-info" style="width: '+pro_percent+'"></div>');
-        $('#pro_cent').append(d);
+        var d2 = $('<div class="bar bar-info" style="width: '+pro_percent+'"></div>');
+        $('#pro_cent').append(d2);
+        var pro_percent1 = toPercent(Number(fallNum) *1.0/Number(stuNum));
+        $('#pro_percent1').html(pro_percent1);
+        var d3 = $('<div class="bar bar-info" style="width: '+pro_percent1+'"></div>');
+        $('#pro_cent1').append(d3);
     }
     $('#pro_name').html(name.toString());
+    $('#pro_name1').html(fallName.toString());
 
 
 }
@@ -93,7 +111,7 @@ function addtitle() {
     var td3 = $('<td class="cell-name">出勤表现</td>');
     var td4 = $('<td class="cell-name">课堂表现</td>');
     var td5 = $('<td class="cell-name">自习表现</td>');
-    var td6 = $('<td class="cell-problem hidden-phone hidden-tablet">可能存在的问题</td>');
+    var td6 = $('<td class="cell-problem hidden-phone hidden-tablet">综合分析</td>');
     tr.append(td1, td2, td3, td4, td5, td6);
     return tr;
 }
@@ -117,13 +135,12 @@ function createStudentsList(data) {
     var problemList = data['problem'];
     for (var i = 0; i < problemList.length; i++) {
         var problem = problemList[i];
-
         if (problem['title'] === "出勤较少") {
             var c = $('<c style="margin-left: 4px">出勤较少</c>&nbsp;');
             td6.append(c);
         }
-        if (problem['title'] === "表现一般") {
-            var d = $('<d style="margin-left: 4px">表现一般</d>&nbsp;');
+        if (problem['title'] === "课堂低迷") {
+            var d = $('<d style="margin-left: 4px">课堂低迷</d>&nbsp;');
             td6.append(d);
 
         }
@@ -133,9 +150,8 @@ function createStudentsList(data) {
 
         }
         if (problem['title'] === "退步较大") {
-            var f = $('<f style="margin-left: 4px">退步较大</f>&nbsp;')
+            var f = $('<c style="margin-left: 4px">退步较大</c>&nbsp;')
             td6.append(f);
-
         }
     }
     tr.append(td1, td2, td3, td4, td5, td6);
@@ -169,5 +185,6 @@ function changeTimeStu(period) {
     }
     $('#time_filter').html(divider);
     $('#time_pro').html(divider);
+    $('#time_pro1').html(divider);
     window.location.reload();
 }

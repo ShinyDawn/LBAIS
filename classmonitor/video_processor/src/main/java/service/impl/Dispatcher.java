@@ -84,7 +84,7 @@ public class Dispatcher implements DispatchService {
 		if (timestamp != null) {
 			String[] t = timestamp.getTime().split("-");
 			if (time.compareTo(t[0]) >= 0 && time.compareTo(t[0]) <= 0) {
-				cname = curriculumRepo.getCourseName(timestamp.getCid(), timestamp.getId(), day);
+				cname = curriculumRepo.findByTidAndCidAndDay(timestamp.getId(), timestamp.getCid(),day).getCourse();
 				isClass = true;
 				end = true;
 			}
@@ -94,7 +94,7 @@ public class Dispatcher implements DispatchService {
 				String[] times = t.getTime().split("-");
 				if (time.compareTo(times[0]) >= 0 && time.compareTo(times[1]) <= 0) {
 					timestamp = t;
-					cname = curriculumRepo.getCourseName(t.getCid(), t.getId(), day);
+					cname = curriculumRepo.findByTidAndCidAndDay(t.getId(),t.getCid(), day).getCourse();
 					isClass = true;
 					end = true;
 					break;

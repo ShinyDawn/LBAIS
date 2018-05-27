@@ -9,23 +9,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import service.entity.Time;
 
-public interface TimeRepository extends JpaRepository<Time, Integer> {
+import javax.rmi.CORBA.Tie;
 
-	@Transactional
-	@Modifying
-	@Query(value = "truncate table Time", nativeQuery = true)
-	public void deleteAll();
+public interface TimeRepository extends JpaRepository<Time, Integer>{
 
-	@Query("SELECT total_time from Time where cid =?1  and id =?2")
-	public int getCourseHour(int cid, int tid);
+//	@Query("SELECT t from Time t where t.cid =?1  and t.id =?2")
+	public Time findById(int id);
 
+	public int countByCid(int cid);
+	
 	@Query("select t from Time t where t.cid=?1 order by t.time")
 	public List<Time> findByCid(int cid);
-
+	
 	@Transactional
 	@Modifying
 	@Query("update Time t set t.time=?2 where t.id=?1")
-	public void updateTime(int id, String time);
+	public void updateTime(int id,String time);
 
 	@Transactional
 	@Modifying

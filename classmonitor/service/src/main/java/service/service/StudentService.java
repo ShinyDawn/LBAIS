@@ -26,7 +26,7 @@ public interface StudentService {
 
     public List<LivenessVO> getLivenessPercentBySubject(int cid, int sid, String startDate, String endDate, String subject);
 
-    public List<LivenessShowVO> getLivenessPercentEveryDay(int cid, int sid, String startDate, String endDate);
+    public List<LivenessVO> getLivenessPercentDay(int cid, int sid, String startDate, String endDate);
 
     public List<LivenessShowVO> getLivenessPercentEveryWeek(int cid, int sid, String startDate, String endDate);
 
