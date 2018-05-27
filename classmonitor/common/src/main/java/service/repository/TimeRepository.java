@@ -13,7 +13,11 @@ import javax.rmi.CORBA.Tie;
 
 public interface TimeRepository extends JpaRepository<Time, Integer>{
 
-//	@Query("SELECT t from Time t where t.cid =?1  and t.id =?2")
+	@Query("SELECT total_time from Time where cid =?1  and id =?2")
+	public int getCourseHour(int cid,int tid);
+
+
+	//	@Query("SELECT t from Time t where t.cid =?1  and t.id =?2")
 	public Time findById(int id);
 
 	public int countByCid(int cid);
