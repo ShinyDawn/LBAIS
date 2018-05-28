@@ -10,6 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import service.entity.Student;
 
 public interface StudentRepository extends JpaRepository<Student, Integer> {
+	
+	@Transactional
+	@Modifying
+	@Query(value = "truncate table student", nativeQuery = true)
+	public void deleteAll();
 
 	public int countStudentsByCid(int cid);
 

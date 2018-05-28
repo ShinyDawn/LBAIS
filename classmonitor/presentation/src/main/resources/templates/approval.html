@@ -22,17 +22,17 @@
 
             <div class="nav-collapse collapse navbar-inverse-collapse">
                 <ul class="nav pull-left">
-                    <li><a href="students.html">
-                        学生详情
+                    <li><a href="http://localhost:10001/students">
+                        学生分析
                     </a></li>
-                    <li><a href="http://localhost:10001/approval">
-                        课堂分析
+                    <li><a href="http://localhost:10002/sub">
+                        课堂状态
                     </a></li>
                     <li><a href="study.html">
                         自习报警
                     </a></li>
                     <li><a class='active' href="http://localhost:10001/approval">
-                        请假录入
+                        请假管理
                     </a></li>
 
                 </ul>
@@ -40,7 +40,7 @@
 
                 <ul class="nav pull-right">
 
-                    <li><a><i id="time_tip">早上好</i>&nbsp;<i id="teacher_name">XX</i>老师</a></li>
+                    <li><a><span id="time_tip">早上好</span>&nbsp;<span id="teacher_name">XX</span>老师</a></li>
                     <li class="nav-user dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="../images/user.png" class="nav-avatar"/>
                         <b class="caret"></b></a>
@@ -142,38 +142,40 @@
                                                 <div id="tid">
                                                     <div class="controls">
                                                         <label class="checkbox inline">
-                                                            <input type="checkbox" name="timeId" value="1"/>
+                                                            <input type="checkbox" name="timeM" onclick="swapCheckM()"
+                                                                   value=""/>
+                                                            上午
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="checkbox" name="timeM" value="1"/>
                                                             第1节
                                                         </label>
                                                         <label class="checkbox inline">
-                                                            <input type="checkbox" name="timeId" value="2"/>
+                                                            <input type="checkbox" name="timeM" value="2"/>
                                                             第2节
                                                         </label>
                                                         <label class="checkbox inline">
-                                                            <input type="checkbox" name="timeId" value="3"/>
+                                                            <input type="checkbox" name="timeM" value="3"/>
                                                             第3节
-                                                        </label>
-                                                        <label class="checkbox inline">
-                                                            <input type="checkbox" name="timeId" value="4"/>
-                                                            第4节
                                                         </label>
                                                     </div>
                                                     <div class="controls">
                                                         <label class="checkbox inline">
-                                                            <input type="checkbox" name="timeId" value="5"/>
+                                                            <input type="checkbox" name="timeA" onclick="swapCheckA()"
+                                                                   value=""/>
+                                                            下午
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="checkbox" name="timeA" value="4"/>
+                                                            第4节
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="checkbox" name="timeA" value="5"/>
                                                             第5节
                                                         </label>
                                                         <label class="checkbox inline">
-                                                            <input type="checkbox" name="timeId" value="6"/>
+                                                            <input type="checkbox" name="timeA" value="6"/>
                                                             第6节
-                                                        </label>
-                                                        <label class="checkbox inline">
-                                                            <input type="checkbox" name="timeId" value="7"/>
-                                                            第7节
-                                                        </label>
-                                                        <label class="checkbox inline">
-                                                            <input type="checkbox" name="timeId" value="8"/>
-                                                            第8节
                                                         </label>
                                                     </div>
                                                 </div>
@@ -217,15 +219,13 @@
                         </div>
 
 
-
-
                         <div class="modal modal-success fade" id="success-modal">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <!--<button type="button" class="close" data-dismiss="modal"-->
-                                                <!--aria-label="Close">-->
-                                            <!--<span aria-hidden="true">×</span></button>-->
+                                        <!--aria-label="Close">-->
+                                        <!--<span aria-hidden="true">×</span></button>-->
                                         <h4 class="modal-title">成功</h4>
                                     </div>
                                     <div class="modal-body">
@@ -303,7 +303,6 @@
 <script th:src="@{scripts/jquery-ui-1.10.1.custom.min.js}"></script>
 <script th:src="@{bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{js/ref/jquerysession.js}"></script>
-<script th:src="@{scripts/sweetalert.min.js}"></script>
 <script th:src="@{scripts/flot/jquery.flot.js}"></script>
 <script th:src="@{scripts/js/util.js}"></script>
 <script th:src="@{scripts/js/approval.js}"></script>
@@ -316,9 +315,12 @@
     $('#date').datepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
-        autoclose: true,
-        todayHighlight: true
-    });
+        todayHighlight: true,
+        multidate: true,
+        multidateSeparator: ",",
+        toggleActive:true
+    })
+    ;
 </script>
 <script>
     function click_delete_Approval(obj) {
@@ -350,7 +352,6 @@
     function reload() {
         window.location.reload();
     }
-
 
 </script>
 </body>

@@ -62,7 +62,7 @@ public class LivenessVO {
     }
 
     public void setGeneralRate() {
-        this.generalRate = this.concentrationRate * 0.3 + this.livenessRate * 0.7;
+        this.generalRate = this.concentrationRate * 0.5 + this.livenessRate * 0.5;
     }
 
     public void setSubject(String subject) {
