@@ -24,6 +24,11 @@
 <script th:src="@{scripts/jquery-1.9.1.min.js}" type="text/javascript"></script>
 <script th:src="@{js/layer/layer.js}"></script>
 <script>
+window.onload=function (){
+	var src = window.location.href; 
+	window.id =  parseInt(src.substr(src.indexOf("?alarm=") + 7));
+	alert("alarm_id:"+ window.id);
+}
 
 function getVideoPath(){
 	document.getElementById('alarm_vedio').src = "../video/alarm1.mp4";
@@ -31,14 +36,36 @@ function getVideoPath(){
 }
 
 function confirm(){
-	var index = parent.layer.getFrameIndex(window.name);
-	parent.layer.close(index);
-	//document.getElementsByClassName("layui-layer-ico layui-layer-close layui-layer-close1").click();
+	handle(1);
 }
 
 function dismiss(){
-	var index = parent.layer.getFrameIndex(window.name);
-	parent.layer.close(index);
+	handle(2);
+}
+
+function handle(handle_id){
+	$.ajax({
+        url: 'http://localhost:10002/study/alarmhandle',
+        type: 'POST',
+        data: {'alarm_id': window.id, 'h_type': handle_id,'handle':''},
+        async: false,
+        success: function (obj) {
+        	var index = parent.layer.getFrameIndex(window.name);
+        	parent.layer.close(index);
+        	parent.layer.msg(obj,{
+        	    time: 20000, //20s后自动关闭
+        	  });
+        	parent.location.reload();
+           },
+        error: function(){
+        	var index = parent.layer.getFrameIndex(window.name);
+        	parent.layer.close(index);
+        	parent.layer.msg("操作失败",{
+        	    time: 20000, //20s后自动关闭
+        	  });
+        	parent.location.reload();
+            }
+    });
 }
 
 </script>

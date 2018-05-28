@@ -141,3 +141,28 @@ input.labelauty + label > span.labelauty-checked-image
 {
 	background-image: url( ../images/input-checked.png );
 }
+
+ul {
+	width:500px;
+	list-style-type: none;
+	margin: 10px 5px;
+}
+li { 
+	width:100px;
+	display: inline-block;
+	margin: 0px 0;
+}
+input.labelauty,label { 
+	font: 8px "Microsoft Yahei";
+}
+span.choosespan{
+	display:inline-block;
+	margin:10px 10px 0px 0px;
+	width:200px;
+	text-align:left;
+	border:1px solid #cccccc;
+	background-color:#fff;
+	height:30px;
+	vertical-align:middle;
+	line-height:30px;
+}

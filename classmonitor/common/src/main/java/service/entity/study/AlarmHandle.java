@@ -18,8 +18,9 @@ public class AlarmHandle {
 //	@GeneratedValue
 	private String hid;
 	private int aid;
+	private int cid;
 	private int sid;
-	private int type_id;
+	private String description;
 	
 	public String getHid() {
 		return hid;
@@ -33,17 +34,23 @@ public class AlarmHandle {
 	public void setAid(int aid) {
 		this.aid = aid;
 	}
+	public int getCid() {
+		return cid;
+	}
+	public void setCid(int cid) {
+		this.cid = cid;
+	}
 	public int getSid() {
 		return sid;
 	}
 	public void setSid(int sid) {
 		this.sid = sid;
 	}
-	public int getType_id() {
-		return type_id;
+	public String getDescription() {
+		return description;
 	}
-	public void setType_id(int type_id) {
-		this.type_id = type_id;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }

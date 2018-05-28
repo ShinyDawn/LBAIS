@@ -46,10 +46,14 @@
 
 
 <div>
-	<form role="form" >
-		<div id="description" class="form-group" style="margin:10px 10px 10px 10px">
+	<div id="state" style = "text-align:right; margin:15px 0px 0px 0px">
+			<button class="btn btn-primary" style="margin:0px 10px;" onclick="dismiss()">&nbsp;&nbsp;误报&nbsp;&nbsp;</button>
+			<button class="btn btn-primary" style="margin:0px 10px;" onclick="handle()">&nbsp;&nbsp;确认&nbsp;&nbsp;</button>
+	</div>
+		<div id="handle_alarm" style="display:none">
+		<div class="form-group" style="margin:10px 10px 10px 10px">
 		  <label for="name">事件描述：</label>
-		  <textarea class="form-control" rows="3" style="width:90%"></textarea>
+		  <textarea id="description"  class="form-control" rows="3" style="width:90%"></textarea>
 		</div>
 		
 		<div id="handle" class="form-group" style="margin:0px 10px 10px 10px">
@@ -61,18 +65,11 @@
 			</div>
 		</div>
 		<div style = "text-align:right; margin:15px 0px 0px 0px">
-			<button class="btn btn-primary" style="margin:0px 10px;" onclick="dismiss()">&nbsp;&nbsp;误报&nbsp;&nbsp;</button>
-			<button class="btn btn-primary" style="margin:0px 10px;" onclick="confirm()">&nbsp;&nbsp;确定&nbsp;&nbsp;</button>
+			<span id="warning" style="color:red;display:none">请至少完整填写一项处理结果</span>
+			<button class="btn btn-primary" style="margin:0px 10px;" onclick="hide_handle()">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+			<button class="btn btn-primary" style="margin:0px 10px;" onclick="sub_handle()">&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
 		</div>
-	</form>
-	<!-- <div id="description">
-		<h3>历史报警</h3>
-		<input type="textarea" rows="3" cols="20">
-	</div>
-	<div id="handle">
-		<div>处理结果 <button id="zq">新增</button></div>
-		
-	</div> -->
+		</div>
 
 </div>
 
@@ -81,23 +78,111 @@
 <script th:src="@{scripts/jquery-1.9.1.min.js}" type="text/javascript"></script>
 <script th:src="@{js/layer/layer.js}"></script>
 <script th:src="@{js/choose_stu/js/jquery-labelauty.js}" type="text/javascript"></script>
+<script th:src="@{js/ref/jquerysession.js}"></script>
 <script>
 window.alarm_count=0;
+
+window.onload=function (){
+	document.getElementById("alarm_vedio").currentTime = 10;
+}
+
+
 
 function getVideoPath(){
 	document.getElementById('alarm_vedio').src = "../video/alarm1.mp4";
 	
 }
-
-function confirm(){
-	var index = parent.layer.getFrameIndex(window.name);
-	parent.layer.close(index);
-	//document.getElementsByClassName("layui-layer-ico layui-layer-close layui-layer-close1").click();
+//确认
+function handle(){
+	document.getElementById('handle_alarm').style.display="";
+	document.getElementById('state').style.display="none";
 }
-
+//取消
+function hide_handle(){
+	document.getElementById('handle_alarm').style.display="none";
+	document.getElementById('state').style.display="";
+}
+//提交
+function sub_handle(){
+	var count=0;
+	/* <![CDATA[ */
+		var students_behaviour=[];
+		for(var i=1;i<=alarm_count;i++){
+			var student=document.getElementById("multistu"+i).value;
+			var index=document.getElementById("behavior"+i).selectedIndex;
+			if(student!=null&&index!=0){
+				var row={'students':student,'behaviour':index};
+				students_behaviour.push(row);
+				}
+		}
+	/* ]]> */
+	if(students_behaviour.length==0){
+		document.getElementById('warning').style.display="";
+		setTimeout(function(){
+			document.getElementById('warning').style.display="none";
+			},2000);
+	}else{
+		var data =
+            {
+				"description": $("#description").val(),
+                "behaviours": students_behaviour
+            };
+		var jsonString = JSON.stringify(data);
+        //alert(jsonString);
+		var id=$.session.get('alarm_id');
+		$.ajax({
+	        url: 'http://localhost:10002/study/alarmhandle',
+	        //dataType: 'String',
+	        type: 'POST',
+	        data: {'alarm_id': parseInt(id), 'h_type': 3,'handle':jsonString},
+	        async: false,
+	        success: function (obj) {
+	        	var index = parent.layer.getFrameIndex(window.name);
+	        	parent.layer.close(index);
+	        	parent.layer.msg(obj,{
+	        	    time: 2000, //20s后自动关
+	        	  });
+	        	parent.location.reload();
+	           },
+	        error: function(){
+	        	var index = parent.layer.getFrameIndex(window.name);
+	        	parent.layer.close(index);
+        		parent.layer.msg("操作失败",{
+	        	    time: 20000, 
+	        	  });
+        		parent.location.reload();
+	            }
+	    });
+		}
+	}
+//误报
 function dismiss(){
-	var index = parent.layer.getFrameIndex(window.name);
-	parent.layer.close(index);
+	var id=$.session.get('alarm_id');
+	var result="";
+	$.ajax({
+        url: 'http://localhost:10002/study/alarmhandle',
+        //dataType: 'String',
+        type: 'POST',
+        data: {'alarm_id': parseInt(id), 'h_type': 2,'handle':''},
+        async: false,
+        success: function (obj) {
+        	var index = parent.layer.getFrameIndex(window.name);
+        	parent.layer.close(index);
+        	parent.layer.msg(obj,{
+        	    time: 20000, //20s后自动关闭
+        	  });
+        	parent.location.reload();
+           },
+        error: function(){
+        	var index = parent.layer.getFrameIndex(window.name);
+        	parent.layer.close(index);
+        	parent.layer.msg("操作失败",{
+        	    time: 20000, //20s后自动关闭
+        	  });
+        	parent.location.reload();
+            }
+    });
+	
 }
 
 </script>

@@ -10,7 +10,7 @@
 			// WebSocket("ws://localhost:9094/starManager/websocket/张三")
             socket = new WebSocket("ws://localhost:10002/websocket");
             // 打开事件
-            socket.onopen = function() {  
+            socket.onopen = function() {
                 console.log("Socket 已打开");
                 // socket.send("这是来自客户端的消息" + location.href + new Date());
             };  
@@ -19,7 +19,8 @@
             socket.onmessage = function(msg) {
                 console.log(msg.data);
 //                alert(msg.data);
-                if(msg.data=="有警报！"){
+                if(msg.data.indexOf("警报")>=0){
+                	var id=msg.data.substring(msg.data.indexOf(":")+1);
 //                	var obj = eval('(' + msg.data + ')'); 
 //                	document.cookie="vedio_path="+obj["vedio_path"];
                 	layer.open({
@@ -31,9 +32,10 @@
                 		  ,shade: 0.2 //遮罩透明度
                 		  ,maxmin: true //允许全屏最小化
                 		  ,anim: 2 //0-6的动画形式，-1不开启
-                		  ,content: 'http://localhost:10001/alarm_layer.html'
+                		  ,content: 'http://localhost:10001/alarm_layer.html?alarm='+id
                 		  });
-                }else{
+                }
+                if(msg.data.indexOf("close")>=0){
                 	//关闭弹出层
                 	var index = layer.getFrameIndex(window.name);
                 	layer.close(index);

@@ -2,11 +2,39 @@
 <html>
 <head>
   <meta charset="utf-8"/>
-  <link th:href="@{css/theme.css}" rel="stylesheet" />
-  <link th:href="@{bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
-  <link th:href="@{bootstrap/css/bootstrap-responsive.min.css}" rel="stylesheet" />
-  <link th:href="@{css/theme.css}" rel="stylesheet" />
+  	<link th:href="@{js/choose_stu/css/jquery-labelauty.css}" rel="stylesheet" />
+  	<link th:href="@{css/theme.css}" rel="stylesheet" />
+	<link th:href="@{css/bootstrap.css}" rel="stylesheet" />
+	<link th:href="@{bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+	<link th:href="@{bootstrap/css/bootstrap-responsive.min.css}" rel="stylesheet" />
+	
   <title>模式处理窗口</title>
+  <style>
+		ul {
+			width:500px;
+			list-style-type: none;
+			margin: 10px 5px;
+		}
+		li { 
+			width:100px;
+			display: inline-block;
+			margin: 0px 0;
+		}
+		input.labelauty,label { 
+			font: 8px "Microsoft Yahei";
+		}
+		span.choosespan{
+			display:inline-block;
+			margin:10px 10px 0px 0px;
+			width:200px;
+			text-align:left;
+			border:1px solid #cccccc;
+			background-color:#fff;
+			height:30px;
+			vertical-align:middle;
+			line-height:30px;
+		}
+	</style>
 </head>
 <body style="margin: 0px;">
  
@@ -19,36 +47,33 @@
 
 
 <div>
-	<form role="form" >
-		<div id="description" class="form-group" style="margin:10px 10px 10px 10px">
-		  <label for="name">事件描述：</label>
-		  <textarea class="form-control" rows="3" style="width:90%"></textarea>
-		</div>
-		
-		<div id="handle" class="form-group" style="margin:0px 10px 10px 10px">
-			<div>
-				<label for="name" style="display:inline;">处理结果</label>
-				<span id="plus" class="icon-plus-sign" style="display:inline-block;"></span>
-			</div>
-			<div id="select_team">
-				
-				
-			</div>
-		</div>
-		
-		<div style = "text-align:right; margin:15px 0px 0px 0px">
+	<div id="state" style = "text-align:right; margin:15px 0px 0px 0px">
 			<button class="btn btn-primary" style="margin:0px 10px;" onclick="dismiss()">&nbsp;&nbsp;误报&nbsp;&nbsp;</button>
-			<button class="btn btn-primary" style="margin:0px 10px;" onclick="confirm()">&nbsp;&nbsp;确定&nbsp;&nbsp;</button>
-		</div>
-	</form>
-	<!-- <div id="description">
-		<h3>历史报警</h3>
-		<input type="textarea" rows="3" cols="20">
+			<button class="btn btn-primary" style="margin:0px 10px;" onclick="handle()">&nbsp;&nbsp;确认&nbsp;&nbsp;</button>
 	</div>
-	<div id="handle">
-		<div>处理结果 <button id="zq">新增</button></div>
+		<div id="handle_pattern" style="display:none">
 		
-	</div> -->
+			<div id="description" class="form-group" style="margin:10px 10px 10px 10px">
+			  <label for="name">事件描述：</label>
+			  <textarea id="description_p" class="form-control" rows="3" style="width:90%"></textarea>
+			</div>
+			
+			<div id="handle" class="form-group" style="margin:0px 10px 10px 10px">
+				<div>
+					<label for="name" style="display:inline;">处理结果</label>
+					<span id="plus" class="icon-plus-sign" style="display:inline-block;"></span>
+				</div>
+				<div id="select_team">
+				</div>
+			</div>
+			
+			<div style = "text-align:right; margin:15px 0px 0px 0px">
+				<span id="warning" style="color:red;display:none">请至少完整填写一项处理结果</span>
+				<button class="btn btn-primary" style="margin:0px 10px;" onclick="hide_handle()">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+				<button class="btn btn-primary" style="margin:0px 10px;" onclick="sub_handle()">&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
+			</div>
+		</div>
+		
 
 </div>
 
@@ -56,22 +81,113 @@
 
 <script th:src="@{scripts/jquery-1.9.1.min.js}" type="text/javascript"></script>
 <script th:src="@{js/layer/layer.js}"></script>
+<script th:src="@{js/choose_stu/js/jquery-labelauty.js}" type="text/javascript"></script>
+<script th:src="@{js/ref/jquerysession.js}"></script>
 <script>
+
+window.pattern_count=0;
 
 function getVideoPath(){
 	document.getElementById('alarm_vedio').src = "../video/alarm1.mp4";
 	
 }
 
-function confirm(){
-	var index = parent.layer.getFrameIndex(window.name);
-	parent.layer.close(index);
-	//document.getElementsByClassName("layui-layer-ico layui-layer-close layui-layer-close1").click();
+function handle(){
+	document.getElementById('handle_pattern').style.display="";
+	document.getElementById('state').style.display="none";
 }
 
+function hide_handle(){
+	document.getElementById('handle_pattern').style.display="none";
+	document.getElementById('state').style.display="";
+}
+
+function sub_handle(){
+	//dismiss();
+	//var index = parent.layer.getFrameIndex(window.name);
+	//parent.layer.close(index);
+	var count=0;
+	/* <![CDATA[ */
+		var students_behaviour=[];
+		for(var i=1;i<=pattern_count;i++){
+			var student=document.getElementById("multistu"+i).value;
+			var index=document.getElementById("behavior"+i).selectedIndex;
+			if(student!=null&&index!=0){
+				var row={'students':student,'behaviour':index};
+				students_behaviour.push(row);
+				}
+		}
+	/* ]]> */
+	if(students_behaviour.length==0){
+		document.getElementById('warning').style.display="";
+		setTimeout(function(){
+			document.getElementById('warning').style.display="none";
+			},2000);
+	}else{
+		var data =
+            {
+				"description": $("#description_p").val(),
+                "behaviours": students_behaviour
+            };
+		var jsonString = JSON.stringify(data);
+        //alert(jsonString);
+		var id=$.session.get('pattern_id');
+		$.ajax({
+	        url: 'http://localhost:10002/study/patternhandle',
+	        //dataType: 'String',
+	        type: 'POST',
+	        data: {'pattern_id': parseInt(id), 'h_type': 1,'handle':jsonString},
+	        async: false,
+	        success: function (obj) {
+	        	var index = parent.layer.getFrameIndex(window.name);
+	        	parent.layer.close(index);
+	        	parent.layer.msg(obj,{
+ 	        	    time: 2000, //20s后自动关
+ 	        	  });
+	        	parent.location.reload();
+	           },
+	        error: function(){
+	        	var index = parent.layer.getFrameIndex(window.name);
+	        	parent.layer.close(index);
+        		parent.layer.msg("操作失败",{
+	        	    time: 20000, 
+	        	  });
+        		parent.location.reload();
+	            }
+	    });
+		}
+	}
+
 function dismiss(){
-	var index = parent.layer.getFrameIndex(window.name);
-	parent.layer.close(index);
+	//var index = parent.layer.getFrameIndex(window.name);
+	//parent.layer.close(index);
+	var id=$.session.get('pattern_id');
+	//alert(id);
+	var result="";
+	$.ajax({
+        url: 'http://localhost:10002/study/patternhandle',
+        //dataType: 'String',
+        type: 'POST',
+        data: {'pattern_id': parseInt(id), 'h_type': 2,'handle':''},
+        async: false,
+        success: function (obj) {
+        	var index = parent.layer.getFrameIndex(window.name);
+        	parent.layer.close(index);
+       		parent.layer.msg(obj,{
+        	    time: 2000, //20s后自动关闭
+        	  });
+        	parent.location.reload();
+        	//parent.location.reload();
+           },
+        error: function(){
+        	var index = parent.layer.getFrameIndex(window.name);
+        	parent.layer.close(index);
+        	parent.layer.msg("操作失败",{
+        	    time: 20000, //20s后自动关闭
+        	  });
+        	parent.location.reload();
+            }
+    });
 }
 
 </script>

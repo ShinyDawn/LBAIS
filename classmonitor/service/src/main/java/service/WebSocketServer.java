@@ -27,7 +27,7 @@ public class WebSocketServer {
     /** 
      * 连接建立成功调用的方法*/  
     @OnOpen  
-    public void onOpen(Session session) {  
+    public void onOpen(Session session) {
         this.session = session;  
         webSocketSet.add(this);     //加入set中  
         addOnlineCount();           //在线数加1  

@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import service.WebSocketServer;
 import service.entity.study.Alarm;
-import service.entity.study.Pattern;
 import service.service.StudyService;
+import service.vo.study.AlarmVO;
+import service.vo.study.PatternVO;
 
 @Controller
 public class StudyController {
@@ -26,14 +27,25 @@ public class StudyController {
 	// 获得报警信息（输入时间区间和班级编号）
 	@RequestMapping(value = "/study/getalarm")
 	@ResponseBody
-	public List<Alarm> getAlarm(@RequestParam("type") String type, @RequestParam("cid") int cid) {
+	public List<AlarmVO> getAlarm(@RequestParam("type") String type, @RequestParam("cid") int cid) {
 		return study.getAlarm(type, cid);
+	}
+	
+	//分别得到三个数据 待处理警报 待核实警报 待处理模式
+	@RequestMapping(value = "/study/getNum")
+	@ResponseBody
+	public int[] getNum( @RequestParam("cid") int cid) {
+		int[] result=new int[3]; 
+		result[0]=study.getNumA_handle(cid);
+		result[1]=study.getNumA_confirm(cid);
+		result[2]=study.getNumP_handle(cid);
+		return result;
 	}
 
 	// 获得报警信息
 	@RequestMapping(value = "/study/get_s_alarm")
 	@ResponseBody
-	public Alarm getAlarmById(@RequestParam("alarm_id") int aid) {
+	public AlarmVO getAlarmById(@RequestParam("alarm_id") int aid) {
 		return study.getSingleAlarm(aid);
 	}
 
@@ -53,14 +65,14 @@ public class StudyController {
 	// 获得报警信息（输入时间区间和班级编号）
 	@RequestMapping(value = "/study/getpattern")
 	@ResponseBody
-	public List<Pattern> getPattern(@RequestParam("type") String type, @RequestParam("cid") int cid) {
+	public List<PatternVO> getPattern(@RequestParam("type") String type, @RequestParam("cid") int cid) {
 		return study.getPattern(type, cid);
 	}
 
 	// 获得报警信息
 	@RequestMapping(value = "/study/get_s_pattern")
 	@ResponseBody
-	public Pattern getPatternById(@RequestParam("pattern_id") int pid) {
+	public PatternVO getPatternById(@RequestParam("pattern_id") int pid) {
 		return study.getSinglePattern(pid);
 	}
 
@@ -70,7 +82,7 @@ public class StudyController {
 	public String handlePattern(@RequestParam("pattern_id") int pid, @RequestParam("h_type") int isHandle,
 			@RequestParam("handle") String handle) throws Exception {
 		try {
-			study.handleAlarm(pid, isHandle, handle);
+			study.handlePattern(pid, isHandle, handle);
 		} catch (Exception e) {
 			return "操作失败";
 		}
@@ -81,23 +93,32 @@ public class StudyController {
 	@RequestMapping(value = "/study/alertAlarm")
 	@ResponseBody
 	public void alertAlarm(@RequestParam("alarm_id") int alarm_id) throws IOException {
-		Alarm result=study.getSingleAlarm(alarm_id);
-		System.out.println("警报");
-		WebSocketServer.sendInfo("有警报！");
+		AlarmVO result=study.getSingleAlarm(alarm_id);
+		System.out.println("警报："+alarm_id);
+		WebSocketServer.sendInfo("有警报:"+alarm_id);
 	}
+	
+	// 弹出报警信息
+		@RequestMapping(value = "/study/closeAlarm")
+		@ResponseBody
+		public void closeAlarm(@RequestParam("alarm_id") int alarm_id) throws IOException {
+			AlarmVO result=study.getSingleAlarm(alarm_id);
+			System.out.println("closes"+alarm_id);
+			WebSocketServer.sendInfo("close："+alarm_id);
+		}
 
-	// websocket
-	@RequestMapping(value = "/pushVideoListToWeb", method = RequestMethod.POST, consumes = "application/json")
-	@ResponseBody
-	public Map<String, Object> pushVideoListToWeb(@RequestBody Map<String, Object> param) {
-		Map<String, Object> result = new HashMap<String, Object>();
-//		try {
-//			WebSocketServer.sendInfo("有新客户呼入,sltAccountId:");
-//			result.put("operationResult", true);
-//		} catch (IOException e) {
-//			result.put("operationResult", true);
-//		}
-		result.put("operationResult", true);
-		return result;
-	}
+//	// websocket
+//	@RequestMapping(value = "/pushVideoListToWeb", method = RequestMethod.POST, consumes = "application/json")
+//	@ResponseBody
+//	public Map<String, Object> pushVideoListToWeb(@RequestBody Map<String, Object> param) {
+//		Map<String, Object> result = new HashMap<String, Object>();
+////		try {
+////			WebSocketServer.sendInfo("有新客户呼入,sltAccountId:");
+////			result.put("operationResult", true);
+////		} catch (IOException e) {
+////			result.put("operationResult", true);
+////		}
+//		result.put("operationResult", true);
+//		return result;
+//	}
 }

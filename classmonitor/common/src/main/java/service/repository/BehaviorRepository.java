@@ -51,5 +51,12 @@ public interface BehaviorRepository extends JpaRepository<Behavior, Integer> {
 
     @Query("SELECT b FROM Behavior b WHERE b.cid = ?1 AND b.sid = ?2 AND b.date > ?3 AND b.place = '自习' AND b.status <> '误报'")
     public List<Behavior> findBehaviorsDuringStudy(int cid, int sid, String period);
+    
+    @Query("SELECT b FROM Behavior b WHERE b.cid=?1 AND b.date >=?2 AND b.sid=?3 AND b.status != '已请假'")
+    public List<Behavior> getByDate(int cid,String date,int sid);
+    
+    @Query("SELECT distinct(b.sid) FROM Behavior b WHERE b.cid=?1 AND b.date >=?2 AND b.status != '已请假'")
+    public List<Integer> getByDateStu(int cid,String date);
+    
 }
 

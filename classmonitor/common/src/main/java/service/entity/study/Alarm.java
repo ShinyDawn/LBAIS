@@ -26,7 +26,7 @@ public class Alarm {
 	private int date;
 	private String time;
 	private String destribute;
-	private int isHandle;//0 no;1 yes;2  误报
+	private int isHandle;//0 待核实;1 待处理;2  误报;3 已处理
 	private String handle_id;
 	private String vedio_path;
 	

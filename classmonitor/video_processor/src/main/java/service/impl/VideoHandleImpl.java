@@ -31,12 +31,13 @@ public class VideoHandleImpl implements VideoHandleService {
 		// TODO Auto-generated method stub
 		File file = new File(path);
 		String[] fileName = file.list();
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < fileName.length; i++) {
 			String content = readFile(path + "\\" + fileName[i]);
 			JSONObject jsonObject = new JSONObject(content);
 			JSONArray people = jsonObject.getJSONArray("people");
 			System.out.println("people:" + people.length());
-			for (int k = 0; k < people.length(); k++) {
+			//
+			for (int k = 0; k < 1; k++) {
 				// String temp_s = people.getString(k);
 				JSONObject person = people.getJSONObject(k);
 				// items offered by the json
@@ -45,7 +46,18 @@ public class VideoHandleImpl implements VideoHandleService {
 						"hand_right_keypoints_3d" };
 				for (int t = 0; t < 1; t++) {
 					JSONArray temp = person.getJSONArray(items[i]);
-					System.out.println(sleep(temp));
+					if(sleep(temp)){
+						System.out.println("第"+i/30+"s 睡觉");
+						
+					}
+					if(rise(temp)){
+						System.out.println("第"+i/30+"s 抬头");
+						
+					}
+					if(down(temp)){
+						System.out.println("第"+i/30+"s 低头");
+						
+					}
 				}
 			}
 			System.out.println();
