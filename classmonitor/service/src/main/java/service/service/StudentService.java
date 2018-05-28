@@ -22,6 +22,8 @@ public interface StudentService {
     public List<AttendanceVO> getAttendanceInfo(int cid, int sid, String startDate, String endDate);
 
     public double getAttendanceRate(int cid, int sid, String startDate, String endDate);
+    public List<LivenessVO> getLivenessInfoBysubject(int cid, int sid, String startDate, String endDate, String subject);
+    public int initCourse(int cid, String startDate, String endDate);
 
 
     public List<LivenessVO> getLivenessPercentBySubject(int cid, int sid, String startDate, String endDate, String subject);

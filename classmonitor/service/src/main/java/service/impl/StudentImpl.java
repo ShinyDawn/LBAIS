@@ -9,14 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import service.entity.Behavior;
+import service.entity.CourseCal;
 import service.entity.Curriculum;
 import service.entity.Student;
 //import service.entity.study.Pattern;
 //import service.entity.study.PatternHandle;
-import service.repository.BehaviorRepository;
-import service.repository.CurriculumRepository;
-import service.repository.StudentRepository;
-import service.repository.TimeRepository;
+import service.repository.*;
 //import service.repository.study.PatternHandleRepository;
 //import service.repository.study.PatternRepository;
 import service.service.StudentService;
@@ -37,6 +35,8 @@ public class StudentImpl implements StudentService {
     private CurriculumRepository curriculumRepository;
     @Autowired
     private TimeRepository timeRepository;
+    @Autowired
+    private CourseCalRepository courseCalRepository;
 //    @Autowired
 //    private PatternHandleRepository patternHandleRepository;
 //    @Autowired
@@ -540,11 +540,28 @@ public class StudentImpl implements StudentService {
 
     ;
 
+    public int initCourse(int cid, String startDate, String endDate) {
+        String[] student = {"钱多多", "张晓伟", "王小明", "李小娜", "王小峰", "韩小雪", "周小芳", "赵小磊", "陆小瑶", "刘小洋", "叶小天", "王小明", "赵小川",
+                "李小静", "吴小杰", "孙小豪", "郑小波"};
+//        String[][] curriculum = {{"语文", "数学", "英语", "品德", "科学", "自习", "自习"},
+//                {"数学", "数学", "语文", "自习", "品德", "自习", "英语"}, {"语文", "语文", "数学", "数学", "英语", "英语", "自习"},
+//                {"英语", "英语", "语文", "数学", "科学", "自习", "自习"}, {"英语", "数学", "语文", "语文", "自习", "自习", "自习"},
+//                {"语文", "数学", "英语", "英语", "自习", "科学", "品德"}, {"语文", "数学", "英语", "自习", "自习", "自习", "自习"},
+//                {"语文", "数学", "英语", "自习", "自习", "自习", "自习"}};
+        String[] subjects = {"语文", "数学", "英语", "品德", "科学"};
+        for (int i = 0; i < student.length; i++) {
+            for (String s : subjects) {
+                getLivenessInfoBysubjectOrigin(cid, i + 1, startDate, endDate, s);
+            }
+        }
+        return 0;
+    }
+
     /**
      * lesson 1
      * 某一时间段内每一门学科每一个课时的每个学生的课堂表现统计 数值 （活跃度、参与度、综合表现）
      */
-    private List<LivenessVO> getLivenessInfoBysubject(int cid, int sid, String startDate, String endDate, String subject) {
+    private List<LivenessVO> getLivenessInfoBysubjectOrigin(int cid, int sid, String startDate, String endDate, String subject) {
 
         List<LivenessVO> resultList = new ArrayList<>();
         List<Curriculum> initList = curriculumRepository.getCourseList(cid, subject, startDate, endDate);
@@ -552,6 +569,8 @@ public class StudentImpl implements StudentService {
         if (initList == null || initList.isEmpty()) {
             return resultList;
         }
+
+//        courseCalRepository.deleteAll();
 
         for (Curriculum data : initList) {
             String date = data.getDate();
@@ -647,7 +666,49 @@ public class StudentImpl implements StudentService {
             livenessVO.setConcentrationRate(concentrationRate);
             livenessVO.setGeneralRate();
             resultList.add(livenessVO);
+
+            CourseCal courseCal = new CourseCal();
+            courseCal.setCid(cid);
+            courseCal.setConcentrationRate(concentrationRate);
+            courseCal.setDate(date);
+            courseCal.setGeneralRate(livenessVO.getGeneralRate());
+            courseCal.setLivenessRate(livenessRate);
+            courseCal.setSid(sid);
+            courseCal.setTid(tid);
+            courseCal.setSubject(subject);
+//            courseCalRepository.save(courseCal);
+
         }
+
+
+        return resultList;
+    }
+
+
+    public List<LivenessVO> getLivenessInfoBysubject(int cid, int sid, String startDate, String endDate, String subject) {
+
+        List<LivenessVO> resultList = new ArrayList<>();
+        List<CourseCal> initList = courseCalRepository.findAll(cid, sid,subject, startDate, endDate);
+
+        if (initList == null || initList.isEmpty()) {
+            return resultList;
+        }
+
+//        courseCalRepository.deleteAll();
+
+        for (CourseCal data : initList) {
+            LivenessVO livenessVO = new LivenessVO();
+            livenessVO.setDate(data.getDate());
+            livenessVO.setTid(data.getTid());
+            livenessVO.setSubject(subject);
+//            livenessVO.setGeneralRate(generalRate);
+            livenessVO.setLivenessRate(data.getLivenessRate());
+            livenessVO.setConcentrationRate(data.getConcentrationRate());
+            livenessVO.setGeneralRate(data.getGeneralRate());
+            resultList.add(livenessVO);
+
+        }
+
 
         return resultList;
     }
@@ -931,7 +992,6 @@ public class StudentImpl implements StudentService {
 //        }
 //        return resultList;
 //    }
-
     public List<LivenessVO> getLivenessPercentDay(int cid, int sid, String startDate, String endDate) {
 
         List<LivenessVO> resultList = new ArrayList<>();
@@ -951,7 +1011,6 @@ public class StudentImpl implements StudentService {
         }
         return resultList;
     }
-
 
 
     /**

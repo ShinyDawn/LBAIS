@@ -18,7 +18,13 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-
+    @RequestMapping(value = "/test")
+    @ResponseBody
+    public List<LivenessVO> getLivenessInfoBysubject(@RequestParam("cid") int cid,@RequestParam("sid") int sid, @RequestParam("period") int period, @RequestParam("subject") String subject) {
+        String endDate = DateUtil.getDate();
+        String startDate = DateUtil.getPassedDate(period, endDate);
+        return studentService. getLivenessPercentBySubject(cid, sid,startDate,endDate,subject);
+    }
 
 
 
@@ -111,7 +117,7 @@ public class StudentController {
     @RequestMapping(value = "/student/lesson/subject")
     @ResponseBody
     public List<LivenessVO> getLivenessPercentBySubject(@RequestParam("cid") int cid, @RequestParam("sid") int sid, @RequestParam("period") int period, @RequestParam("subject") String subject) {
-        String endDate = "2018-05-22";
+        String endDate = DateUtil.getDate();
         String startDate = DateUtil.getPassedDate(period, endDate);
         return studentService.getLivenessPercentBySubject(cid, sid, startDate, endDate, subject);
     }

@@ -14,8 +14,8 @@ public class PositivityController {
 
 	@Autowired
 	private PositivityService positivityService;
-	//@Autowired
-	//private InsertDataService insertDataService;
+	@Autowired
+	private InsertDataService insertDataService;
 	
 	@RequestMapping(value = "/data")
     @ResponseBody
@@ -26,7 +26,7 @@ public class PositivityController {
 	@RequestMapping(value = "/sub")
     @ResponseBody
     public String[] getSubjects(@RequestParam("cid") int cid) {
-		//insertDataService.insert();
+		insertDataService.insert();
         return positivityService.getSubjects(cid);
     }
 }
