@@ -144,7 +144,7 @@ public class ClassBehaviorAnalyser implements AnalyseService {
 					behaviorRepo.save(b);
 					int raise = behaviorRepo.countRaiseHand(student.getCid(), student.getSid(), cname, date);
 					int answer = behaviorRepo.countAnswerQuestion(student.getCid(), student.getSid(), cname, date);
-					String name = studentRepo.findByCidAndSid(student.getCid(), student.getSid()).getName();
+					String name = studentRepo.findName(student.getCid(), student.getSid());
 					student.setSname(name);
 					student.setRaiseHand(raise);
 					student.setStandup(answer);
@@ -181,11 +181,15 @@ public class ClassBehaviorAnalyser implements AnalyseService {
 				Pose p = pose[i][j];
 				p.setDected(false);
 				double distance = Math.abs(p.getAngle() - avg);
-				distance = sdev / distance < 1 ? sdev / distance : 1;
+				if (p.getAngle() - avg == 0)
+					distance = 1;
+				else
+					distance = sdev / distance < 1 ? sdev / distance : 1;
+
 				if (p.getAngle() == 0)
 					distance = 1;
 
-				p.setFocus(distance);
+				p.setFocus(p.getFocus() * 0.3 + distance * 0.7);
 			}
 		}
 

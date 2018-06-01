@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Observer;
 
-import service.entity.Behavior;
 import service.entity.Student;
 import service.entity.Time;
 import service.model.Pose;
@@ -26,7 +25,6 @@ public class Dispatcher implements DispatchService {
 	private static List<Time> list;
 	private static int classroom;
 	public static Pose[][] pose;
-	private static boolean end = false;
 	private static Time timestamp = null;
 	private static String cname = null;
 	public static Observer observer;
@@ -76,17 +74,14 @@ public class Dispatcher implements DispatchService {
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 		String time = format.format(cal.getTime());
 
-		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-mm-dd");
-		String date = format1.format(cal.getTime());
-
 		boolean isClass = false;
 
 		if (timestamp != null) {
 			String[] t = timestamp.getTime().split("-");
 			if (time.compareTo(t[0]) >= 0 && time.compareTo(t[0]) <= 0) {
-				cname = curriculumRepo.findByTidAndCidAndDay(timestamp.getId(), timestamp.getCid(),day).getCourse();
-				isClass = true;
-				end = true;
+				if (!cname.equals("自习")) {
+					isClass = true;
+				}
 			}
 		}
 		if (!isClass) {
@@ -94,10 +89,11 @@ public class Dispatcher implements DispatchService {
 				String[] times = t.getTime().split("-");
 				if (time.compareTo(times[0]) >= 0 && time.compareTo(times[1]) <= 0) {
 					timestamp = t;
-					cname = curriculumRepo.findByTidAndCidAndDay(t.getId(),t.getCid(), day).getCourse();
-					isClass = true;
-					end = true;
-					break;
+					cname = curriculumRepo.getCourseName(t.getCid(), t.getId(), day);
+					if (cname != null && !cname.equals("自习")) {
+						isClass = true;
+						break;
+					}
 				}
 			}
 		}
@@ -105,24 +101,7 @@ public class Dispatcher implements DispatchService {
 		if (isClass) {
 			String filename = source.getNextSource();
 			List<StudentPose> list = poseService.getStudentPose(filename);
-			classBehavior.analyse(list, cname, classroom, pose, observer,behaviorRepo, studentRepo);
-		} else {
-			if (end) {
-				for (int i = 0; i < pose.length; i++) {
-					for (int j = 0; j < pose[0].length; j++) {
-						Pose p = pose[i][j];
-						Behavior b = new Behavior();
-						b.setCid(p.getCid());
-						b.setSid(p.getSid());
-						b.setTotal_time((int) (p.getFocus() * 100));
-						b.setDate(date);
-						b.setAction("concentration");
-						b.setPlace(cname);
-						behaviorRepo.save(b);
-					}
-				}
-				end = false;
-			}
+			classBehavior.analyse(list, cname, classroom, pose, observer, behaviorRepo, studentRepo);
 		}
 	}
 
