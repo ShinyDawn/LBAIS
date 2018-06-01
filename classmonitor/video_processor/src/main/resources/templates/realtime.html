@@ -31,6 +31,10 @@
 	text-size: 16px;
 	margin-top: 30px;
 	margin-bottom: 20px;
+}
+
+#percent {
+	font-size: 50px;
 	color: rgb(51, 122, 183);
 }
 </style>
@@ -44,97 +48,167 @@
 <body>
 	<div id="t">
 		<h4 id="t_d">
-			学生专注度分布图&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当前平均专注度<span id="percent"></span>%
+			平均专注度<span id="percent"></span>%
 		</h4>
 	</div>
 	<div id="list"
-		style="width: 700px; height: 420px; margin-right: auto; margin-left: auto; margin-top: 10px; margin-bottom: 30px"></div>
+		style="width: 700px; height: 400px; margin-right: auto; margin-left: auto; margin-top: 10px; margin-bottom: 30px"></div>
 
 
 	<script type="text/javascript">
 		/*<![CDATA[*/
 		function heatMap() {
-			$.ajax({
-				type : "POST",
-				url : "http://localhost:10003/realTime/focus",
-				crossDomain : true,
-				success : function(data) {
-					var heatData = [];
-					var x = data.length;
-					var y = data[0].length;
-					var x_insert = 650 / x;
-					var y_insert = 390 / y;
-					var gradient = 150 / x;
-					var avg = 0;
-					for (var i = 0; i < data.length; i++) {
-						for (var j = 0; j < data[i].length; j++) {
-							var val = 1 - data[i][j];
-							avg += data[i][j];
-							heatData.push([ 650 - i * x_insert,
-									390 - j * y_insert, val ]);
-							for (var k = 1; k < gradient / 1.5; k++) {
-								n = k / gradient;
-								heatData.push([ 650 - (i - n) * x_insert,
-										390 - j * y_insert, val * (1 - n) ]);
-								heatData.push([ 650 - (i + n) * x_insert,
-										390 - j * y_insert, val * (1 - n) ]);
-								heatData
-										.push([ 650 - i * x_insert,
-												390 - (j - n) * y_insert,
-												val * (1 - n) ]);
-								heatData
-										.push([ 650 - i * x_insert,
-												390 - (j + n) * y_insert,
-												val * (1 - n) ]);
-								heatData
-										.push([ 650 - (i - n) * x_insert,
-												390 - (j - n) * y_insert,
-												val * (1 - n) ]);
-								heatData
-										.push([ 650 - (i - n) * x_insert,
-												390 - (j + n) * y_insert,
-												val * (1 - n) ]);
-								heatData
-										.push([ 650 - (i + n) * x_insert,
-												390 - (j - n) * y_insert,
-												val * (1 - n) ]);
-								heatData
-										.push([ 650 - (i + n) * x_insert,
-												390 - (j + n) * y_insert,
-												val * (1 - n) ]);
+			$
+					.ajax({
+						type : "POST",
+						url : "http://localhost:10003/realTime/focus",
+						crossDomain : true,
+						success : function(data) {
+							var heatData = [];
+							var x = data.length;
+							var y = data[0].length;
+							var x_insert = 700 / x;
+							var y_insert = 400 / y;
+							var range = 10;
+							var avg = 1;
+							var count = 0;
+
+							var dense = x_insert / (range * 6);
+							var dense2 = y_insert / (range * 6);
+
+							var circle = [
+									[ 0, 0, 0.1, 0.2, 0.3, 0.3, 0.2, 0.1, 0, 0 ],
+									[ 0, 0.2, 0.3, 0.4, 0.4, 0.4, 0.4, 0.3,
+											0.2, 0 ],
+									[ 0.1, 0.3, 0.4, 0.5, 0.6, 0.6, 0.5, 0.4,
+											0.3, 0.1 ],
+									[ 0.2, 0.4, 0.5, 0.6, 0.7, 0.7, 0.6, 0.5,
+											0.4, 0.2 ],
+									[ 0.2, 0.3, 0.5, 0.6, 0.7, 0.7, 0.6, 0.5,
+											0.3, 0.2 ],
+									[ 0.2, 0.3, 0.5, 0.6, 0.7, 0.7, 0.6, 0.5,
+											0.3, 0.2 ],
+									[ 0.2, 0.4, 0.5, 0.6, 0.7, 0.7, 0.6, 0.5,
+											0.4, 0.2 ],
+									[ 0.1, 0.3, 0.4, 0.5, 0.6, 0.6, 0.5, 0.4,
+											0.3, 0.1 ],
+									[ 0, 0.2, 0.3, 0.4, 0.4, 0.4, 0.4, 0.3,
+											0.2, 0 ],
+									[ 0, 0, 0.1, 0.2, 0.3, 0.3, 0.2, 0.1, 0, 0 ] ];
+
+							var arr1 = new Array();
+							for (var i = 0; i < x * 6; i++) {
+								arr1[i] = new Array(i);
+								for (var j = 0; j < y * 6; j++) {
+									arr1[i][j] = 0;
+								}
 							}
+
+							var arr2 = new Array();
+							for (var i = 0; i < x * 6; i++) {
+								arr2[i] = new Array(i);
+								for (var j = 0; j < y * 6; j++) {
+									arr2[i][j] = 0;
+								}
+							}
+
+							for (var i = 0; i < data.length; i++) {
+								for (var j = 0; j < data[i].length; j++) {
+									if (data[i][j] != 1) {
+										avg += data[i][j];
+										count++;
+									}
+									var k = i * 6 - 5;
+									var m = j * 6 - 5;
+									if (k < 0)
+										k = 0;
+									if (m < 0)
+										m = 0;
+									for (var p = k; p < i * 6 + 5
+											&& p < arr1.length; p++) {
+										for (var q = m; q < j * 6 + 5
+												&& q < arr1[k].length; q++) {
+											arr1[p][q] += circle[p - k][q - m]
+													* (1 - data[i][j]);
+											arr2[p][q] += 1;
+										}
+									}
+
+								}
+							}
+
+							for (var i = 0; i < x * 6; i++) {
+								for (var j = 0; j < y * 6; j++) {
+									if (arr2[i][j] == 0) {
+										arr2[i][j] = 1;
+									}
+								}
+							}
+
+							for (var i = 0; i < x * 6; i++) {
+								for (var j = 0; j < y * 6; j++) {
+									arr1[i][j] = arr1[i][j] / arr2[i][j];
+								}
+							}
+
+							for (var i = 0; i < x * 6; i++) {
+								for (var j = 0; j < y * 6; j++) {
+									arr1[i][j] = arr1[i][j] / arr2[i][j];
+								}
+							}
+
+							for (var i = 0; i < x * 6; i++) {
+								for (var j = 0; j < y * 6; j++) {
+									for (var k = 0; k < dense; k++) {
+										for (var m = 0; m < dense2; m++) {
+											heatData
+													.push([
+															i * x_insert / 6
+																	+ k * range,
+															j * y_insert / 6
+																	+ m * range,
+															arr1[i][j] ]);
+										}
+									}
+								}
+							}
+
+							if (count != 0)
+								avg = avg / count * 100;
+							else
+								avg = avg * 100;
+							avg = avg.toFixed(1);
+							document.getElementById("percent").innerText = avg;
+							var chart = echarts.init(document
+									.getElementById('list'));
+							option = {
+								series : [ {
+									type : 'heatmap',
+									data : heatData,
+									hoverable : false,
+									blurSize : 50,
+									gradientColors : [ {
+										offset : 0.6,
+										color : '#7cd813'
+									}, {
+										offset : 0.84,
+										color : '#ece309'
+									}, {
+										offset : 0.88,
+										color : '#f68413'
+									}, {
+										offset : 0.95,
+										color : '#f93f39'
+									}, {
+										offset : 0.98,
+										color : '#f82c25'
+									} ],
+									valueScale : 1
+								} ]
+							};
+							chart.setOption(option);
 						}
-					}
-					avg = avg / (x * y) * 100;
-					avg = avg.toFixed(1);
-					document.getElementById("percent").innerText = avg;
-					var chart = echarts.init(document.getElementById('list'));
-					option = {
-						series : [ {
-							type : 'heatmap',
-							data : heatData,
-							hoverable : false,
-							blurSize : 50,
-							gradientColors : [ {
-								offset : 0.5,
-								color : '#4dbe13'
-							}, {
-								offset : 0.8,
-								color : '#d6e62d'
-							}, {
-								offset : 0.92,
-								color : '#f93f39'
-							}, {
-								offset : 0.95,
-								color : '#f82c25'
-							} ],
-							valueScale : 1,
-							opacity : 0.8
-						} ]
-					};
-					chart.setOption(option);
-				}
-			});
+					});
 		}
 		heatMap();
 		setInterval("heatMap()", "30000");
@@ -165,13 +239,19 @@
 								}
 								var html = "";
 								for (var i = 0; i < data.length; i++) {
+									var sid = data[i].sid;
+									if (sid < 10) {
+										sid = "0" + sid;
+									}
 									html += "<h4 style='color:grey'>"
-											+ data[i].sid
+											+ sid
 											+ "号&nbsp;&nbsp;&nbsp;&nbsp;"
 											+ data[i].sname
-											+ "&nbsp;&nbsp;&nbsp;&nbsp;("
-											+ data[i].standup + "/"
-											+ data[i].raiseHand + ")" + "</h4>";
+											+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(回答次数："
+											+ data[i].standup
+											+ "次&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;举手次数："
+											+ data[i].raiseHand + "次)"
+											+ "</h4>";
 								}
 								document.getElementById("container").innerHTML = html;
 							} else if (data[0].answer == 1) {
@@ -206,7 +286,7 @@
 					<button type="button" class="close" id="close_btn"
 						data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title" id="myModalLabel"
-						style="padding-left: 13px; color: #38a626">学习行为智能分析助手</h4>
+						style="padding-left: 13px; color: #38a626">学习行为智能分析系统</h4>
 				</div>
 				<div class="modal-body">
 					<div class="container" id="container"></div>
