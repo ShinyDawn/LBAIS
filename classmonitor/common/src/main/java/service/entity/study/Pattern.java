@@ -9,7 +9,6 @@ import javax.persistence.Id;
 //日期
 //描述
 //是否处理
-//处理编号
 
 
 @Entity
@@ -21,7 +20,6 @@ public class Pattern {
 	private int date;
 	private String destribute;
 	private int isHandle;//0 no;1 yes;2  误报
-	private String handle_id;
 	
 	
 	public int getId() {
@@ -54,11 +52,4 @@ public class Pattern {
 	public void setIsHandle(int isHandle) {
 		this.isHandle = isHandle;
 	}
-	public String getHandle_id() {
-		return handle_id;
-	}
-	public void setHandle_id(String handle_id) {
-		this.handle_id = handle_id;
-	}
-	
 }

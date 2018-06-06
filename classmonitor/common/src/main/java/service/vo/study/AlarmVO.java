@@ -9,7 +9,7 @@ public class AlarmVO {
 	private String time;
 	private String destribute;
 	private int isHandle;//0 no;1 yes;2  误报
-	private String handle_id;
+	private int start;
 	private String vedio_path;
 	
 	public AlarmVO(Alarm temp) {
@@ -20,7 +20,7 @@ public class AlarmVO {
 		this.time=temp.getTime();
 		this.destribute=temp.getDestribute();
 		this.isHandle=temp.getIsHandle();
-		this.handle_id=temp.getHandle_id();
+		this.start=temp.getStart();
 		this.vedio_path=temp.getVedio_path();
 	}
 	
@@ -60,11 +60,11 @@ public class AlarmVO {
 	public void setIsHandle(int isHandle) {
 		this.isHandle = isHandle;
 	}
-	public String getHandle_id() {
-		return handle_id;
+	public int getStart() {
+		return start;
 	}
-	public void setHandle_id(String handle_id) {
-		this.handle_id = handle_id;
+	public void setStart(int start) {
+		this.start = start;
 	}
 	
 	public String getVedio_path() {

@@ -12,7 +12,7 @@ import javax.persistence.Table;
 //报警时间
 //描述
 //是否处理
-//处理编号
+//视频开始
 //视频路径
 
 @Entity
@@ -27,7 +27,7 @@ public class Alarm {
 	private String time;
 	private String destribute;
 	private int isHandle;//0 待核实;1 待处理;2  误报;3 已处理
-	private String handle_id;
+	private int start;
 	private String vedio_path;
 	
 	
@@ -67,11 +67,11 @@ public class Alarm {
 	public void setIsHandle(int isHandle) {
 		this.isHandle = isHandle;
 	}
-	public String getHandle_id() {
-		return handle_id;
+	public int getStart() {
+		return start;
 	}
-	public void setHandle_id(String handle_id) {
-		this.handle_id = handle_id;
+	public void setStart(int start) {
+		this.start = start;
 	}
 	
 	public String getVedio_path() {
