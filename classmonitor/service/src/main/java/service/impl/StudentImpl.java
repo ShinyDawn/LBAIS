@@ -1,10 +1,8 @@
 package service.impl;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-import org.apache.poi.util.SystemOutLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -132,17 +130,21 @@ public class StudentImpl implements StudentService {
 
 
         /**
+         * 这里参数都可以修改
          * 出勤较少：出勤率不足80%
          * 兴趣较低：某一科课堂表现<=20% (偏科：课堂表现方差>0.6)
          * 纪律较差：出现旷课>=1次 或者 迟到未请假>=3次 早退未请假>=3次 或者自习课<=20%
-         * 退步较大：任一指标下降>30%
-         * 进步较大：任一指标上升>30% （今天比昨天，这周比上周，如此类推）
+         * 进步和退步分析这里在提供了两个解决方案，一个是在该方法中的
+         *          退步较大：任一指标下降>30%
+         *          进步较大：任一指标上升>30% （今天比昨天，这周比上周，如此类推）
+         *
+         * 一个是analyzeTrend方法，线性回归获得斜率k来判断进步退步的趋势
          */
 
         List<ProblemVO> problemList = new ArrayList<>();
 
         /**
-         * 出勤表现低于80% 出现旷课、迟到未请假、早退未请假
+         * 出勤表现低于80% 出现旷课、迟到未请假、早退未请假，参数可以优化
          */
         double rate = 0.0;
 
@@ -200,7 +202,7 @@ public class StudentImpl implements StudentService {
         subjectList.add("科学");
 
         /**
-         * 各科专注度或者活跃度 percent在后20%
+         * 各科专注度或者活跃度<0.5，参数可以优化
          */
         String con_detail = "";
         String live_detail = "";
@@ -227,6 +229,7 @@ public class StudentImpl implements StudentService {
         }
         /**
          * 偏科
+         * 这里使用标准差分析，可以进一步优化
          */
 
         List<Double> genList = new ArrayList<>();
@@ -242,7 +245,7 @@ public class StudentImpl implements StudentService {
 
 
         /**
-         * 课堂表现
+         * 课堂表现，使用分类，可以优化
          */
         rate = genRate;
         if (rate <= 0.2) {
@@ -267,7 +270,7 @@ public class StudentImpl implements StudentService {
 
 
         /**
-         * 自习表现低于60% 理论上应该有pattarn 先不写
+         * 自习表现低于60% 可以添加识别出的模式
          */
         rate = disciplineRate;
 
@@ -286,8 +289,9 @@ public class StudentImpl implements StudentService {
         }
 
         /**
+         * 解决方案一
          * 退步趋势：课堂指标下降>30%，出勤、纪律下降60%
-         %        * 进步趋势：课堂指标上升>30%，出勤、纪律上升60% , period 再设计
+         * 进步趋势：课堂指标上升>30%，出勤、纪律上升60% , period 再设计
          */
 
         double past_percent_a = 0.0;
@@ -379,6 +383,7 @@ public class StudentImpl implements StudentService {
 
     }
 
+    //进步退步解决方案二
     private ProblemVO analyzeTrend(int cid, int sid, String startDate, String endDate) {
 
         ProblemVO problemVO = new ProblemVO();
@@ -408,12 +413,18 @@ public class StudentImpl implements StudentService {
         }
         int rank = getSort(rankList, sid);
         double percent = 1 - 1.0 * (rank - 0.9) / stuNum;
+        //乘以period做归一化处理
         current_k = current_k * period / 7.0;
         boolean fall = false;
+        boolean advance =true;
         String detail = "";
-        if (percent < 0.2 || current_k < -0.03) {
-            detail = Summery.lesson_fall;
+        //退步趋势在后20%或者退步幅度>0.03
+        if (percent <= 0.2 || current_k < -0.03) {
+            detail = Summary.lesson_fall;
             fall = true;
+        } else if(percent>=0.8||current_k>0.03){
+            detail = Summary.lesson_advance;
+            advance = true;
         }
 
         if (fall) {
@@ -421,12 +432,15 @@ public class StudentImpl implements StudentService {
             problemVO.setDetail(detail);
             problemVO.setIsProgress(-1);
         }
+
+        if (advance) {
+            problemVO.setTitle("进步较大");
+            problemVO.setDetail(detail);
+            problemVO.setIsProgress(1);
+        }
         return problemVO;
     }
 
-//    private List<ProblemVO> analyzeBehavior(int cid,int sid,String startDate,String endDate,){
-//        return  null;
-//    }
     ;
 
     /**
@@ -540,6 +554,13 @@ public class StudentImpl implements StudentService {
 
     ;
 
+    /**
+     * 该方法为造数据时使用的
+     * @param cid
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     public int initCourse(int cid, String startDate, String endDate) {
         String[] student = {"钱多多", "张晓伟", "王小明", "李小娜", "王小峰", "韩小雪", "周小芳", "赵小磊", "陆小瑶", "刘小洋", "叶小天", "王小明", "赵小川",
                 "李小静", "吴小杰", "孙小豪", "郑小波"};
@@ -667,16 +688,17 @@ public class StudentImpl implements StudentService {
             livenessVO.setGeneralRate();
             resultList.add(livenessVO);
 
-            CourseCal courseCal = new CourseCal();
-            courseCal.setCid(cid);
-            courseCal.setConcentrationRate(concentrationRate);
-            courseCal.setDate(date);
-            courseCal.setGeneralRate(livenessVO.getGeneralRate());
-            courseCal.setLivenessRate(livenessRate);
-            courseCal.setSid(sid);
-            courseCal.setTid(tid);
-            courseCal.setSubject(subject);
-            courseCalRepository.save(courseCal);
+            //注销部分为持久化对象的创建
+//            CourseCal courseCal = new CourseCal();
+//            courseCal.setCid(cid);
+//            courseCal.setConcentrationRate(concentrationRate);
+//            courseCal.setDate(date);
+//            courseCal.setGeneralRate(livenessVO.getGeneralRate());
+//            courseCal.setLivenessRate(livenessRate);
+//            courseCal.setSid(sid);
+//            courseCal.setTid(tid);
+//            courseCal.setSubject(subject);
+//            courseCalRepository.save(courseCal);
 
         }
 
