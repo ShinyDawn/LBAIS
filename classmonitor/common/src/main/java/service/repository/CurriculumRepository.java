@@ -1,4 +1,4 @@
-package service.repository;
+﻿package service.repository;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public interface CurriculumRepository extends JpaRepository<Curriculum, Integer>
 
 	public List<Curriculum> findByCidAndDayAndCourse(int cid, int day, String cname);
 
-	@Query(value = "SELECT c FROM Curriculum c where c.tid = ?1 AND c.id=?2 and day=?3 limit 1 ", nativeQuery = true)
+	@Query(value = "SELECT c FROM Curriculum c where c.tid = ?1 AND c.id=?2 and c.day=?3 limit 1 ", nativeQuery = true)
 	public Curriculum findByTidAndCidAndDay(int tid, int cid, int day);
 
 	public Curriculum findByTidAndCidAndDate(int tid, int cid, String date);
