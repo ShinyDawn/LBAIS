@@ -26,6 +26,14 @@ public class StudentController {
         return studentService. getLivenessPercentBySubject(cid, sid,startDate,endDate,subject);
     }
 
+    @RequestMapping(value = "/tester")
+    @ResponseBody
+    public int init(@RequestParam("cid") int cid,@RequestParam("period") int period) {
+        String endDate = DateUtil.getDate();
+        String startDate = DateUtil.getPassedDate(period, endDate);
+        return studentService. initCourse(cid, startDate,endDate);
+    }
+
 
 
     /**

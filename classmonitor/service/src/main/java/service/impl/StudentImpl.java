@@ -676,7 +676,7 @@ public class StudentImpl implements StudentService {
             courseCal.setSid(sid);
             courseCal.setTid(tid);
             courseCal.setSubject(subject);
-//            courseCalRepository.save(courseCal);
+            courseCalRepository.save(courseCal);
 
         }
 
@@ -774,7 +774,12 @@ public class StudentImpl implements StudentService {
                 percent_con = 1 - 1.0 * (rank_con - 0.9) / stuNum;
                 percent_live = 1 - 1.0 * (rank_live - 0.9) / stuNum;
                 percent_gen = 1 - 1.0 * (rank_gen - 0.9) / stuNum;
+                if (percent_gen < 0.2)
+                    percent_gen = 0.2;
             }
+
+
+
             LivenessVO percentVO = new LivenessVO();
             percentVO.setGeneralRate(percent_gen);
             percentVO.setLivenessRate(percent_live);
@@ -951,7 +956,10 @@ public class StudentImpl implements StudentService {
                 percent_con = 1 - 1.0 * (rank_con - 0.9) / stuNum;
                 percent_live = 1 - 1.0 * (rank_live - 0.9) / stuNum;
                 percent_gen = 1 - 1.0 * (rank_gen - 0.9) / stuNum;
+                if (percent_gen < 0.2)
+                    percent_gen = 0.2;
             }
+
             LivenessVO percentVO = new LivenessVO();
             percentVO.setGeneralRate(percent_gen);
             percentVO.setLivenessRate(percent_live);
@@ -1071,7 +1079,10 @@ public class StudentImpl implements StudentService {
                 percent_con = 1 - 1.0 * (rank_con - 0.9) / stuNum;
                 percent_live = 1 - 1.0 * (rank_live - 0.9) / stuNum;
                 percent_gen = 1 - 1.0 * (rank_gen - 0.9) / stuNum;
+                if (percent_gen < 0.2)
+                    percent_gen = 0.2;
             }
+
             LivenessVO percentVO = new LivenessVO();
             percentVO.setGeneralRate(percent_gen);
             percentVO.setLivenessRate(percent_live);
@@ -1354,6 +1365,8 @@ public class StudentImpl implements StudentService {
             percent_con = 1 - 1.0 * (rank_con - 0.9) / stuNum;
             percent_live = 1 - 1.0 * (rank_live - 0.9) / stuNum;
             percent_gen = 1 - 1.0 * (rank_gen - 0.9) / stuNum;
+            if (percent_gen < 0.2)
+                percent_gen = 0.2;
         }
 
         percent.setGeneralRate(percent_gen);

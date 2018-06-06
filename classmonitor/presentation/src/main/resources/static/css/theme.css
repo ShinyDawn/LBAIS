@@ -1297,15 +1297,15 @@ border-top-left-radius: 3px;
 	text-transform: uppercase
 }
 .message .table-message tbody td.cell-problem c {
-	background: #37a2da;
+	background: #469fda;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	color: #fff;
-	color: rgba(255,255,255,0.8);
+	color: #ffffff;
+	/*color: rgba(255, 255, 255, 0.8);*/
 	display: inline-block;
 	padding: 1px 5px;
-	font-size: 11px;
+	font-size: 12px;
 	text-transform: uppercase
 }
 .message .table-message tbody td.cell-problem d {

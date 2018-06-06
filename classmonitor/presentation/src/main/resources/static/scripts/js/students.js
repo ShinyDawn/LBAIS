@@ -140,19 +140,24 @@ function createStudentsList(data) {
             td6.append(c);
         }
         if (problem['title'] === "课堂低迷") {
-            var d = $('<d style="margin-left: 4px">课堂低迷</d>&nbsp;');
+            var d = $('<c style="margin-left: 4px">偏科</c>&nbsp;');
             td6.append(d);
 
         }
         if (problem['title'] === "纪律较差") {
-            var e = $('<e style="margin-left: 4px">纪律较差</e>&nbsp;');
+            var e = $('<c style="margin-left: 4px">纪律较差</c>&nbsp;');
             td6.append(e);
 
         }
         if (problem['title'] === "退步较大") {
-            var f = $('<c style="margin-left: 4px">退步较大</c>&nbsp;')
+            var f = $('<c style="margin-left: 4px">退步</c>&nbsp;')
             td6.append(f);
         }
+        if (problem['title'] === "进步较大") {
+            var g = $('<c style="margin-left: 4px">进步</c>&nbsp;')
+            td6.append(g);
+        }
+        // console.log(problem['title']);
     }
     tr.append(td1, td2, td3, td4, td5, td6);
 

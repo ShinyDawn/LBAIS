@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * Created by elva on 2018/5/16.
  */
-//@Service
+@Service
 public class AbsenteeImpl implements AbsenteeService {
     @Autowired
     private BehaviorRepository behaviorRepository;
