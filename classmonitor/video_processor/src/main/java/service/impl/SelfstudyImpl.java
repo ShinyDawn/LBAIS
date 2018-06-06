@@ -88,7 +88,7 @@ public class SelfstudyImpl implements SelfstudyService {
 				alarm_num++;
 				Alarm temp = new Alarm();
 				temp.setClass_id(cid);
-				temp.setStart(sequence);
+				temp.setHandle_id("");
 				temp.setId(0);
 				String path = "E:/vedio/1960/alarm" + Integer.toString(alarm_num) + ".avi";
 				getVedio(sequence, path);
@@ -105,16 +105,14 @@ public class SelfstudyImpl implements SelfstudyService {
 				}
 				temp.setDestribute(destribution);
 				System.out.println(temp.getTime() + "  :  " + temp.getDestribute());
-//				Alarm result = alarm.save(temp);
-				sendPost("http://localhost:10002/study/alertAlarm?alarm_id=9", "");
-				return;
-//				alarm_id = result.getId();
+				Alarm result = alarm.save(temp);
+				alarm_id = result.getId();
 
 			}
 			if (checkAlarm(list) == 0)
 				alarm_id = 0;
 		}
-//		checkPattern();
+		checkPattern();
 	}
 
 	public int addBehavior(StateHelper orig, int sequence, String state) {
@@ -276,64 +274,36 @@ public class SelfstudyImpl implements SelfstudyService {
 			List<Behavior> Threeday=behavior.getByDate(cid,threeday,sid);
 			List<Behavior> Weekday=behavior.getByDate(cid,week,sid);
 			
-			String description="";
 			//某个同学在一天内超过五次出现异常情况；
-			if(Oneday.size()>=5) {
-				for(int k=0;k<Oneday.size();k++){
-					description=description+Oneday.get(i).getDate()+" "+
-				Oneday.get(i).getStart()+" "+Oneday.get(k).getAction()+";<br>";
-				}
-				addPattern(sid,sname+"同学在1天内出现"+Oneday.size()+"次异常行为:<br>"+description);
-			}
+			if(Oneday.size()>=5) 
+				addPattern(sid,sname+"号同学在一天内出现"+Oneday.size()+"次异常行为，建议了解相关情况。");
+			//某个同学在一天内的超过三个时段出教室出教室（包括短时离开）；
 			//某个同学在一天内的超过三个时段 睡觉；
 			int sleep=0;
-			description="";
+			int leave=0;
 			for(int k=0;k<Oneday.size();k++){
 				String action=Oneday.get(k).getAction();
-				if(action.equals("睡觉")) {
-					description=description+Oneday.get(k).getDate()+" "+
-							Oneday.get(k).getStart()+" "+action+";<br>";
-					sleep++;
-					}
+				if(action.equals("睡觉")) sleep++;
+				if(action.contains("离开")||action.equals("早退"))leave++;
 			}
 			if(sleep>=3)
-					addPattern(sid,sname+"号同学在1天内出现"+sleep+"次睡觉行为:<br>"+description);
-				
-			//某个同学在一天内的超过三个时段出教室出教室（包括短时离开）；
-			int leave=0;
-			description="";
-			for(int k=0;k<Oneday.size();k++){
-				String action=Oneday.get(k).getAction();
-				if(action.contains("离开")||action.equals("早退")){
-					description=description+Oneday.get(k).getDate()+" "+
-							Oneday.get(k).getStart()+" "+action+";";
-					leave++;
-				}
-			}
+				addPattern(sid,sname+"号同学在一天内出现"+sleep+"次睡觉行为，建议了解相关情况。");
 			if(leave>=3)
-				addPattern(sid,sname+"号同学在1天内出现"+leave+"次离开教室的行为:<br>"+description);
+				addPattern(sid,sname+"号同学在一天内出现"+leave+"次离开教室的行为，建议了解相关情况。");
 			//某个同学在三天内超过十次出现异常情况；
-			if(Threeday.size()>=10){
-				description="";
-				for(int k=0;k<Threeday.size();k++){
-					description=description+Threeday.get(i).getDate()+" "+
-							Threeday.get(i).getStart()+" "+Threeday.get(k).getAction()+";<br>";
-				}
-				addPattern(sid,sname+"同学在3天内出现"+Threeday.size()+"次异常行为:<br>"+description);
-			}
+			if(Threeday.size()>=10) 
+				addPattern(sid,sname+"号同学连续三天内出现"+Threeday.size()+"次异常行为，建议了解相关情况。");
 			//某个同学在一周内超过 三个时段迟到或者缺勤。
 			int late=0;
-			description="";
+			leave=0;
 			for(int k=0;k<Weekday.size();k++){
 				String action=Weekday.get(k).getAction();
-				if(action.equals("迟到")||action.equals("缺勤")){
-					late++;
-					description=description+Weekday.get(i).getDate()+" "+
-							Weekday.get(i).getStart()+" "+Weekday.get(k).getAction()+";<br>";
-				}
+				if(action.equals("迟到")||action.equals("缺勤"))late++;
+				if(action.contains("离开")||action.equals("早退"))leave++;
 			}
 			if(late>=3)
-				addPattern(sid,sname+"同学在一周内出现"+late+"次迟到或者是缺勤行为:<br>"+description);
+				addPattern(sid,sname+"号同学在一周内出现"+late+"次迟到或者是缺勤行为，建议了解相关情况。");
+			if(leave>=3) team.add(sid);
 		}
 		//某两位同学在一周内超过三个时段内先后出教室；考虑几次相差的时间均不超过xx
 		if(team.size()>1){
@@ -352,7 +322,6 @@ public class SelfstudyImpl implements SelfstudyService {
 		ArrayList<Behavior> beh1=new ArrayList<Behavior>();
 		List<Behavior> Week2=behavior.getByDate(cid,date,s1);
 		ArrayList<Behavior> beh2=new ArrayList<Behavior>();
-		String description="";
 		for(int i=0;i<Week1.size();i++){
 			String action=Week1.get(i).getAction();
 			if(action.contains("离开")||action.equals("早退")){
@@ -383,14 +352,7 @@ public class SelfstudyImpl implements SelfstudyService {
 					t2.setTime(sdf.parse(cl2));
 					long end = t2.getTimeInMillis();
 					long between=(end - begin)/(1000);
-					if(between>-1*space&&between<space) {
-						key++;
-						Behavior temp1=beh1.get(i);
-						Behavior temp2=beh2.get(k);
-						description=description+temp1.getDate()+" "+stu_repo.findName(cid, s1)+
-								" "+temp1.getStart()+"-"+temp1.getEnd()+";"+stu_repo.findName(cid, s2)+
-								" "+temp2.getStart()+"-"+temp2.getEnd()+";<br>";
-					}
+					if(between>-1*space&&between<space) key++;
 				}
 			}
 		}
@@ -405,6 +367,7 @@ public class SelfstudyImpl implements SelfstudyService {
 		
 		Pattern temp = new Pattern();
 		temp.setClass_id(cid);
+		temp.setHandle_id("");
 		temp.setId(0);
 		Date day = new Date();
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");

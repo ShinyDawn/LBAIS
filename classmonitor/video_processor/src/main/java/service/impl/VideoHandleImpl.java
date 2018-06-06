@@ -5,9 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +32,9 @@ public class VideoHandleImpl implements VideoHandleService {
 		String[] fileName = file.list();
 		for (int i = 0; i < fileName.length; i++) {
 			String content = readFile(path + "\\" + fileName[i]);
-			JSONObject jsonObject = new JSONObject(content);
+			JSONObject jsonObject = JSONObject.fromObject(content);
 			JSONArray people = jsonObject.getJSONArray("people");
-			System.out.println("people:" + people.length());
+			System.out.println("people:" + people.size());
 			//
 			for (int k = 0; k < 1; k++) {
 				// String temp_s = people.getString(k);
@@ -145,7 +144,7 @@ public class VideoHandleImpl implements VideoHandleService {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String file = "E:\\百度云下载\\2018.5.4\\jsonOut\\IMG_1928";
+		String file = "D:\\workspace\\video\\jsonOut\\IMG_1928";
 		new VideoHandleImpl().handle(file);
 	}
 }

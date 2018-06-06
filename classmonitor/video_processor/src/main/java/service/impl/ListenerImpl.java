@@ -67,19 +67,22 @@ public class ListenerImpl implements ListenerService, Observer {
 				Comparator<RaiseHandStudent> c = new Comparator<RaiseHandStudent>() {
 					@Override
 					public int compare(RaiseHandStudent o1, RaiseHandStudent o2) {
-						if (o1.getStandup() == 0 && o2.getStandup() != 0)
-							return -1;
-						else if (o1.getStandup() != 0 && o2.getStandup() == 0)
+						int standup1 = o1.getStandup();
+						int standup2 = o2.getStandup();
+						// 发言次数越多，发言指数越大
+						double standupRate1 = (double) standup1 * (1 + (double) standup1 / 10.0);
+						double standupRate2 = (double) standup2 * (1 + (double) standup2 / 10.0);
+						// 第一次举手，有奖励
+						if (o1.getRaiseHand() == 1)
+							return -1; 
+						else if (o2.getRaiseHand() == 1)
 							return 1;
-						else if (o1.getStandup() == 0 && o2.getStandup() == 0 && o1.getRaiseHand() >= o2.getRaiseHand())
-							return -1;
-						else if (o1.getStandup() == 0 && o2.getStandup() == 0 && o1.getRaiseHand() < o2.getRaiseHand())
-							return 1;
-						else if ((double) o1.getStandup() / o1.getRaiseHand() < (double) o2.getStandup()
-								/ o2.getRaiseHand())
+						// 多次举手，将举手次数与发言指数相减，所得值较大的优先级更高
+						else if ((double) o1.getRaiseHand() - standupRate1 < (double) o2.getRaiseHand() -standupRate2)
 							return -1;
 						else
 							return 1;
+
 					}
 				};
 				raiseHandStudent.sort(c);

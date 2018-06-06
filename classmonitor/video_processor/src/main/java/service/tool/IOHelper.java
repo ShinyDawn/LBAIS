@@ -1,10 +1,12 @@
 package service.tool;
 
 import org.apache.commons.io.FileUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.multipart.MultipartFile;
+
+import service.util.PathConfig;
 
 import java.awt.geom.Point2D;
 import java.io.*;
@@ -19,9 +21,9 @@ import java.util.List;
  * Created by elva on 2018/5/16.
  */
 public class IOHelper {
-    public static List<List<Point2D>> dealWithJson() throws IOException {
+    public static List<List<Point2D>> dealWithJson() throws Exception {
 
-        String pathStart = "D:/2018.5.4/jsonOut/IMG_1961/IMG_1961_00000000";
+        String pathStart = "D:/workspace\\video\\jsonOut/IMG_1961/IMG_1961_00000000";
         DecimalFormat f = new DecimalFormat("0000");
         String pathEnd = "_keypoints.json";
 
@@ -37,10 +39,10 @@ public class IOHelper {
             List<Point2D> current = new ArrayList<>();
 
             String content = FileUtils.readFileToString(file);
-            JSONObject jsonObject = new JSONObject(content);
-            JSONArray jsonArray = jsonObject.getJSONArray("people");
+            JSONObject object = JSONObject.fromObject(content);
+            JSONArray jsonArray = object.getJSONArray("people");
 
-            for (int i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject people = jsonArray.getJSONObject(i);
                 JSONArray pose = people.getJSONArray("pose_keypoints_2d");
                 Point2D.Double p = new Point2D.Double(pose.getDouble(3), pose.getDouble(4));

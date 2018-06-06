@@ -70,8 +70,8 @@
 							var x_insert = 700 / x;
 							var y_insert = 400 / y;
 							var range = 10;
-							var avg = 1;
-							var count = 0;
+							var avg = 0;
+							var count = 1;
 
 							var dense = x_insert / (range * 6);
 							var dense2 = y_insert / (range * 6);
@@ -114,7 +114,7 @@
 
 							for (var i = 0; i < data.length; i++) {
 								for (var j = 0; j < data[i].length; j++) {
-									if (data[i][j] != 1) {
+									if (data[i][j] < 1) {
 										avg += data[i][j];
 										count++;
 									}
@@ -163,10 +163,12 @@
 										for (var m = 0; m < dense2; m++) {
 											heatData
 													.push([
-															i * x_insert / 6
-																	+ k * range,
-															j * y_insert / 6
-																	+ m * range,
+															i * x_insert
+																	/ 6 + k
+																	* range,
+															400 - j * y_insert
+																	/ 6 + m
+																	* range,
 															arr1[i][j] ]);
 										}
 									}
@@ -176,7 +178,9 @@
 							if (count != 0)
 								avg = avg / count * 100;
 							else
-								avg = avg * 100;
+								avg = 1;
+							if (avg > 100)
+								avg = 100;
 							avg = avg.toFixed(1);
 							document.getElementById("percent").innerText = avg;
 							var chart = echarts.init(document
@@ -191,10 +195,10 @@
 										offset : 0.6,
 										color : '#7cd813'
 									}, {
-										offset : 0.84,
+										offset : 0.88,
 										color : '#ece309'
 									}, {
-										offset : 0.88,
+										offset : 0.90,
 										color : '#f68413'
 									}, {
 										offset : 0.95,
@@ -211,7 +215,7 @@
 					});
 		}
 		heatMap();
-		setInterval("heatMap()", "30000");
+		setInterval("heatMap()", "6000");
 		/*]]>*/
 	</script>
 

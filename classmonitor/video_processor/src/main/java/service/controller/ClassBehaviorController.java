@@ -13,7 +13,7 @@ import service.service.ListenerService;
 
 @RestController
 public class ClassBehaviorController{
-//	@Autowired
+	@Autowired
 	private BehaviorService behaviorService;
 	@Autowired
 	private ListenerService listener;

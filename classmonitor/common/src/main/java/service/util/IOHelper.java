@@ -1,4 +1,4 @@
-package service.tool;
+package service.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,10 +9,11 @@ import java.io.InputStreamReader;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.multipart.MultipartFile;
 
+import service.util.PathConfig;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import service.tool.PathConfig;
 
 public class IOHelper {
 

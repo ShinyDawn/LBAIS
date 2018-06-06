@@ -7,8 +7,8 @@ import java.util.List;
 
 import service.model.StudentPose;
 import service.service.PoseService;
-import service.tool.IOHelper;
 import service.tool.JsonParser;
+import service.util.IOHelper;
 
 public class ClassBehaviorGetter implements PoseService {
 

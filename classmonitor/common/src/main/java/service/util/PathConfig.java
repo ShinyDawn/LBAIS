@@ -1,4 +1,4 @@
-package service.tool;
+package service.util;
 
 public class PathConfig {
 
