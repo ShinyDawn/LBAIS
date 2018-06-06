@@ -30,17 +30,17 @@
 
             <div class="nav-collapse collapse navbar-inverse-collapse">
                 <ul class="nav pull-left">
-                    <li><a  href="http://localhost:10001/students">
+                    <li><a href="http://localhost:10001/students">
                         学生分析
                     </a></li>
-                    <li><a href="http://localhost:10001/subjectHistory">
+                    <li><a href="http://localhost:10002/sub">
                         课堂状态
                     </a></li>
-                    <li><a class='active' href="http://localhost:10001/study">
-                        自习报警
+                    <li><a class='active' href="study.html">
+                        自习提醒
                     </a></li>
                     <li><a href="http://localhost:10001/approval">
-                        请假管理
+                        请假录入
                     </a></li>
 
                 </ul>
@@ -82,46 +82,40 @@
                         </div>
                     </div>
                     
-                        <!-- <div class="btn-box-row row-fluid">
-                            <a href="#" class="btn-box big span4"><i class=" icon-random"></i><b>1</b>
-                                <p class="text-muted">
-                                    待处理警报</p>
-                            </a><a href="#" class="btn-box big span4"><i class="icon-user"></i><b>2</b>
-                            <p class="text-muted">
-                                待核实警报</p>
-                        </a><a href="#" class="btn-box big span4"><i class="icon-bullhorn"></i><b>1</b>
-                            <p class="text-muted">
-                                待处理模式</p>
-                        </a>
-                        </div>  -->
                         
-                        <div id="content">
+                        
+                        <!-- <div id="content">
   							<div class="notification blue">
 								<div class="info">
-							          <p id="numA_handle">待处理警报：1</p>
+									<p id="numA_handle">待处理警报：1</p>
 							          <p id="numA_confirm">待处理警报：2</p>
 							          <p id="numP_handle">待处理警报：2</p>
 							    </div>
-							    <div class="icon">
+							     <div class="icon">
 							    	<i class="fa fa-newspaper-o"></i>
 							    	
 							    </div>
 							</div>
-							<!-- <div class="notification blue">
-								<div class="info">
-							          <p>待核实警报：1</p>
-							    </div>
-							    <div class="icon">
-							    </div>
-							</div>
-							<div class="notification blue">
-								<div class="info">
-							          <p>待处理模式：1</p>
-							    </div>
-							    <div class="icon">
-							    </div>
-							</div> -->
-					  	</div>
+					  	</div> -->
+					  	
+					<div class="module message">
+					  	<table class="table table-message">
+                                <tbody id="ware">
+                                	<tr class="heading">
+										<td class="cell-time align-center">提醒事项</td>
+                                	</tr>
+                                	<tr class="task">
+                                		<td class="cell-time align-center" id="numA_handle"></td>
+                                	</tr>
+                                	<tr class="task">
+                                		<td class="cell-time align-center" id="numA_confirm"></td>
+                                	</tr>
+                                	<tr class="task">
+                                		<td class="cell-time align-center" id="numP_handle"></td>
+                                	</tr>
+                                </tbody>
+                        </table>
+					</div>
 								
 
                     <div class="module message">
@@ -213,9 +207,11 @@
 <script th:src="@{js/ref/jquerysession.js}"></script>
 <script type="text/javascript">
 
-window.cid=2;
+//window.cid=2;
 
 window.onload=function (){
+	window.cid=$.session.get('cid');
+	if(window.cid==null) window.cid=2;
 	AlarmList(window.cid);
 	PatternList(window.cid);
 	getNum(window.cid);
@@ -241,7 +237,7 @@ window.onload=function (){
   		  ,shade: 0.1 //遮罩透明度
   		  ,maxmin: true //允许全屏最小化
   		  ,anim: 2 //0-6的动画形式，-1不开启
-  		  ,content: 'http://localhost:10001/handle_alarm.html'
+  		  ,content: 'http://localhost:10001/handle_alarm.html?alarm_id='+id
   		  });
         }
     function handle_pattern(id){
