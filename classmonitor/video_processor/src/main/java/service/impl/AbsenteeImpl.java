@@ -190,13 +190,16 @@ public class AbsenteeImpl implements AbsenteeService {
     }
 
     public static void main(String[] args) throws Exception {
+        //这一步必须要有，获得初始的座位表，目前初始的座位表是写好的，日后可以拓展修改
         SeatHelper.init();
+
         InitInfo initInfo = new InitInfo();
         initInfo.setSeatTable(SeatHelper.getInitalSeatArea());
         initInfo.setCid(2);
         initInfo.setDate("2018-05-17");
         initInfo.setTid(1);
         initInfo.setPlace("语文");
+
         new AbsenteeImpl().analyseAbsentee(IOHelper.dealWithJson(), initInfo);
     }
 

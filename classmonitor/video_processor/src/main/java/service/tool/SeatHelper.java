@@ -9,7 +9,10 @@ import java.util.*;
  * Created by elva on 2018/5/16.
  */
 public class SeatHelper {
+
+    //初始的座位表，学号 + 座位区域
     private static Map<Integer, List> initalSeatArea=new HashMap<>();
+
     public static final double offset_x = 40.0;
     public static final double offset_y=40.0;
 
