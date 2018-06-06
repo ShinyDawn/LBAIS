@@ -76,27 +76,17 @@
                 <div class="content">
                     <div class="module">
                         <div class="module-head">
-                            <a class="icon-sort-down pull-left" href="#"></a>
-                            <h3 class='' style="margin-left: 30px">一年级3班</h3>
+                        <div class="dropdown">
+                             <div data-toggle="dropdown">
+                                 <a class="icon-sort-down pull-left"></a>
+                                 <h3 class='' style="margin-left: 30px" id="current_cname"></h3>
+                             </div>
+                             <ul class="dropdown-menu" id="class_list">
+                             </ul>
+                         </div>
                         </div>
                     </div>
                     
-                        
-                        
-                        <!-- <div id="content">
-  							<div class="notification blue">
-								<div class="info">
-									<p id="numA_handle">待处理警报：1</p>
-							          <p id="numA_confirm">待处理警报：2</p>
-							          <p id="numP_handle">待处理警报：2</p>
-							    </div>
-							     <div class="icon">
-							    	<i class="fa fa-newspaper-o"></i>
-							    	
-							    </div>
-							</div>
-					  	</div> -->
-					  	
 					<div class="module message">
 					  	<table class="table table-message">
                                 <tbody id="ware">
@@ -204,9 +194,9 @@
 <script th:src="@{js/layer/layer.js}" type="text/javascript"></script>
 <script th:src="@{scripts/study/study.js}" type="text/javascript"></script>
 <script th:src="@{js/ref/jquerysession.js}"></script>
-<script type="text/javascript">
 <script th:src="@{scripts/js/util.js}"></script>
 
+<script type="text/javascript">
 //window.cid=2;
 
 window.onload=function (){
@@ -214,6 +204,8 @@ window.onload=function (){
 	if(window.cid==null) window.cid=2;
 	
 	changeUserInfo();
+	var sequenceId = $.session.get('current_sequence_id');//默认为0
+	if(sequenceId==null) sequenceId=0;
 	getClassInfo(sequenceId);//在这里获得cid
 	
 	AlarmList(window.cid);
@@ -260,7 +252,6 @@ window.onload=function (){
         }
 
 
-  
 </script>
 </body>
 </html>
