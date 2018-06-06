@@ -87,9 +87,12 @@
 					itemStyle : {
 						normal : {
 							color : function(params) {
-                                var colorList = ['#37a2da', '#67e0e3', '#ffe080', '#fbb8a2', '#e58dc2', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
-
-                                return colorList[params.dataIndex];
+								var colorList = [ '#37a2da', '#67e0e3',
+										'#ffe080', '#fbb8a2', '#e58dc2',
+										'#61a0a8', '#d48265', '#91c7ae',
+										'#749f83', '#ca8622', '#bda29a',
+										'#6e7074', '#546570', '#c4ccd3' ];
+								return colorList[params.dataIndex];
 							},
 							lineStyle : {
 								color : '#1E90FF'
@@ -132,9 +135,12 @@
 					itemStyle : {
 						normal : {
 							color : function(params) {
-                                var colorList = ['#37a2da', '#67e0e3', '#ffe080', '#fbb8a2', '#e58dc2', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
-
-                                return colorList[params.dataIndex];
+								var colorList = [ '#37a2da', '#67e0e3',
+										'#ffe080', '#fbb8a2', '#e58dc2',
+										'#61a0a8', '#d48265', '#91c7ae',
+										'#749f83', '#ca8622', '#bda29a',
+										'#6e7074', '#546570', '#c4ccd3' ];
+								return colorList[params.dataIndex];
 							},
 							lineStyle : {
 								color : '#1E90FF'
@@ -178,9 +184,9 @@
 					data : data[0],
 					itemStyle : {
 						normal : {
-							color : '#37a2da',
+							color : '#f14e22',
 							lineStyle : {
-								color : '#37a2da'
+								color : '#f14e22'
 							}
 						}
 					},
@@ -190,9 +196,9 @@
 					data : data[1],
 					itemStyle : {
 						normal : {
-							color : '#67e0e3',
+							color : '#1e9f19',
 							lineStyle : {
-								color : '#67e0e3'
+								color : '#1e9f19'
 							}
 						}
 					},
@@ -202,9 +208,9 @@
 					data : data[2],
 					itemStyle : {
 						normal : {
-							color : '#ffe080',
+							color : '#e3f245',
 							lineStyle : {
-								color : '#ffe080'
+								color : '#e3f245'
 							}
 						}
 					},
@@ -214,9 +220,9 @@
 					data : data[3],
 					itemStyle : {
 						normal : {
-							color : '#fbb8a2',
+							color : '#11b8c0',
 							lineStyle : {
-								color : '#fbb8a2'
+								color : '#11b8c0'
 							}
 						}
 					},
@@ -226,9 +232,9 @@
 					data : data[4],
 					itemStyle : {
 						normal : {
-							color : '#e58dc2',
+							color : '#1E90FF',
 							lineStyle : {
-								color : '#e58dc2'
+								color : '#1E90FF'
 							}
 						}
 					},
@@ -272,9 +278,9 @@
 					data : data[0],
 					itemStyle : {
 						normal : {
-							color : '#37a2da',
+							color : '#f14e22',
 							lineStyle : {
-								color : '#37a2da'
+								color : '#f14e22'
 							}
 						}
 					},
@@ -284,9 +290,9 @@
 					data : data[1],
 					itemStyle : {
 						normal : {
-							color : '#67e0e3',
+							color : '#1e9f19',
 							lineStyle : {
-								color : '#67e0e3'
+								color : '#1e9f19'
 							}
 						}
 					},
@@ -296,9 +302,9 @@
 					data : data[2],
 					itemStyle : {
 						normal : {
-							color : '#ffe080',
+							color : '#e3f245',
 							lineStyle : {
-								color : '#ffe080'
+								color : '#e3f245'
 							}
 						}
 					},
@@ -308,9 +314,9 @@
 					data : data[3],
 					itemStyle : {
 						normal : {
-							color : '#fbb8a2',
+							color : '#11b8c0',
 							lineStyle : {
-								color : '#fbb8a2'
+								color : '#11b8c0'
 							}
 						}
 					},
@@ -320,9 +326,9 @@
 					data : data[4],
 					itemStyle : {
 						normal : {
-							color : '#e58dc2',
+							color : '#1E90FF',
 							lineStyle : {
-								color : '#e58dc2'
+								color : '#1E90FF'
 							}
 						}
 					},
@@ -347,20 +353,13 @@
 				<div class="nav-collapse collapse navbar-inverse-collapse">
 					<ul class="nav pull-left">
 						<li><a class='active' href="http://localhost:10001/students">
-							学生分析
-						</a></li>
-						<li><a href="http://localhost:10001/subjectHistory">
-							课堂状态
-						</a></li>
-						<li><a href="http://localhost:10001/study">
-							自习提醒
-						</a></li>
-						<li><a href="http://localhost:10001/approval">
-							请假管理
-						</a></li>
+								学生详情 </a></li>
+						<li><a href="#"> 课堂分析 </a></li>
+						<li><a href="study.html"> 自习报警 </a></li>
+						<li><a href="http://localhost:10001/approval">请假录入 </a></li>
 					</ul>
 					<ul class="nav pull-right">
-						<li><a><span id="time_tip">下午好，</span>&nbsp;<span id="teacher_name">胡风</span>老师</a></li>
+						<li><a><i id="time_tip">早上好</i>&nbsp;<i id="teacher_name">胡风</i>老师</a></li>
 						<li class="nav-user dropdown"><a href="#"
 							class="dropdown-toggle" data-toggle="dropdown"> <img
 								src="../images/user.png" class="nav-avatar" /> <b class="caret"></b></a>
