@@ -8,6 +8,6 @@ public class SubjectHistoryController {
 	
 	@RequestMapping(value = "/subjectHistory")
 	public String index() {
-	    return "shTmp";
+	    return "subjectHistory";
 	}
 }

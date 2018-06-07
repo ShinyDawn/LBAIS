@@ -18,7 +18,7 @@ import service.repository.ScoreRepository;
 import service.repository.SubjectRepository;
 import service.repository.TestRepository;
 import service.service.SubjectService;
-import service.tool.PathConfig;
+import service.util.PathConfig;
 import service.vo.SubjectVO;
 
 @Service

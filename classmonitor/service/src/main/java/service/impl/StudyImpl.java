@@ -196,7 +196,7 @@ public class StudyImpl implements StudyService{
 		return pattern.getNum_handle(cid);
 	}
 	
-	public static void main(String[] args) throws JSONException{
+	public static void main(String[] args) throws Exception{
 //		StudyImpl.test();
 	}
 }

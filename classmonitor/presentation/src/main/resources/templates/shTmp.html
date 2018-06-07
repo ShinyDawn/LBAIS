@@ -17,9 +17,16 @@
 <script th:src="@{js/ref/jquerysession.js}"></script>
 <script th:src="@{scripts/flot/jquery.flot.js}"></script>
 <script th:src="@{scripts/echarts.min.js}"></script>
+<script th:src="@{scripts/js/util.js}"></script>
 <script th:src="@{js/websocket.js}" type="text/javascript"></script>
 <script>
 	/*<![CDATA[*/
+
+	window.onload = function() {
+		changeUserInfo();
+		getClassInfo(0);
+
+	};
 
 	function backToIndex() {
 		window.location.href = "http://localhost:10001/students";
@@ -391,14 +398,18 @@
 						<div class="module">
 							<div class="module-head">
 								<div class="dropdown">
-									<div data-toggle="dropdown">
-										<a class="icon-sort-down pull-left"></a>
-										<h3 class='' style="margin-left: 30px" id="current_cname">1年级2班</h3>
+									<div class="pull-left">
+										<div data-toggle="dropdown">
+											<a class="icon-sort-down pull-left"></a>
+											<h3 class='' style="margin-left: 30px" id="current_cname"></h3>
+										</div>
+										<ul class="dropdown-menu" id="class_list">
+										</ul>
 									</div>
-									<ul class="dropdown-menu" id="class_list">
-										<li><a>1年级2班</a></li>
-									</ul>
 								</div>
+								<h3>
+									<!--使得module-head有留白-->
+								</h3>
 							</div>
 						</div>
 

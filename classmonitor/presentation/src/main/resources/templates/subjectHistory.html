@@ -17,16 +17,26 @@
 <script th:src="@{js/ref/jquerysession.js}"></script>
 <script th:src="@{scripts/flot/jquery.flot.js}"></script>
 <script th:src="@{scripts/echarts.min.js}"></script>
-<script th:src="@{js/websocket.js}" type="text/javascript"></script>
+<script th:src="@{scripts/js/util.js}"></script>
+<script th:src="@{js/websocket.js}" type="text/javascript"></script> 
 <script>
 	/*<![CDATA[*/
+
+	window.onload = function() {
+		changeUserInfo();
+		getClassInfo(0);
+
+	};
 	var sub = new Array();
+
+	var cid = $.session.get('current_cid');
+
 	function init() {
 		$.ajax({
 			type : "POST",
 			url : "http://localhost:10002/sub",
 			data : {
-				cid : 2
+				cid : cid
 			},
 			async : false,
 			crossDomain : true,
@@ -79,136 +89,146 @@
 
 		// 指定图表的配置项和数据
 		if (type == 1) {
-			$
-					.ajax({
-						type : "POST",
-						url : "http://localhost:10002/data",
-						data : {
-							cid : 2,
-							type : type
+			$.ajax({
+				type : "POST",
+				url : "http://localhost:10002/data",
+				data : {
+					cid : cid,
+					type : type
+				},
+				crossDomain : true,
+				success : function(data) {
+					for (var i = 0; i < data.length; i++) {
+						data[i] = parseInt(data[i]);
+					}
+					option = {
+						tooltip : {
+							trigger : 'axis'
 						},
-						crossDomain : true,
-						success : function(data) {
-							for (var i = 0; i < data.length; i++) {
-								data[i] = parseInt(data[i]);
+						grid : {
+							left : '3%',
+							right : '4%',
+							bottom : '3%',
+							containLabel : true
+						},
+						xAxis : {
+							type : 'category',
+							data : sub,
+							axisTick : {
+								alignWithLabel : true
 							}
-							option = {
-								tooltip : {
-									trigger : 'axis'
-								},
-								grid : {
-									left : '3%',
-									right : '4%',
-									bottom : '3%',
-									containLabel : true
-								},
-								xAxis : {
-									type : 'category',
-									data : sub,
-									axisTick : {
-										alignWithLabel : true
-									}
-								},
-								yAxis : {
-									type : 'value'
-								},
-								label : {
-									normal : {
-										show : true,
-										position : 'top',
-										textStyle : {
-											color : 'grey'
-										}
-									}
-								},
-								series : [ {
-									type : 'bar',
-									data : data,
-									barWidth : '50%',
-									itemStyle : {
-										normal : {
-											color : function(params) {
-                                                var colorList = ['#37a2da', '#67e0e3', '#ffe080', '#fbb8a2', '#e58dc2', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
-                                                return colorList[params.dataIndex];
-											},
-											lineStyle : {
-												color : '#1E90FF'
-											}
-										}
+						},
+						yAxis : {
+							type : 'value'
+						},
+						label : {
+							normal : {
+								show : true,
+								position : 'top',
+								textStyle : {
+									color : 'grey'
+								}
+							}
+						},
+						series : [ {
+							type : 'bar',
+							data : data,
+							barWidth : '50%',
+							itemStyle : {
+								normal : {
+									color : function(params) {
+										var colorList = [ '#37a2da', '#67e0e3',
+												'#ffe080', '#fbb8a2',
+												'#e58dc2', '#61a0a8',
+												'#d48265', '#91c7ae',
+												'#749f83', '#ca8622',
+												'#bda29a', '#6e7074',
+												'#546570', '#c4ccd3' ];
+										return colorList[params.dataIndex];
 									},
-								} ]
-							};
-							// 使用刚指定的配置项和数据显示图表。
-							myChart.setOption(option);
-						}
-					});
+									lineStyle : {
+										color : '#1E90FF'
+									}
+								}
+							},
+						} ]
+					};
+					// 使用刚指定的配置项和数据显示图表。
+					myChart.setOption(option);
+				}
+			});
 		}
 
 		else if (type == 2) {
-			$
-					.ajax({
-						type : "POST",
-						url : "http://localhost:10002/data",
-						data : {
-							cid : 2,
-							type : type
+			$.ajax({
+				type : "POST",
+				url : "http://localhost:10002/data",
+				data : {
+					cid : cid,
+					type : type
+				},
+				crossDomain : true,
+				success : function(data) {
+					for (var i = 0; i < data.length; i++) {
+						data[i] = parseInt(data[i]);
+					}
+					option = {
+						tooltip : {
+							trigger : 'axis'
 						},
-						crossDomain : true,
-						success : function(data) {
-							for (var i = 0; i < data.length; i++) {
-								data[i] = parseInt(data[i]);
+						grid : {
+							left : '3%',
+							right : '4%',
+							bottom : '3%',
+							containLabel : true
+						},
+						xAxis : {
+							type : 'category',
+							data : sub,
+							axisTick : {
+								alignWithLabel : true
 							}
-							option = {
-								tooltip : {
-									trigger : 'axis'
-								},
-								grid : {
-									left : '3%',
-									right : '4%',
-									bottom : '3%',
-									containLabel : true
-								},
-								xAxis : {
-									type : 'category',
-									data : sub,
-									axisTick : {
-										alignWithLabel : true
-									}
-								},
-								yAxis : {
-									type : 'value'
-								},
-								label : {
-									normal : {
-										show : true,
-										position : 'top',
-										textStyle : {
-											color : 'grey'
-										}
-									}
-								},
-								series : [ {
-									type : 'bar',
-									data : data,
-									barWidth : '50%',
-									itemStyle : {
-										normal : {
-											color : function(params) {
-                                                var colorList = ['#37a2da', '#67e0e3', '#ffe080', '#fbb8a2', '#e58dc2', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
+						},
+						yAxis : {
+							type : 'value'
+						},
+						label : {
+							normal : {
+								show : true,
+								position : 'top',
+								textStyle : {
+									color : 'grey'
+								}
+							}
+						},
+						series : [ {
+							type : 'bar',
+							data : data,
+							barWidth : '50%',
+							itemStyle : {
+								normal : {
+									color : function(params) {
+										var colorList = [ '#37a2da', '#67e0e3',
+												'#ffe080', '#fbb8a2',
+												'#e58dc2', '#61a0a8',
+												'#d48265', '#91c7ae',
+												'#749f83', '#ca8622',
+												'#bda29a', '#6e7074',
+												'#546570', '#c4ccd3' ];
 
-                                                return colorList[params.dataIndex];
-											},
-											lineStyle : {
-												color : '#1E90FF'
-											}
-										}
+										return colorList[params.dataIndex];
 									},
-								} ]
-							};
-							// 使用刚指定的配置项和数据显示图表。
-							myChart.setOption(option);
-						}
-					});
+									lineStyle : {
+										color : '#1E90FF'
+									}
+								}
+							},
+						} ]
+					};
+					// 使用刚指定的配置项和数据显示图表。
+					myChart.setOption(option);
+				}
+			});
 		}
 
 		else if (type == 3) {
@@ -216,7 +236,7 @@
 				type : "POST",
 				url : "http://localhost:10002/data",
 				data : {
-					cid : 2,
+					cid : cid,
 					type : type
 				},
 				crossDomain : true,
@@ -320,7 +340,7 @@
 				type : "POST",
 				url : "http://localhost:10002/data",
 				data : {
-					cid : 2,
+					cid : cid,
 					type : type
 				},
 				crossDomain : true,
@@ -433,23 +453,17 @@
 
 				<div class="nav-collapse collapse navbar-inverse-collapse">
 					<ul class="nav pull-left">
-						<li><a href="http://localhost:10001/students">
-							学生分析
+						<li><a href="http://localhost:10001/students"> 学生分析 </a></li>
+						<li><a href="http://localhost:10001/subjectHistory"> 课堂状态
 						</a></li>
-						<li><a href="http://localhost:10001/subjectHistory">
-							课堂状态
-						</a></li>
-						<li><a href="http://localhost:10001/study">
-							自习报警
-						</a></li>
+						<li><a href="http://localhost:10001/study"> 自习报警 </a></li>
 						<li><a class='active' href="http://localhost:10001/approval">
-							请假管理
-						</a></li>
+								请假管理 </a></li>
 					</ul>
 					<ul class="nav pull-right">
 						<li><a><i id="time_tip">早上好</i>&nbsp;<i id="teacher_name">胡风</i>老师</a></li>
 						<li class="nav-user dropdown"><a href="#"
-														 status					class="dropdown-toggle" data-toggle="dropdown"> <img
+							class="dropdown-toggle" data-toggle="dropdown"> <img
 								src="../images/user.png" class="nav-avatar" /> <b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<li><a href="#">座位表录入</a></li>
@@ -478,14 +492,18 @@
 						<div class="module">
 							<div class="module-head">
 								<div class="dropdown">
-									<div data-toggle="dropdown">
-										<a class="icon-sort-down pull-left"></a>
-										<h3 class='' style="margin-left: 30px" id="current_cname">1年级2班</h3>
+									<div class="pull-left">
+										<div data-toggle="dropdown">
+											<a class="icon-sort-down pull-left"></a>
+											<h3 class='' style="margin-left: 30px" id="current_cname"></h3>
+										</div>
+										<ul class="dropdown-menu" id="class_list">
+										</ul>
 									</div>
-									<ul class="dropdown-menu" id="class_list">
-										<li><a>1年级2班</a></li>
-									</ul>
 								</div>
+								<h3>
+                                    <!--使得module-head有留白-->
+                                </h3>
 							</div>
 						</div>
 

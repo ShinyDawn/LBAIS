@@ -83,7 +83,7 @@ public class PositivityImpl implements PositivityService {
 			List<Curriculum> c = curriculumRepo.findByCidAndDayAndCourse(cid, day, courseList.get(i));
 			if (c != null && c.size() > 0) {
 				int hour = timeRepo.getCourseHour(cid, c.get(0).getTid());
-				count = (count * 100) / (number * hour) < 100 ? (count * 100) / (number * hour * c.size()) : 100;
+				count = (count * 100) / (number * hour) < 100 ? (count * 100) / (number * hour / 60 * c.size()) : 100;
 				positivity[i][0] = count;
 
 			} else {
