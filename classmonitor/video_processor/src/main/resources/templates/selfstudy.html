@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>自习项目选择</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script th:src="@{/js/ref/jquery-3.2.1.min.js}"></script>
+<script th:src="@{js/ref/jquerysession.js}"></script>
+<script th:src="@{js/ref/bootstrap.min.js}"></script>
+<script th:src="@{js/layer.js}"></script>
+<link th:href="@{css/bootstrap.css}" rel="stylesheet" />
+</head>
+<body>
+<h3>&nbsp;&nbsp;自习课视频运行</h3>
+<button class="btn btn-primary" style="margin:0px 10px;" onclick="takeClass(1960)">&nbsp;&nbsp;1960&nbsp;&nbsp;</button>
+<button class="btn btn-primary" style="margin:0px 10px;" onclick="takeClass(1961)">&nbsp;&nbsp;1961&nbsp;&nbsp;</button>
+<h3>&nbsp;&nbsp;模式行为运行</h3>
+<button class="btn btn-primary" style="margin:0px 10px;" onclick="handle_pattern()">&nbsp;&nbsp;运行&nbsp;&nbsp;</button>
+
+
+<script type="text/javascript">
+window.onload=function (){
+}
+
+
+
+function takeClass(num){
+	$.ajax({
+    url: 'http://218.94.159.98:10003/takeClass',
+    //dataType: 'String',
+    async: false,
+    //timeout : 300000,//单次超时长连接时间为分钟
+    type: 'POST',
+    data: {'num': num},
+    async: false,
+    success: function (obj) {
+    	alert(obj)
+       },
+    error: function(){
+    	alert("操作失败")
+        }
+	});
+}
+
+function handle_pattern(){
+	$.ajax({
+    url: 'http://218.94.159.98:10003/pattern',
+    //dataType: 'String',
+    type: 'POST',
+    async: false,
+    success: function (obj) {
+    	alert(obj)
+       },
+    error: function(){
+    	alert("操作失败")
+        }
+	});
+}
+
+
+
+</script>
+</body>
+</html>

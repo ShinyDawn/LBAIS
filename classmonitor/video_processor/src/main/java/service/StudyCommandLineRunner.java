@@ -23,10 +23,9 @@ public class StudyCommandLineRunner implements CommandLineRunner{
 //		temp.setId(0);
 //		behavior.save(temp);
 //		System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
-		study.takeClass("D:\\workspace\\video\\jsonOut\\IMG_1961",2,"../video/alarm2.mp4");
+		//study.takeClass("D:\\workspace\\video\\jsonOut\\IMG_1961",2,"../video/alarm2.mp4");
 		//study.checkPattern(2);
-		System.out.println("This will be execute when the project was started!");
-		// TODO Auto-generated method stub
+		//System.out.println("This will be execute when the project was started!");
 		
 	}
 

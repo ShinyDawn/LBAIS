@@ -55,7 +55,7 @@ public class SelfstudyImpl implements SelfstudyService {
 			put("缺席", 2.0);
 			put("离开", 3.0);
 			put("早退", 3.0);
-			put("站立", 1.0);
+			put("站立", 3.0);
 			put("游荡", 4.0);
 			put("睡觉", 1.0);
 		}
@@ -557,7 +557,8 @@ public class SelfstudyImpl implements SelfstudyService {
 					alarm_id = turnvalue.getId();
 					sendPost("http://localhost:10002/study/alertAlarm?alarm_id="+alarm_id, "");
 				System.out.println(start/30+" "+alarm_num+" "+description);
-				}else{
+				}else if(alarm_num<alarm_stan && alarm_id !=0){
+					sendPost("http://localhost:10002/study/closeAlarm?alarm_id="+alarm_id, "");
 					alarm_id=0;
 				}
 				
@@ -565,7 +566,7 @@ public class SelfstudyImpl implements SelfstudyService {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		//new SelfstudyImpl().takeClass("E:\\百度云下载\\2018.5.4\\jsonOut\\IMG_1960",2);
+		new SelfstudyImpl().takeClass("E:\\百度云下载\\2018.5.4\\jsonOut\\IMG_1960",2,"../video/alarm1.mp4");
 	}
 	
 }
