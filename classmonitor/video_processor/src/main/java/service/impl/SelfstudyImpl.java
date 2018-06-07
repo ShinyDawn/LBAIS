@@ -490,7 +490,7 @@ public class SelfstudyImpl implements SelfstudyService {
 	private static Map<Integer, ActionInfo> map=new HashMap<>();
 	private static Map<Integer,String> beh=new HashMap<>();
 	@Override
-	public void takeClass(String path,int cid) throws Exception {
+	public void takeClass(String path,int cid,String video) throws Exception {
 		int alarm_id=0;
 		double alarm_num=0.0;
 		String description="";
@@ -546,7 +546,7 @@ public class SelfstudyImpl implements SelfstudyService {
 					temp_a.setClass_id(cid);
 					temp_a.setStart(start/30);
 					temp_a.setId(0);
-					temp_a.setVedio_path("../video/alarm1.mp4");
+					temp_a.setVedio_path(video);
 					Date day = new Date();
 					SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 					temp_a.setDate(Integer.parseInt(df.format(day)));
@@ -565,7 +565,7 @@ public class SelfstudyImpl implements SelfstudyService {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		new SelfstudyImpl().takeClass("E:\\百度云下载\\2018.5.4\\jsonOut\\IMG_1960",2);
+		//new SelfstudyImpl().takeClass("E:\\百度云下载\\2018.5.4\\jsonOut\\IMG_1960",2);
 	}
 	
 }

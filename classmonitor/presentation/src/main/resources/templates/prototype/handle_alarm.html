@@ -39,9 +39,9 @@
  
 <div class="layui-container">
 
-<div width="100%" style="margin:0px 10px 0px 10px">
+<div id="alarm_vedio" width="100%" style="margin:0px 10px 0px 10px">
 
-<video id="alarm_vedio" width="100%" height="100%" autoplay="" src="../video/alarm1.mp4"  type="video/mp4" controls="controls" >您的浏览器不支持该视频格式。</video>
+<video id="vedio" width="100%" height="100%" autoplay="" src="../video/alarm1.mp4"  type="video/mp4" controls="controls" >您的浏览器不支持该视频格式。</video>
 </div>
 
 
@@ -83,7 +83,23 @@
 window.alarm_count=0;
 
 window.onload=function (){
-	document.getElementById("alarm_vedio").currentTime = 10;
+	var src = window.location.href;
+	window.id =  parseInt(src.substr(src.indexOf("?alarm_id=") + 10));
+	$.ajax({
+	        url: 'http://localhost:10002/study/get_s_alarm',
+	        //dataType: 'String',
+	        type: 'POST',
+	        data: {'alarm_id': window.id },
+	        async: false,
+	        success: function (obj) {
+	        	//obj["vedio_path"]
+	        	var latency=parseInt(obj["start"]);
+	        	var path=obj["vedio_path"];
+	        	var video='<video id="video" width="100%" height="100%" autoplay="" src="'+path+'"  type="video/mp4" controls="controls" >您的浏览器不支持该视频格式。</video>'
+	        	document.getElementById("alarm_vedio").innerHTML =video;
+	        	document.getElementById("video").currentTime =latency;
+	        }
+	});
 }
 
 
