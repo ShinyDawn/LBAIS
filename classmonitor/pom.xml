@@ -63,6 +63,5 @@
 		<module>presentation</module>
 		<module>service</module>
 		<module>common</module>
-		<module>class_assistant</module>
 	</modules>
 </project>
