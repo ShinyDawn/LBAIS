@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import service.repository.BehaviorRepository;
 import service.service.VideoHandleService;
 
@@ -45,6 +47,7 @@ public class VideoHandleImpl implements VideoHandleService {
 						"hand_right_keypoints_3d" };
 				for (int t = 0; t < 1; t++) {
 					JSONArray temp = person.getJSONArray(items[i]);
+					System.out.println(temp);
 					if(sleep(temp)){
 						System.out.println("第"+i/30+"s 睡觉");
 						
@@ -86,8 +89,10 @@ public class VideoHandleImpl implements VideoHandleService {
 		}
 		return laststr;
 	}
-	//睡觉  鼻子和眼睛的综合 比 脖子的高度低
+	//睡觉  鼻子和眼睛的综合 比 脖子的高度低 且低于右肩
 	public static boolean sleep(JSONArray pose) throws Exception {
+		if(pose.size()==0) return false;
+		double amber_r=getNum(pose,7);
 		double nose=getNum(pose, 1);
 		double eye_l=getNum(pose,43);
 		double eye_r=getNum(pose,46);
@@ -98,7 +103,7 @@ public class VideoHandleImpl implements VideoHandleService {
 //		if(eye_l==0||eye_r==0)
 		double center=(eye_l+eye_r)/4+nose/2;
 		
-		if(center>neck)return true;
+		if(center>neck&&center<amber_r)return true;
 		return false;
 	}
 	//重心变高
@@ -142,9 +147,12 @@ public class VideoHandleImpl implements VideoHandleService {
 		if (pose.get(index) instanceof Integer ) return (Integer) pose.get(index) * 1.0;
 		else return (Double) pose.get(index);
 	}
+	
+	
 
 	public static void main(String[] args) throws Exception {
-		String file = "D:\\workspace\\video\\jsonOut\\IMG_1928";
+		
+		String file = "E:\\百度云下载\\2018.5.4\\jsonOut\\IMG_1960";
 		new VideoHandleImpl().handle(file);
 	}
 }

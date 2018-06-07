@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class IOHelper {
     public static List<List<Point2D>> dealWithJson() throws Exception {
-
-        String pathStart = "D:/workspace\\video\\jsonOut/IMG_1961/IMG_1961_00000000";
+    	String pathStart = "E:\\百度云下载\\2018.5.4\\jsonOut\\IMG_1960\\IMG_1960_00000000";
+//        String pathStart = "D:/workspace\\video\\jsonOut/IMG_1961/IMG_1961_00000000";
         DecimalFormat f = new DecimalFormat("0000");
         String pathEnd = "_keypoints.json";
 

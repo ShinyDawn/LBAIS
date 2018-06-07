@@ -24,9 +24,9 @@ import service.service.InitService;
 import service.service.PoseService;
 import service.service.SourceService;
 import service.tool.ConfigInit;
-
+//CommandLineRunner, 
 @Component
-public class Process implements CommandLineRunner, BehaviorService {
+public class Process implements BehaviorService {
 	@Autowired
 	private TimeRepository timeRepo;
 	@Autowired
@@ -51,7 +51,7 @@ public class Process implements CommandLineRunner, BehaviorService {
 		}, 1000, (long) (conf.getInterval() * 1000));
 	}
 
-	@Override
+	//@Override
 	public void run(String... args) throws Exception {
 		ConfigInit configInit = new ConfigInit();
 		conf = configInit.config();

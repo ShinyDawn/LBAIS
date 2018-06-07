@@ -22,7 +22,9 @@ public class StudyCommandLineRunner implements CommandLineRunner{
 //		Behavior temp=new Behavior();
 //		temp.setId(0);
 //		behavior.save(temp);
-		study.checkPattern();
+//		System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+		study.takeClass("E:\\百度云下载\\2018.5.4\\jsonOut\\IMG_1961",2);
+		//study.checkPattern(2);
 		System.out.println("This will be execute when the project was started!");
 		// TODO Auto-generated method stub
 		
