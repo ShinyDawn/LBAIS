@@ -29,7 +29,7 @@ window.onload=function (){
 	window.id =  parseInt(src.substr(src.indexOf("?alarm=") + 7));
 	//alert("alarm_id:"+ window.id);
 	$.ajax({
-        url: 'http://localhost:10002/study/get_s_alarm',
+        url: 'http://218.94.159.98:10002/study/get_s_alarm',
         //dataType: 'String',
         type: 'POST',
         data: {'alarm_id': window.id },
@@ -61,7 +61,7 @@ function dismiss(){
 
 function handle(handle_id){
 	$.ajax({
-        url: 'http://localhost:10002/study/alarmhandle',
+        url: 'http://218.94.159.98:10002/study/alarmhandle',
         type: 'POST',
         data: {'alarm_id': window.id, 'h_type': handle_id,'handle':''},
         async: false,

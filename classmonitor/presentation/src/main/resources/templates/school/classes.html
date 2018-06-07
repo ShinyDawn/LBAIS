@@ -106,7 +106,7 @@ h5{color:grey}
 /*<![CDATA[*/
 $.ajax({
 	type : "POST",
-	url : "http://localhost:10002/classroom",
+	url : "http://218.94.159.98:10002/classroom",
 	crossDomain : true,
 	success : function(data) {
 		var html = "";
@@ -159,7 +159,7 @@ $.ajax({
 
 	function see(id){
 		$.session.set('cid', id);
-		window.location.href="http://localhost:10001/curriculum";
+		window.location.href="http://218.94.159.98:10001/curriculum";
 	}
 
 	function update(id){
@@ -192,7 +192,7 @@ $.ajax({
 	function del(id){
 		$.ajax({
 			type : "POST",
-			url : "http://localhost:10002/classroom/delete",
+			url : "http://218.94.159.98:10002/classroom/delete",
 			data : {
 				id : id
 			},
@@ -223,9 +223,9 @@ $.ajax({
 			document.getElementById("alert").innerText="*请输入开班日期";
 		else{
 			document.getElementById("alert").innerText="";
-			var baseurl = "http://localhost:10002/classroom/update";
+			var baseurl = "http://218.94.159.98:10002/classroom/update";
 			if(id==0)
-				baseurl = "http://localhost:10002/classroom/add";
+				baseurl = "http://218.94.159.98:10002/classroom/add";
 			$.ajax({
 				type : "POST",
 				url : baseurl,
@@ -265,12 +265,12 @@ $.ajax({
 			<div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
 					<li class="active"><a href="#">班级列表</a></li>
-					<li><a href="http://localhost:10001/ss">全校班级信息统计</a></li>
-					<li><a href="http://localhost:10001/number">班级人数统计</a></li>
-					<li><a href="http://localhost:10001/help">帮助文档</a></li>
+					<li><a href="http://218.94.159.98:10001/ss">全校班级信息统计</a></li>
+					<li><a href="http://218.94.159.98:10001/number">班级人数统计</a></li>
+					<li><a href="http://218.94.159.98:10001/help">帮助文档</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href='http://localhost:10001/login' id='logout'>登出</a></li>
+					<li><a href='http://218.94.159.98:10001/login' id='logout'>登出</a></li>
 				</ul>
 			</div>
 		</div>

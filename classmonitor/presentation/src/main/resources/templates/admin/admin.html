@@ -72,7 +72,7 @@ h5{color:grey}
 /*<![CDATA[*/
 $.ajax({
 	type : "POST",
-	url : "http://localhost:10002/admin",
+	url : "http://218.94.159.98:10002/admin",
 	crossDomain : true,
 	success : function(data) {
 		document.getElementById("aaa").innerHTML+="<tbody>";
@@ -130,7 +130,7 @@ $.ajax({
 	function del(id){
 		$.ajax({
 			type : "POST",
-			url : "http://localhost:10002/admin/delete",
+			url : "http://218.94.159.98:10002/admin/delete",
 			data : {
 				id : id
 			},
@@ -162,9 +162,9 @@ $.ajax({
 			document.getElementById("alert").innerText="*请输入至少9位的密码";
 		else{
 			document.getElementById("alert").innerText="";
-			var baseurl = "http://localhost:10002/admin/modify";
+			var baseurl = "http://218.94.159.98:10002/admin/modify";
 			if(id==0)
-				baseurl = "http://localhost:10002/admin/add";
+				baseurl = "http://218.94.159.98:10002/admin/add";
 			$.ajax({
 				type : "POST",
 				url : baseurl,
@@ -203,7 +203,7 @@ $.ajax({
 
 			<div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href='http://localhost:10001/login' id='logout'>登出</a></li>
+					<li><a href='http://218.94.159.98:10001/login' id='logout'>登出</a></li>
 				</ul>
 			</div>
 		</div>

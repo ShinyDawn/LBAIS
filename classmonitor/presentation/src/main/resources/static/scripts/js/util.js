@@ -65,7 +65,7 @@ function changeUserInfo() {
 function getClassInfo(sequenceId) {
     var uid = $.session.get('uid');
     $.ajax({
-        url: "http://localhost:10002/classes",
+        url: "http://218.94.159.98:10002/classes",
         type: 'GET',
         dataType: 'json',
         data: {'uid': uid},

@@ -133,7 +133,7 @@ function sub_handle(){
         //alert(jsonString);
 		var id=$.session.get('pattern_id');
 		$.ajax({
-	        url: 'http://localhost:10002/study/patternhandle',
+	        url: 'http://218.94.159.98:10002/study/patternhandle',
 	        //dataType: 'String',
 	        type: 'POST',
 	        data: {'pattern_id': parseInt(id), 'h_type': 1,'handle':jsonString},
@@ -165,7 +165,7 @@ function dismiss(){
 	//alert(id);
 	var result="";
 	$.ajax({
-        url: 'http://localhost:10002/study/patternhandle',
+        url: 'http://218.94.159.98:10002/study/patternhandle',
         //dataType: 'String',
         type: 'POST',
         data: {'pattern_id': parseInt(id), 'h_type': 2,'handle':''},

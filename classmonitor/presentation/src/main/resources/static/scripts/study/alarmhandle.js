@@ -72,7 +72,7 @@ function getId(){
 	var max=16;
 	for(var i=1;i<=max;i++){
 		$.ajax({
-	        url: 'http://localhost:10002/student/get',
+	        url: 'http://218.94.159.98:10002/student/get',
 	        //dataType: 'String',
 	        type: 'POST',
 	        data: {'cid': cid, 'sid': i},
@@ -94,7 +94,7 @@ function getName(){
 	var max=16;
 	for(var i=1;i<=max;i++){
 		$.ajax({
-	        url: 'http://localhost:10002/student/get',
+	        url: 'http://218.94.159.98:10002/student/get',
 	        //dataType: 'String',
 	        type: 'POST',
 	        data: {'cid': cid, 'sid': i},

@@ -110,7 +110,7 @@ h5 {
 	var cid = $.session.get('cid');
 	$.ajax({
 		type : "POST",
-		url : "http://localhost:10002/classroom/info",
+		url : "http://218.94.159.98:10002/classroom/info",
 		data : {
 			id : cid
 		},
@@ -123,7 +123,7 @@ h5 {
 	$
 			.ajax({
 				type : "POST",
-				url : "http://localhost:10002/students",
+				url : "http://218.94.159.98:10002/students",
 				data : {
 					cid : cid
 				},
@@ -191,7 +191,7 @@ h5 {
 	function del(id) {
 		$.ajax({
 			type : "POST",
-			url : "http://localhost:10002/students/delete",
+			url : "http://218.94.159.98:10002/students/delete",
 			data : {
 				id : id
 			},
@@ -220,9 +220,9 @@ h5 {
 			document.getElementById("alert").innerText = "*请输入座位";
 		else {
 			document.getElementById("alert").innerText = "";
-			var baseurl = "http://localhost:10002/students/update";
+			var baseurl = "http://218.94.159.98:10002/students/update";
 			if (id == 0)
-				baseurl = "http://localhost:10002/students/add";
+				baseurl = "http://218.94.159.98:10002/students/add";
 			$
 					.ajax({
 						type : "POST",
@@ -270,20 +270,20 @@ h5 {
 			<div class="navbar-collapse collapse"
 				id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><a href="http://localhost:10001/curriculum">课程表</a></li>
-					<li><a href="http://localhost:10001/realtime">上课实时统计</a></li>
+					<li><a href="http://218.94.159.98:10001/curriculum">课程表</a></li>
+					<li><a href="http://218.94.159.98:10001/realtime">上课实时统计</a></li>
 					<li class="dropdown active"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown" role="button" aria-haspopup="true"
 						aria-expanded="false">班级信息<span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="#">学生列表</a></li>
-							<li><a href="http://localhost:10001/cs">班级信息统计</a></li>
+							<li><a href="http://218.94.159.98:10001/cs">班级信息统计</a></li>
 						</ul></li>
-					<li><a href="http://localhost:10001/subject">学科信息统计</a></li>
-					<li><a href="http://localhost:10001/exception">特殊情况</a></li>
+					<li><a href="http://218.94.159.98:10001/subject">学科信息统计</a></li>
+					<li><a href="http://218.94.159.98:10001/exception">特殊情况</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href='http://localhost:10001/login' id='logout'>登出</a></li>
+					<li><a href='http://218.94.159.98:10001/login' id='logout'>登出</a></li>
 				</ul>
 			</div>
 		</div>

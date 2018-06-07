@@ -42,7 +42,7 @@ function getAnalysis(period) {
     }
 
     $.ajax({
-            url: 'http://localhost:10002/studentInfo',
+            url: 'http://218.94.159.98:10002/studentInfo',
             dataType: 'json',
             type: 'get',
             data: {'sid': sid, 'cid': cid, 'period': period},
@@ -81,7 +81,7 @@ function changeName() {
     }
 
     $.ajax({
-            url: 'http://localhost:10002//student/get',
+            url: 'http://218.94.159.98:10002//student/get',
             dataType: 'json',
             type: 'get',
             data: {'sid': sid, 'cid': cid},
@@ -101,7 +101,7 @@ function getAddendance(period) {
     }
 
     // $.ajax({
-    //         url: 'http://localhost:10002/student/attendanceRate',
+    //         url: 'http://218.94.159.98:10002/student/attendanceRate',
     //         dataType: 'json',
     //         type: 'get',
     //         data: {'sid': sid, 'cid': cid, 'period': period},
@@ -112,7 +112,7 @@ function getAddendance(period) {
     // );
 
     $.ajax({
-            url: 'http://localhost:10002/student/attendanceRate',
+            url: 'http://218.94.159.98:10002/student/attendanceRate',
             dataType: 'json',
             type: 'get',
             data: {'sid': sid, 'cid': cid, 'period': period},
@@ -124,7 +124,7 @@ function getAddendance(period) {
 
     $('#attencen_list').append(addtitle_attendance());
     $.ajax({
-            url: 'http://localhost:10002//student/attendance',
+            url: 'http://218.94.159.98:10002//student/attendance',
             dataType: 'json',
             type: 'get',
             data: {'sid': sid, 'cid': cid, 'period': period},
@@ -170,7 +170,7 @@ function getLessonALL() {
     $('#subject_filter').html('全部');
 
     $.ajax({
-            url: 'http://localhost:10002/student/livenessPercent',
+            url: 'http://218.94.159.98:10002/student/livenessPercent',
             dataType: 'json',
             type: 'get',
             data: {'sid': sid, 'cid': cid, 'period': period},
@@ -183,7 +183,7 @@ function getLessonALL() {
 
     if (period === '1' || period === '7' || period === '3') {
         $.ajax({
-                url: 'http://localhost:10002/student/lesson',
+                url: 'http://218.94.159.98:10002/student/lesson',
                 dataType: 'json',
                 type: 'get',
                 data: {'sid': sid, 'cid': cid, 'period': period},
@@ -194,7 +194,7 @@ function getLessonALL() {
         );
     } else {
         $.ajax({
-                url: 'http://localhost:10002/student/lessonweek',
+                url: 'http://218.94.159.98:10002/student/lessonweek',
                 dataType: 'json',
                 type: 'get',
                 data: {'sid': sid, 'cid': cid, 'period': period},
@@ -217,7 +217,7 @@ function getLesson(subject) {
     $('#subject_filter').html(subject);
 
     $.ajax({
-            url: 'http://localhost:10002/student/livenessPercent/subject',
+            url: 'http://218.94.159.98:10002/student/livenessPercent/subject',
             dataType: 'json',
             type: 'get',
             data: {'sid': sid, 'cid': cid, 'period': period, 'subject': subject},
@@ -228,7 +228,7 @@ function getLesson(subject) {
     );
 
     $.ajax({
-            url: 'http://localhost:10002/student/lesson/subject',
+            url: 'http://218.94.159.98:10002/student/lesson/subject',
             dataType: 'json',
             type: 'get',
             data: {'sid': sid, 'cid': cid, 'period': period, 'subject': subject},
@@ -246,7 +246,7 @@ function getDicipline(period) {
     }
 
     $.ajax({
-            url: 'http://localhost:10002/student/disciplinePercent',
+            url: 'http://218.94.159.98:10002/student/disciplinePercent',
             dataType: 'json',
             type: 'get',
             data: {'sid': sid, 'cid': cid, 'period': period},
@@ -258,7 +258,7 @@ function getDicipline(period) {
 
     $('#dicipline_list').append(addtitle_dicipline());
     $.ajax({
-            url: 'http://localhost:10002/student/discipline',
+            url: 'http://218.94.159.98:10002/student/discipline',
             dataType: 'json',
             type: 'get',
             data: {'sid': sid, 'cid': cid, 'period': period},

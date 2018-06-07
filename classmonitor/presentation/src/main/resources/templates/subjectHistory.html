@@ -34,7 +34,7 @@
 	function init() {
 		$.ajax({
 			type : "POST",
-			url : "http://localhost:10002/sub",
+			url : "http://218.94.159.98:10002/sub",
 			data : {
 				cid : cid
 			},
@@ -48,7 +48,7 @@
 	}
 
 	function backToIndex() {
-		window.location.href = "http://localhost:10001/students";
+		window.location.href = "http://218.94.159.98:10001/students";
 	}
 
 	function getDateArr(num) {
@@ -91,7 +91,7 @@
 		if (type == 1) {
 			$.ajax({
 				type : "POST",
-				url : "http://localhost:10002/data",
+				url : "http://218.94.159.98:10002/data",
 				data : {
 					cid : cid,
 					type : type
@@ -162,7 +162,7 @@
 		else if (type == 2) {
 			$.ajax({
 				type : "POST",
-				url : "http://localhost:10002/data",
+				url : "http://218.94.159.98:10002/data",
 				data : {
 					cid : cid,
 					type : type
@@ -234,7 +234,7 @@
 		else if (type == 3) {
 			$.ajax({
 				type : "POST",
-				url : "http://localhost:10002/data",
+				url : "http://218.94.159.98:10002/data",
 				data : {
 					cid : cid,
 					type : type
@@ -338,7 +338,7 @@
 		else {
 			$.ajax({
 				type : "POST",
-				url : "http://localhost:10002/data",
+				url : "http://218.94.159.98:10002/data",
 				data : {
 					cid : cid,
 					type : type
@@ -453,11 +453,11 @@
 
 				<div class="nav-collapse collapse navbar-inverse-collapse">
 					<ul class="nav pull-left">
-						<li><a href="http://localhost:10001/students"> 学生分析 </a></li>
-						<li><a href="http://localhost:10001/subjectHistory"> 课堂状态
+						<li><a href="http://218.94.159.98:10001/students"> 学生分析 </a></li>
+						<li><a href="http://218.94.159.98:10001/subjectHistory"> 课堂状态
 						</a></li>
-						<li><a href="http://localhost:10001/study"> 自习报警 </a></li>
-						<li><a class='active' href="http://localhost:10001/approval">
+						<li><a href="http://218.94.159.98:10001/study"> 自习报警 </a></li>
+						<li><a class='active' href="http://218.94.159.98:10001/approval">
 								请假管理 </a></li>
 					</ul>
 					<ul class="nav pull-right">

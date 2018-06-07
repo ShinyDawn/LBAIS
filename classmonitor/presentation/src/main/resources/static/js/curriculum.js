@@ -41,7 +41,7 @@ function save(div, day) {
 		}
 		$.ajax({
 			type : "POST",
-			url : "http://localhost:10002/curriculum/at",
+			url : "http://218.94.159.98:10002/curriculum/at",
 			data : {
 				id : tid,
 				cid : cid,
@@ -57,7 +57,7 @@ function save(div, day) {
 
 		$.ajax({
 			type : "POST",
-			url : "http://localhost:10002/curriculum/ac",
+			url : "http://218.94.159.98:10002/curriculum/ac",
 			data : {
 				cid : cid,
 				tid : tid,
@@ -87,7 +87,7 @@ function del(div) {
 	else {
 		$.ajax({
 			type : "POST",
-			url : "http://localhost:10002/curriculum/delete",
+			url : "http://218.94.159.98:10002/curriculum/delete",
 			data : {
 				cid : cid,
 				tid : tid

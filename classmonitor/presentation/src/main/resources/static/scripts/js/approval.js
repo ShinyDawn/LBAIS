@@ -25,7 +25,7 @@ window.onload = function () {
 function changeApprovalList(cid, period) {
     $('#approval_list').append(addtitle());
     $.ajax({
-        url: 'http://localhost:10002/approval',
+        url: 'http://218.94.159.98:10002/approval',
         dataType: 'json',
         type: 'POST',
         data: {'cid': cid, 'period': period},
@@ -133,7 +133,7 @@ function addApproval() {
 
 
     $.ajax({
-        url: "http://localhost:10002/approval/add",
+        url: "http://218.94.159.98:10002/approval/add",
         type: 'PUT',
         data: {
             'sid': sid, 'cid': cid, 'dates': date,'tids': tids.toString(), 'type': type,

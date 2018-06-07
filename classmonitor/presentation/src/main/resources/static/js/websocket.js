@@ -1,4 +1,4 @@
-//socket = new WebSocket("ws://localhost:9094/starManager/websocket/张三");  
+//socket = new WebSocket("ws://218.94.159.98:9094/starManager/websocket/张三");
         var socket;  
         if(typeof(WebSocket) == "undefined") {  
             console.log("您的浏览器不支持WebSocket");  
@@ -7,8 +7,8 @@
               
             // 实现化WebSocket对象，指定要连接的服务器地址与端口 建立连接
             // socket = new
-			// WebSocket("ws://localhost:9094/starManager/websocket/张三")
-            socket = new WebSocket("ws://localhost:10002/websocket");
+			// WebSocket("ws://218.94.159.98:9094/starManager/websocket/张三")
+            socket = new WebSocket("ws://218.94.159.98:10002/websocket");
             // 打开事件
             socket.onopen = function() {
                 console.log("Socket 已打开");
@@ -32,7 +32,7 @@
                 		  ,shade: 0.2 //遮罩透明度
                 		  ,maxmin: true //允许全屏最小化
                 		  ,anim: 2 //0-6的动画形式，-1不开启
-                		  ,content: 'http://localhost:10001/alarm_layer.html?alarm='+id
+                		  ,content: 'http://218.94.159.98:10001/alarm_layer.html?alarm='+id
                 		  });
                 }
                 if(msg.data.indexOf("close")>=0){

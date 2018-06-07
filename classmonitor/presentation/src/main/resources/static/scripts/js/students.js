@@ -38,7 +38,7 @@ window.onload = function () {
 function changeStudentList(cid, period) {
     $('#students_list').append(addtitle());
     $.ajax({
-        url: 'http://localhost:10002/students',
+        url: 'http://218.94.159.98:10002/students',
         dataType: 'json',
         type: 'POST',
         data: {'cid': cid, 'period': period},
@@ -164,7 +164,7 @@ function createStudentsList(data) {
     return tr;
 }
 function detail_show(sid) {
-    window.location.href = "http://localhost:10001/student?sid=" + sid;
+    window.location.href = "http://218.94.159.98:10001/student?sid=" + sid;
 }
 
 

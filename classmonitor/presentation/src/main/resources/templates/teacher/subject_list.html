@@ -193,7 +193,7 @@ h5 {
 
 	$.ajax({
 		type : "POST",
-		url : "http://localhost:10002/classroom/info",
+		url : "http://218.94.159.98:10002/classroom/info",
 		data : {
 			id : cid
 		},
@@ -206,7 +206,7 @@ h5 {
 	$
 			.ajax({
 				type : "POST",
-				url : "http://localhost:10002/subject",
+				url : "http://218.94.159.98:10002/subject",
 				data : {
 					cid : cid
 				},
@@ -305,7 +305,7 @@ h5 {
 
 	function see(id) {
 		$.session.set('subject', id);
-		window.location.href = "http://localhost:10001/single";
+		window.location.href = "http://218.94.159.98:10001/single";
 	}
 
 	function update(id) {
@@ -330,7 +330,7 @@ h5 {
 	function del(id) {
 		$.ajax({
 			type : "POST",
-			url : "http://localhost:10002/subject/delete",
+			url : "http://218.94.159.98:10002/subject/delete",
 			data : {
 				id : id
 			},
@@ -351,9 +351,9 @@ h5 {
 			document.getElementById("alert").innerText = "*请输入指导老师";
 		else {
 			document.getElementById("alert").innerText = "";
-			var baseurl = "http://localhost:10002/subject/update";
+			var baseurl = "http://218.94.159.98:10002/subject/update";
 			if (id == 0)
-				baseurl = "http://localhost:10002/subject/add";
+				baseurl = "http://218.94.159.98:10002/subject/add";
 			$.ajax({
 				type : "POST",
 				url : baseurl,
@@ -416,20 +416,20 @@ h5 {
 			<div class="navbar-collapse collapse"
 				id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><a href="http://localhost:10001/curriculum">课程表</a></li>
-					<li><a href="http://localhost:10001/realtime">上课实时统计</a></li>
+					<li><a href="http://218.94.159.98:10001/curriculum">课程表</a></li>
+					<li><a href="http://218.94.159.98:10001/realtime">上课实时统计</a></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown" role="button" aria-haspopup="true"
 						aria-expanded="false">班级信息<span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="http://localhost:10001/students">学生列表</a></li>
-							<li><a href="http://localhost:10001/cs">班级信息统计</a></li>
+							<li><a href="http://218.94.159.98:10001/students">学生列表</a></li>
+							<li><a href="http://218.94.159.98:10001/cs">班级信息统计</a></li>
 						</ul></li>
 					<li class="active"><a href="#">学科信息统计</a></li>
-					<li><a href="http://localhost:10001/exception">特殊情况</a></li>
+					<li><a href="http://218.94.159.98:10001/exception">特殊情况</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href='http://localhost:10001/login' id='logout'>登出</a></li>
+					<li><a href='http://218.94.159.98:10001/login' id='logout'>登出</a></li>
 				</ul>
 			</div>
 		</div>
@@ -443,7 +443,7 @@ h5 {
 		</button>
 
 		<a class="btn btn-lg btn-primary" id="download"
-			href="http://localhost:10002/subject/download"> 下载模板<span
+			href="http://218.94.159.98:10002/subject/download"> 下载模板<span
 			class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 		</a>
 	</div>
@@ -491,7 +491,7 @@ h5 {
 				</div>
 				<div class="modal-body">
 					<div class="container">
-						<form id="uploadForm" enctype="multipart/form-data" method="post" action="http://localhost:10002/subject/upload">
+						<form id="uploadForm" enctype="multipart/form-data" method="post" action="http://218.94.159.98:10002/subject/upload">
 							<h4 class="title">上传成绩</h4>
 							<input id="file" name="uploadFile" type="file" class="file"
 								data-show-preview="false" data-show-upload="false" />

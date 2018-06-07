@@ -15,7 +15,7 @@ function AlarmList(cid) {
     $('#alarmlist').html("");
     $('#alarmlist').append(title);
     $.ajax({
-        url: 'http://localhost:10002/study/getalarm',
+        url: 'http://218.94.159.98:10002/study/getalarm',
         dataType: 'json',
         type: 'POST',
         data: {'cid': cid, 'type': period},
@@ -75,7 +75,7 @@ function PatternList(cid) {
     $('#patternlist').html("");
     $('#patternlist').append(title);
     $.ajax({
-        url: 'http://localhost:10002/study/getpattern',
+        url: 'http://218.94.159.98:10002/study/getpattern',
         dataType: 'json',
         type: 'POST',
         data: {'cid': cid, 'type': period},
@@ -118,7 +118,7 @@ function createPatternUnit(data) {
 
 function getNum(cid){
 	$.ajax({
-        url: 'http://localhost:10002/study/getNum',
+        url: 'http://218.94.159.98:10002/study/getNum',
         dataType: 'json',
         type: 'POST',
         data: {'cid': cid},
